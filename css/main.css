@@ -1387,35 +1387,6 @@ pre code {
 .use-motion .menu-item {
   visibility: hidden;
 }
-.book-mark-link {
-  border-bottom: 0;
-  position: fixed;
-  top: -10px;
-  transition: top 0.3s;
-  right: 30px;
-}
-@media (max-width: 991px) {
-  .book-mark-link {
-    right: 20px;
-  }
-}
-@media (max-width: 991px) {
-  .book-mark-link {
-    display: none;
-  }
-}
-.book-mark-link::before {
-  color: #1abc9c;
-  font-size: 32px;
-  line-height: 1;
-  content: '\f02e';
-  font-family: 'Font Awesome 6 Free';
-  font-weight: 900;
-}
-.book-mark-link:hover,
-.book-mark-link-fixed {
-  top: -2px;
-}
 @media (max-width: 991px) {
   .sidebar {
     left: -320px;
@@ -1455,7 +1426,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #341ff5;
+    background: #67a22b;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3105,10 +3076,17 @@ body {
 .site-subtitle {
   overflow: hidden;
   white-space: nowrap;
-  display: inline-block;
+  display: block;
+  width: max-content;
+  max-width: calc(100% - 20px);
+  margin: 10px auto 0;
   animation: typing 3s steps(30, end), blink-caret 0.8s step-end infinite;
   border-right: 2px solid #1abc9c;
   padding-right: 5px;
+}
+.custom-logo-image,
+.site-author-image {
+  height: auto;
 }
 /* ========== 回到顶部按钮美化 ========== */
 .back-to-top {
@@ -3300,10 +3278,10 @@ blockquote::before {
 }
 @keyframes typing {
   from {
-    width: 0;
+    clip-path: inset(0 100% 0 0);
   }
   to {
-    width: 100%;
+    clip-path: inset(0 0 0 0);
   }
 }
 @keyframes blink-caret {
