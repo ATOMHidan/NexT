@@ -1455,7 +1455,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #ff54f1;
+    background: #341ff5;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -2880,7 +2880,7 @@ header.header {
     color: var(--text-color);
     margin-top: 12px;
     max-height: calc(100vh - 24px);
-    visibility: hidden;
+    overflow-y: auto;
   }
   .site-state-item {
     padding: 0 10px;
