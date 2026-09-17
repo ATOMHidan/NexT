@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="description" content="在浏览器本地生成 TOTP 动态验证码，不上传、不保存密钥。">
+  <title>2FA 验证器 | Soyo Course</title>
+  <link rel="icon" href="/images/icon-32.png">
+  <style id="twofa-style">:root {
+  color-scheme:light dark;
+  --surface:#f6faf5;
+  --container:#fff;
+  --low:#edf4ed;
+  --primary:#286a50;
+  --on-primary:#fff;
+  --tonal:#ccebd9;
+  --on-tonal:#0a3828;
+  --text:#19221c;
+  --muted:#526259;
+  --outline:#a4b4a8;
+  --error:#ba1a1a;
+  --ease:cubic-bezier(.2,0,0,1)
+}
+* {
+  box-sizing:border-box
+}
+body {
+  margin:0;
+  color:var(--text);
+  font:16px/1.6 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  background:linear-gradient(#edf4edf0,#edf4edf0),url('/images/bg.jpg') center/cover fixed;
+  min-height:100vh
+}
+a {
+  color:inherit;
+  text-decoration:none
+}
+button,input {
+  font:inherit
+}
+button,a,input,summary {
+  -webkit-tap-highlight-color:transparent
+}
+button {
+  cursor:pointer;
+  border:0;
+  min-height:48px;
+  padding:0 24px;
+  border-radius:999px;
+  font-weight:600;
+  transition:background-color .2s var(--ease),box-shadow .2s var(--ease),transform .2s var(--ease)
+}
+button:active {
+  transform:scale(.97)
+}
+button:disabled {
+  opacity:.45;
+  cursor:default
+}
+button:focus-visible,a:focus-visible,summary:focus-visible {
+  outline:3px solid var(--primary);
+  outline-offset:4px
+}
+.shell {
+  display:grid;
+  grid-template-columns:220px minmax(0,780px);
+  gap:64px;
+  max-width:1200px;
+  margin:auto;
+  padding:56px 32px
+}
+.rail {
+  align-self:start;
+  position:sticky;
+  top:48px;
+  padding:12px 0
+}
+.brand {
+  font-weight:750;
+  font-size:25px;
+  letter-spacing:-.8px
+}
+.rail-caption {
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin:4px 0 32px
+}
+.rail nav {
+  display:grid;
+  gap:8px
+}
+.rail nav a {
+  padding:12px 24px;
+  border-radius:999px;
+  transition:background-color .2s var(--ease);
+  font-size:14px
+}
+.rail nav a:hover {
+  background:var(--low)
+}
+.rail nav a[aria-current] {
+  background:var(--tonal);
+  color:var(--on-tonal);
+  font-weight:700
+}
+.rail-note {
+  margin-top:40px;
+  color:var(--muted);
+  font-size:12px;
+  padding-left:24px
+}
+main {
+  min-width:0
+}
+.intro {
+  margin:0 8px 28px
+}
+.eyebrow {
+  font-size:11px;
+  letter-spacing:2.5px;
+  font-weight:700;
+  color:var(--primary)
+}
+h1 {
+  font-size:clamp(30px,4vw,46px);
+  letter-spacing:-1.5px;
+  line-height:1.2;
+  margin:12px 0
+}
+.heading-dot {
+  color:var(--primary)
+}
+.intro p {
+  margin:0;
+  color:var(--muted)
+}
+.auth-card {
+  background:var(--container);
+  padding:32px;
+  border-radius:32px;
+  box-shadow:0 8px 32px #1634250a
+}
+.card-top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:28px
+}
+.symbol {
+  display:grid;
+  place-items:center;
+  width:52px;
+  height:52px;
+  background:var(--tonal);
+  border-radius:18px;
+  color:var(--on-tonal);
+  font-size:32px
+}
+.privacy-chip {
+  font-size:12px;
+  color:var(--primary);
+  border:1px solid var(--outline);
+  padding:6px 12px;
+  border-radius:8px
+}
+label {
+  display:block;
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:8px
+}
+.input-wrap {
+  display:flex;
+  align-items:center;
+  border:1px solid var(--outline);
+  border-radius:12px;
+  transition:box-shadow .2s var(--ease)
+}
+.input-wrap:focus-within {
+  box-shadow:0 0 0 2px var(--primary);
+  border-color:transparent
+}
+input {
+  width:100%;
+  min-width:0;
+  background:transparent;
+  border:0;
+  color:var(--text);
+  padding:18px 16px;
+  outline:0
+}
+input::placeholder {
+  color:var(--muted);
+  font-size:14px
+}
+.input-wrap button {
+  flex-shrink:0;
+  padding:0 16px;
+  margin-right:4px
+}
+.text-button {
+  background:transparent;
+  color:var(--primary)
+}
+.text-button:hover {
+  background:var(--low)
+}
+.support {
+  font-size:12px;
+  color:var(--muted);
+  margin:8px 4px 0
+}
+.error {
+  color:var(--error);
+  font-size:13px;
+  min-height:21px;
+  margin:4px
+}
+.form-actions {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:8px
+}
+.filled {
+  color:var(--on-primary);
+  background:var(--primary)
+}
+.filled span {
+  margin-left:20px
+}
+.filled:hover {
+  box-shadow:0 4px 12px #16342524
+}
+.tonal {
+  background:var(--tonal);
+  color:var(--on-tonal);
+  font-size:13px
+}
+.tonal:hover:not(:disabled) {
+  box-shadow:0 2px 8px #1634251a
+}
+.result {
+  margin-top:28px;
+  background:var(--low);
+  border-radius:24px;
+  padding:24px;
+  min-height:226px
+}
+.result-label {
+  color:var(--muted);
+  font-size:12px;
+  display:block;
+  overflow-wrap:anywhere
+}
+#code {
+  display:block;
+  font-family:ui-monospace,Consolas,monospace;
+  font-size:clamp(34px,6vw,58px);
+  font-weight:650;
+  letter-spacing:3px;
+  color:var(--primary);
+  line-height:1.4;
+  margin:8px 0 14px;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums
+}
+.result-bottom {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px
+}
+#countdown {
+  color:var(--muted);
+  font-size:12px;
+  font-variant-numeric:tabular-nums
+}
+.track {
+  height:4px;
+  border-radius:10px;
+  background:var(--outline);
+  overflow:hidden;
+  margin-top:18px
+}
+#progress {
+  height:100%;
+  background:var(--primary);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .25s linear
+}
+.parameters {
+  font-size:11px;
+  color:var(--muted);
+  margin:10px 0 0
+}
+.privacy-note {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.8;
+  margin:20px 4px 0
+}
+.help {
+  margin:20px 8px;
+  color:var(--muted);
+  font-size:13px
+}
+.help summary {
+  cursor:pointer;
+  padding:10px 0
+}
+.help p {
+  max-width:65ch
+}
+.signature {
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  padding:16px 0
+}
+.signature strong {
+  letter-spacing:2px;
+  color:var(--primary);
+  margin-left:3px
+}
+.signature span {
+  display:block;
+  font-size:11px;
+  margin-top:5px
+}
+#snackbar {
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translate(-50%,16px);
+  opacity:0;
+  pointer-events:none;
+  max-width:calc(100% - 32px);
+  width:max-content;
+  border-radius:12px;
+  padding:12px 24px;
+  color:var(--surface);
+  background:var(--text);
+  font-size:14px;
+  transition:opacity .2s var(--ease),transform .2s var(--ease)
+}
+#snackbar.visible {
+  opacity:1;
+  transform:translate(-50%,0)
+}
+@media(prefers-color-scheme:dark) {
+  :root {
+    --surface:#111914;
+    --container:#19251e;
+    --low:#22332a;
+    --primary:#9cd5b5;
+    --on-primary:#003823;
+    --tonal:#304f3e;
+    --on-tonal:#c2efd4;
+    --text:#e0e9e0;
+    --muted:#b0c1b4;
+    --outline:#53695b;
+    --error:#ffb4ab
+  }
+  body {
+    background:linear-gradient(#101c16ef,#101c16ef),url('/images/bg.jpg') center/cover fixed
+  }
+}
+@media(max-width:800px) {
+  .shell {
+    display:block;
+    padding:20px;
+    max-width:680px
+  }
+  .rail {
+    position:static;
+    padding:0;
+    margin-bottom:32px
+  }
+  .brand {
+    font-size:21px
+  }
+  .rail-caption,.rail-note {
+    display:none
+  }
+  .rail nav {
+    display:flex;
+    gap:4px;
+    flex-wrap:wrap;
+    padding:12px 0 6px
+  }
+  .rail nav a {
+    white-space:nowrap;
+    padding:10px 16px
+  }
+  .intro {
+    margin:0 4px 24px
+  }
+  .auth-card {
+    padding:24px;
+    border-radius:28px
+  }
+  body {
+    background-attachment:scroll
+  }
+}
+@media(max-width:420px) {
+  .shell {
+    padding:16px
+  }
+  .auth-card {
+    padding:20px
+  }
+  .result {
+    padding:18px
+  }
+  .result-bottom {
+    gap:8px
+  }
+  .tonal {
+    padding:0 14px
+  }
+  #code {
+    letter-spacing:1px
+  }
+  .privacy-chip {
+    font-size:11px
+  }
+  .intro p {
+    font-size:14px
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation:none!important;
+    transition:none!important
+  }
+  button:active {
+    transform:none
+  }
+}
+</style>
+  <script src="/js/totp-core.js" defer></script>
+  <script src="/js/totp-page.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <a class="brand" href="/">Soyo Course</a>
+      <span class="rail-caption">个人博客 · 工具箱</span>
+      <nav aria-label="博客导航">
+        <a href="/">首页</a>
+        <a href="/about/">关于</a>
+        <a href="/tags/">标签</a>
+        <a href="/categories/">分类</a>
+        <a href="/archives/">归档</a>
+        <a href="/tools/2fa/" aria-current="page">工具箱</a>
+      </nav>
+      <p class="rail-note">一点实用，一点喜欢。</p>
+    </aside>
+    <main id="main">
+      <header class="intro">
+        <span class="eyebrow">ATOM / TOOLS 01</span>
+        <h1>2FA 验证器<span class="heading-dot" aria-hidden="true">.</span></h1>
+        <p>属于此刻的验证码，就在这里。</p>
+      </header>
+      <section class="auth-card" aria-label="验证码生成器">
+        <div class="card-top"><span class="symbol" aria-hidden="true">✳</span><span class="privacy-chip">仅在本地计算</span></div>
+        <form id="totp-form" autocomplete="off">
+          <label for="secret">密钥或配置链接</label>
+          <div class="input-wrap">
+            <input id="secret" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="4096" aria-describedby="input-help input-error" placeholder="输入密钥或 otpauth:// 链接">
+            <button id="reveal" type="button" class="text-button" aria-pressed="false" aria-controls="secret">显示</button>
+          </div>
+          <p id="input-help" class="support">请输入开启两步验证时获得的密钥，而非 6 位验证码。</p>
+          <p id="input-error" class="error" role="alert"></p>
+          <div class="form-actions"><button id="generate" class="filled" type="submit">生成验证码 <span aria-hidden="true">↗</span></button><button id="clear" class="text-button" type="button">清空</button></div>
+        </form>
+        <div class="result" id="result">
+          <span class="result-label" id="result-label">准备就绪</span>
+          <output id="code" aria-label="当前验证码">••• •••</output>
+          <div class="result-bottom"><span id="countdown">输入密钥后开始生成</span><button id="copy" class="tonal" type="button" disabled>复制验证码</button></div>
+          <div class="track" aria-hidden="true"><div id="progress"></div></div>
+          <p id="parameters" class="parameters">TOTP · 默认 6 位 · 30 秒</p>
+        </div>
+        <p class="privacy-note">密钥仅在当前页面内存中使用，不上传、不保存。刷新或离开页面后清空。</p>
+        <noscript><p class="error">请启用 JavaScript 才能在本地生成验证码。</p></noscript>
+      </section>
+      <details class="help"><summary>验证码无法使用？</summary><p>请先检查设备日期与时间是否自动同步，并确认输入的是对应账号的密钥。普通密钥使用 SHA-1、6 位、30 秒；配置链接会读取其中的算法、位数和周期。仅支持 TOTP，不支持计数型 HOTP。</p><p>复制的验证码会留在系统剪贴板；「清空」仅清除本页面中的内容。</p></details>
+      <footer class="signature">Designed by <strong>ATOM</strong><span>每一刻，都刚刚好。</span></footer>
+    </main>
+  </div>
+  <div id="snackbar" role="status" aria-live="polite"></div>
+</body>
+</html>
