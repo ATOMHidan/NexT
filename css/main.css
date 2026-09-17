@@ -1426,7 +1426,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #67a22b;
+    background: #65f0e0;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3029,14 +3029,12 @@ body {
 }
 .post-block {
   background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   border-radius: 12px;
   padding: 25px;
   margin-bottom: 20px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   border: 1px solid rgba(255,255,255,0.4);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .post-block:hover {
   transform: translateY(-3px);
@@ -3090,7 +3088,7 @@ body {
 }
 /* ========== 回到顶部按钮美化 ========== */
 .back-to-top {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease !important;
   border-radius: 50% !important;
 }
 .back-to-top:hover {
@@ -3128,7 +3126,7 @@ body {
 }
 /* ========== 菜单项悬浮效果 ========== */
 .menu-item a {
-  transition: all 0.3s ease !important;
+  transition: transform 0.3s ease, background-color 0.3s ease !important;
   border-radius: 8px;
 }
 .menu-item a:hover {
@@ -3137,7 +3135,7 @@ body {
 }
 /* ========== 标签云美化 ========== */
 .tag-cloud a {
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, color 0.3s ease, background-color 0.3s ease;
   padding: 5px 10px;
   border-radius: 20px;
 }
@@ -3148,7 +3146,7 @@ body {
 }
 /* ========== 文章标题悬浮效果 ========== */
 .post-title-link {
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 .post-title-link:hover {
   color: #1abc9c !important;
@@ -3233,7 +3231,7 @@ blockquote::before {
   border-radius: 2px;
 }
 .toc-link {
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
   display: inline-block;
 }
 .toc-link:hover {
@@ -3257,7 +3255,7 @@ blockquote::before {
 }
 /* ========== 社交图标旋转 ========== */
 .links-of-author-item a {
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
   display: inline-block;
 }
 .links-of-author-item a i {
@@ -3270,11 +3268,52 @@ blockquote::before {
   transform: rotate(360deg);
 }
 .link-grid-container a {
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .link-grid-container a:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(26,188,156,0.2);
+}
+.music-player-slot {
+  height: 86px;
+  display: grid;
+  place-items: center;
+}
+#waline {
+  min-height: 360px;
+}
+@media (max-width: 991px), (prefers-reduced-motion: reduce) {
+  body {
+    background-attachment: scroll;
+  }
+  .main-inner,
+  .post-block,
+  .sidebar-inner,
+  .header-inner {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .site-author-image,
+  .site-subtitle,
+  .category-list-icon,
+  .tag-cloud-icon,
+  .category-all-icon {
+    animation: none;
+  }
+  .footer::before {
+    background-image: none;
+  }
+}
+@media (hover: none) {
+  .post-block:hover,
+  .menu-item a:hover,
+  .tag-cloud a:hover,
+  .links-of-author-item a:hover,
+  .link-grid-container a:hover,
+  .site-author-image:hover,
+  .toc-link:hover {
+    transform: none;
+  }
 }
 @keyframes typing {
   from {
