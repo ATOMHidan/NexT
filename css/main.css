@@ -3009,7 +3009,7 @@ header.header {
   color: #fff;
 }
 :root {
-  --md-surface: #f7f8fa;
+  --md-surface: #edf4ed;
   --md-container: #fff;
   --md-low: #f0f2f5;
   --md-primary: #286a50;
@@ -3062,7 +3062,7 @@ header.header {
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --md-surface: #15171b;
+    --md-surface: #101c16;
     --md-container: #1e2126;
     --md-low: #282c33;
     --md-primary: #9cd5b5;
