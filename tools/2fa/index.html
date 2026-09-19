@@ -10,7 +10,7 @@
   <link rel="icon" href="/images/icon-32.png">
   <style id="twofa-style">:root {
   color-scheme:light dark;
-  --surface:#f6faf5;
+  --surface:#f7f8fa;
   --container:#fff;
   --low:#edf4ed;
   --primary:#286a50;
@@ -30,7 +30,7 @@ body {
   margin:0;
   color:var(--text);
   font:16px/1.6 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
-  background:linear-gradient(#edf4edf0,#edf4edf0),url('/images/bg.jpg') center/cover fixed;
+  background:var(--surface);
   min-height:100vh
 }
 a {
@@ -354,7 +354,7 @@ input::placeholder {
 }
 @media(prefers-color-scheme:dark) {
   :root {
-    --surface:#111914;
+    --surface:#15171b;
     --container:#19251e;
     --low:#22332a;
     --primary:#9cd5b5;
@@ -366,9 +366,7 @@ input::placeholder {
     --outline:#53695b;
     --error:#ffb4ab
   }
-  body {
-    background:linear-gradient(#101c16ef,#101c16ef),url('/images/bg.jpg') center/cover fixed
-  }
+
 }
 @media(max-width:800px) {
   .shell {
