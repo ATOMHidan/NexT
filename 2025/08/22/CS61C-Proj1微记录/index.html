@@ -3063,17 +3063,6 @@ header.header {
   --btn-default-hover-bg: var(--md-primary);
   --btn-default-hover-color: var(--md-on-primary);
   --btn-default-hover-border-color: transparent;
-  --waline-theme-color: var(--md-primary);
-  --waline-active-color: var(--md-primary);
-  --waline-bgcolor: var(--md-container);
-  --waline-bgcolor-light: var(--md-low);
-  --waline-text-color: var(--md-text);
-  --waline-color: var(--md-text);
-  --waline-border-color: var(--md-outline);
-  --waline-border: 1px solid var(--md-outline);
-  --waline-box-shadow: none;
-  --waline-info-bgcolor: var(--md-low);
-  --waline-info-color: var(--md-muted);
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -3847,12 +3836,38 @@ button[data-music-url]:hover {
 #waline {
   min-height: 360px;
 }
-.wl-panel,
-.wl-card {
+#waline,
+#waline [data-waline] {
+  --waline-theme-color: var(--md-primary);
+  --waline-active-color: var(--md-primary);
+  --waline-bgcolor: var(--md-container);
+  --waline-bgcolor-light: var(--md-low);
+  --waline-color: var(--md-text);
+  --waline-border-color: var(--md-outline);
+  --waline-border: 1px solid var(--md-outline);
+  --waline-box-shadow: none;
+  --waline-info-bgcolor: var(--md-low);
+  --waline-info-color: var(--md-muted);
+  --waline-white: var(--md-on-primary);
+  --waline-light-grey: var(--md-muted);
+  --waline-dark-grey: var(--md-muted);
+  --waline-bgcolor-hover: var(--md-tonal);
+  --waline-disable-bgcolor: var(--md-low);
+  --waline-disable-color: var(--md-muted);
+  --waline-bq-color: var(--md-tertiary-container);
+  --waline-badge-color: var(--md-secondary);
+}
+#waline .wl-panel,
+#waline .wl-card {
   border-radius: 20px;
 }
-.wl-btn {
+#waline .wl-btn {
   border-radius: 999px;
+}
+#waline .wl-input::placeholder,
+#waline .wl-editor::placeholder {
+  color: var(--md-muted);
+  opacity: 1;
 }
 .post-body #hexo-blog-encrypt {
   background: var(--md-low);
@@ -4438,7 +4453,7 @@ setInterval("createtime()",250);
 </script>
 <template id="deferred-live2d"><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
 <script src="/js/deferred-widgets.js" defer></script>
-<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://comment-rose.vercel.app/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"path":"/2025/08/22/CS61C-Proj1%E5%BE%AE%E8%AE%B0%E5%BD%95/"}</script>
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://comment-rose.vercel.app/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"auto","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"path":"/2025/08/22/CS61C-Proj1%E5%BE%AE%E8%AE%B0%E5%BD%95/"}</script>
 
 </body>
 </html>

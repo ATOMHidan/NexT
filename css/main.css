@@ -3048,17 +3048,6 @@ header.header {
   --btn-default-hover-bg: var(--md-primary);
   --btn-default-hover-color: var(--md-on-primary);
   --btn-default-hover-border-color: transparent;
-  --waline-theme-color: var(--md-primary);
-  --waline-active-color: var(--md-primary);
-  --waline-bgcolor: var(--md-container);
-  --waline-bgcolor-light: var(--md-low);
-  --waline-text-color: var(--md-text);
-  --waline-color: var(--md-text);
-  --waline-border-color: var(--md-outline);
-  --waline-border: 1px solid var(--md-outline);
-  --waline-box-shadow: none;
-  --waline-info-bgcolor: var(--md-low);
-  --waline-info-color: var(--md-muted);
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -3832,12 +3821,38 @@ button[data-music-url]:hover {
 #waline {
   min-height: 360px;
 }
-.wl-panel,
-.wl-card {
+#waline,
+#waline [data-waline] {
+  --waline-theme-color: var(--md-primary);
+  --waline-active-color: var(--md-primary);
+  --waline-bgcolor: var(--md-container);
+  --waline-bgcolor-light: var(--md-low);
+  --waline-color: var(--md-text);
+  --waline-border-color: var(--md-outline);
+  --waline-border: 1px solid var(--md-outline);
+  --waline-box-shadow: none;
+  --waline-info-bgcolor: var(--md-low);
+  --waline-info-color: var(--md-muted);
+  --waline-white: var(--md-on-primary);
+  --waline-light-grey: var(--md-muted);
+  --waline-dark-grey: var(--md-muted);
+  --waline-bgcolor-hover: var(--md-tonal);
+  --waline-disable-bgcolor: var(--md-low);
+  --waline-disable-color: var(--md-muted);
+  --waline-bq-color: var(--md-tertiary-container);
+  --waline-badge-color: var(--md-secondary);
+}
+#waline .wl-panel,
+#waline .wl-card {
   border-radius: 20px;
 }
-.wl-btn {
+#waline .wl-btn {
   border-radius: 999px;
+}
+#waline .wl-input::placeholder,
+#waline .wl-editor::placeholder {
+  color: var(--md-muted);
+  opacity: 1;
 }
 .post-body #hexo-blog-encrypt {
   background: var(--md-low);
