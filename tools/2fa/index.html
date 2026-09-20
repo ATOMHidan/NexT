@@ -8,6 +8,7 @@
   <meta name="description" content="在浏览器本地生成 TOTP 动态验证码，不上传、不保存密钥。">
   <title>2FA 验证器 | Soyo Course</title>
   <link rel="icon" href="/images/icon-32.png">
+  <script src="/js/site-theme.js"></script>
   <style id="twofa-style">:root {
   color-scheme:light dark;
   --surface:#edf4ed;
@@ -352,8 +353,7 @@ input::placeholder {
   opacity:1;
   transform:translate(-50%,0)
 }
-@media(prefers-color-scheme:dark) {
-  :root {
+html[data-theme='dark'] {
     --surface:#101c16;
     --container:#19251e;
     --low:#22332a;
@@ -366,8 +366,6 @@ input::placeholder {
     --outline:#53695b;
     --error:#ffb4ab
   }
-
-}
 @media(max-width:800px) {
   .shell {
     display:block;
@@ -441,6 +439,9 @@ input::placeholder {
     transform:none
   }
 }
+
+.theme-control { display:flex; align-items:center; gap:12px; color:var(--muted); font-size:13px; padding:12px; }
+.theme-control select { font:inherit; color:var(--text); background:var(--low); border:1px solid var(--outline); border-radius:12px; padding:10px; min-height:44px; }
 </style>
   <script src="/js/totp-core.js" defer></script>
   <script src="/js/totp-page.js" defer></script>
@@ -458,6 +459,14 @@ input::placeholder {
         <a href="/archives/">归档</a>
         <a href="/tools/2fa/" aria-current="page">工具箱</a>
       </nav>
+      <label class="theme-control">外观
+  <select data-theme-select aria-label="外观主题">
+    <option value="system">跟随系统</option>
+    <option value="light">浅色</option>
+    <option value="dark">深色</option>
+  </select>
+</label>
+
       <p class="rail-note">一点实用，一点喜欢。</p>
     </aside>
     <main id="main">
