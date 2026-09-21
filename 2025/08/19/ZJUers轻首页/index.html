@@ -5122,6 +5122,386 @@ button[data-music-url]:active {
   .home-welcome-actions a:active {
     transform: scale(0.98);
   }
+}
+
+#reader-tools [hidden] {
+  display: none !important;
+}
+
+#reader-tools[hidden] {
+  display: block;
+  visibility: hidden;
+}
+
+#reader-tools {
+  margin-bottom: 16px;
+}
+
+.reader-toolbar {
+  display: flex;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+#reader-tools button,
+.reader-code-tools button,
+.reader-end-share {
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--md-outline);
+  border-radius: 999px;
+  background: var(--md-container);
+  color: var(--md-primary);
+  cursor: pointer;
+}
+
+#reader-tools button:hover,
+.reader-code-tools button:hover,
+.reader-end-share:hover {
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+}
+
+#reader-tools button[aria-pressed='true'] {
+  background: var(--md-tonal);
+}
+
+#reader-resume {
+  display: flex;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+  border-radius: 18px;
+  font-size: 14px;
+}
+
+#reader-resume-label {
+  flex: 1 1 180px;
+}
+
+#reader-exit {
+  position: fixed;
+  right: 20px;
+  top: 12px;
+  z-index: 1100;
+  box-shadow: var(--md-shadow);
+}
+
+#reader-status:empty {
+  display: none;
+}
+
+#reader-status {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1200;
+  max-width: calc(100vw - 64px);
+  padding: 12px 20px;
+  background: var(--md-on-tonal);
+  color: var(--md-tonal);
+  border-radius: 16px;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+#reader-dialog {
+  width: calc(100% - 40px);
+  max-width: 520px;
+  max-height: 80dvh;
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 24px;
+  border: 1px solid var(--md-outline);
+  border-radius: 28px;
+  color: var(--md-text);
+  background: var(--md-container);
+}
+
+#reader-dialog::backdrop {
+  background: rgba(6,18,12,0.55);
+}
+
+#reader-dialog header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+#reader-dialog h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+#reader-dialog label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+#reader-dialog select,
+#reader-dialog textarea {
+  padding: 10px;
+  min-height: 44px;
+  font: inherit;
+  font-size: 16px;
+  border: 1px solid var(--md-outline);
+  border-radius: 12px;
+  background: var(--md-low);
+  color: var(--md-text);
+}
+
+#reader-dialog p {
+  color: var(--md-muted);
+  font-size: 13px;
+}
+
+#reader-copy-fallback {
+  flex-direction: column;
+  align-items: stretch !important;
+  font-size: 13px;
+}
+
+#reader-toc a {
+  display: block;
+  border: 0;
+  border-left: 3px solid transparent;
+  padding: 10px 12px;
+  border-radius: 0 12px 12px 0;
+  line-height: 1.6;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+#reader-toc a[aria-current='location'] {
+  border-left-color: var(--md-primary);
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+}
+
+#reader-toc a[data-depth='sub'] {
+  padding-left: 28px;
+}
+
+.post-toc .nav .nav-item a {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.post-toc .nav .active > a {
+  border-left: 3px solid var(--md-primary);
+  padding-left: 8px;
+}
+
+html.reader-panel-open {
+  overflow: hidden;
+}
+
+.post.posts-expand .post-body {
+  font-size: var(--reader-size, 16px);
+  line-height: var(--reader-spacing, 1.95);
+}
+
+body.reader-article .post-body pre,
+body.reader-article .post-body .highlight {
+  font-size: 14px;
+  line-height: 1.65;
+  max-width: 100%;
+}
+
+body.reader-focus .column,
+body.reader-focus .sidebar,
+body.reader-focus .sidebar-dimmer,
+body.reader-focus .sidebar-toggle,
+body.reader-focus #live2d-widget,
+body.reader-focus #waifu,
+body.reader-focus #landlord,
+body.reader-focus .heart {
+  display: none !important;
+}
+
+body.reader-focus .main {
+  display: block;
+  max-width: 880px;
+  margin-top: 68px;
+}
+
+body.reader-focus .main-inner {
+  margin: 0;
+  width: 100%;
+}
+
+body.reader-focus .footer-inner {
+  padding-left: 0;
+}
+
+.reader-section-link {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: normal;
+  margin-left: 10px;
+  opacity: 0.7;
+}
+
+.reader-section-link {
+  border: 0;
+  border-radius: 8px;
+  background: var(--md-low);
+  color: var(--md-secondary);
+  min-height: 36px;
+  padding: 6px 10px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.reader-section-link:focus-visible,
+.reader-section-link:hover {
+  opacity: 1;
+}
+
+.reader-code {
+  min-width: 0;
+  max-width: 100%;
+  margin: 24px 0;
+  border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.reader-code-tools {
+  display: flex;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px;
+  background: var(--md-low);
+}
+
+.reader-code-tools button {
+  padding: 6px 12px;
+  background: transparent;
+  border-color: transparent;
+}
+
+.reader-code > pre,
+.reader-code > figure {
+  margin: 0;
+  border-radius: 0;
+  overflow: auto;
+}
+
+.reader-code.is-collapsed > pre,
+.reader-code.is-collapsed > figure {
+  max-height: 320px;
+}
+
+.reader-code .copy-btn,
+.reader-code .expand-btn,
+.reader-code .fold-cover {
+  display: none !important;
+}
+
+.reader-code .highlight-fold {
+  max-height: none;
+  height: auto;
+  overflow: visible;
+}
+
+.reader-code.is-wrapped pre,
+.reader-code.is-wrapped code,
+.reader-code.is-wrapped .line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.reader-code.is-wrapped table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.reader-code.is-wrapped .gutter {
+  display: none;
+}
+
+.reader-code.is-wrapped .code {
+  width: 100%;
+}
+
+.reader-table {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.reader-table[data-overflow='true']::before {
+  content: '左右滑动查看完整表格';
+  display: block;
+  position: sticky;
+  left: 0;
+  width: fit-content;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--md-muted);
+  background: var(--md-low);
+}
+
+.reader-table table {
+  min-width: 100%;
+}
+
+@media (max-width: 600px) {
+  #reader-dialog {
+    margin: auto 0 0;
+    width: 100%;
+    max-width: none;
+    max-height: 85dvh;
+    padding: 20px;
+    border-radius: 24px 24px 0 0;
+  }
+
+  .reader-toolbar {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  #reader-tools .reader-toolbar button {
+    padding: 10px 6px;
+    font-size: 12px;
+    min-width: 0;
+  }
+
+  .post.posts-expand .post-body {
+    line-height: var(--reader-spacing, 1.85);
+  }
+
+  .reader-table th,
+  .reader-table td {
+    min-width: 100px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #reader-tools button,
+  .reader-code-tools button {
+    transition: background-color 0.16s var(--md-ease), color 0.16s var(--md-ease);
+  }
 }</style>
 
 
@@ -5332,6 +5712,39 @@ button[data-music-url]:active {
 
     <div class="main-inner post posts-expand">
 
+
+  <div id="reader-tools" hidden>
+  <nav class="reader-toolbar" aria-label="文章阅读工具">
+    <button type="button" id="reader-focus" aria-pressed="false">专注阅读</button>
+    <button type="button" data-reader-panel="toc" id="reader-toc-open" hidden>目录</button>
+    <button type="button" data-reader-panel="settings">阅读设置</button>
+    <button type="button" data-reader-panel="share">分享</button>
+  </nav>
+  <div id="reader-resume" hidden>
+    <span id="reader-resume-label"></span>
+    <button type="button" id="reader-continue">继续阅读</button>
+    <button type="button" id="reader-dismiss">忽略</button>
+  </div>
+  <button type="button" id="reader-exit" hidden>退出专注</button>
+  <p id="reader-status" role="status" aria-live="polite"></p>
+  <dialog id="reader-dialog" aria-labelledby="reader-dialog-title">
+    <header><h2 id="reader-dialog-title">阅读设置</h2><button type="button" id="reader-close" aria-label="关闭阅读面板">关闭</button></header>
+    <p id="reader-dialog-status" role="status" aria-live="polite"></p>
+    <section data-reader-content="toc" hidden><nav id="reader-toc" aria-label="文章章节"></nav></section>
+    <section data-reader-content="settings" hidden>
+      <label>正文字号<select id="reader-size"><option value="small">较小</option><option value="normal">标准</option><option value="large">较大</option></select></label>
+      <label>正文行距<select id="reader-spacing"><option value="normal">标准</option><option value="relaxed">宽松</option></select></label>
+      <button type="button" id="reader-reset">恢复默认</button>
+      <p>在此浏览器中记住选择，仅调整文章正文。</p>
+    </section>
+    <section data-reader-content="share" hidden>
+      <button type="button" id="reader-native-share" hidden>系统分享</button>
+      <button type="button" id="reader-copy-url">复制文章链接</button>
+      <button type="button" id="reader-copy-title">复制标题与链接</button>
+      <label id="reader-copy-fallback" hidden>未能自动复制，请选中下方内容复制<textarea readonly aria-label="待复制内容"></textarea></label>
+    </section>
+  </dialog>
+</div>
 
   
 
@@ -5551,6 +5964,7 @@ button[data-music-url]:active {
 
 
 
+  <script src="/js/reader-tools.js" defer></script>
 
 
     <div class="comments" id="waline"></div>
@@ -5683,6 +6097,7 @@ setInterval("createtime()",250);
     }
 
     function createHeart(event) {
+        if (document.body.classList.contains('reader-focus')) return;
         var d = document.createElement("div");
         d.className = "heart";
         hearts.push({

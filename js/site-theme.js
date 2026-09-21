@@ -3,6 +3,13 @@
   'use strict';
   const key = 'soyo-theme';
   const root = document.documentElement;
+  // Apply saved reading dimensions before the first article paint.
+  try {
+    const reading = JSON.parse(localStorage.getItem('soyo-reading-settings')) || {};
+    const size = {small:'15px', normal:'16px', large:'18px'}[reading.size];
+    if (size) root.style.setProperty('--reader-size', size);
+    if (reading.spacing === 'relaxed') root.style.setProperty('--reader-spacing', '2.2');
+  } catch {}
   const system = window.matchMedia('(prefers-color-scheme: dark)');
   const valid = value => ['light', 'dark', 'system'].includes(value) ? value : 'system';
   let preference = 'system';
