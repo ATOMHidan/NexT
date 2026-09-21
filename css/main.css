@@ -3747,8 +3747,7 @@ img:hover {
 }
 
 .headband {
-  height: 3px;
-  background: var(--md-primary);
+  display: none;
 }
 
 .main {
