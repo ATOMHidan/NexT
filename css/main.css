@@ -5020,12 +5020,12 @@ button[data-music-url]:active {
 }
 
 .home-welcome-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px 12px;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
 }
 
 .home-welcome-actions a {
@@ -5035,29 +5035,20 @@ button[data-music-url]:active {
   gap: 10px;
   min-height: 44px;
   box-sizing: border-box;
-  padding: 10px 18px;
+  padding: 10px 14px;
   border: 0;
   border-radius: 999px;
   font-size: 14px;
   line-height: 24px;
   font-weight: 600;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
 }
 
-.home-welcome-actions .home-welcome-start {
+.home-welcome-actions a:hover {
   background: var(--md-primary);
   color: var(--md-on-primary);
-}
-
-.home-welcome-start:hover {
   box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-}
-
-.home-welcome-actions .home-welcome-browse {
-  color: var(--md-secondary);
-}
-
-.home-welcome-browse:hover {
-  background: var(--md-secondary-container);
 }
 
 #home-posts {
@@ -5099,7 +5090,7 @@ button[data-music-url]:active {
   }
 
   .home-welcome-actions a {
-    padding: 10px 16px;
+    padding: 10px 8px;
   }
 }
 
