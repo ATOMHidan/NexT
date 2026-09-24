@@ -3,15 +3,49 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<script src="/js/site-theme.js"></script>
+<script id="site-theme-init">/* Runs before styles/paint, including on the isolated 2FA page. */
+(function () {
+  'use strict';
+  const key = 'soyo-theme';
+  const root = document.documentElement;
+  const system = window.matchMedia('(prefers-color-scheme: dark)');
+  const valid = value => ['light', 'dark', 'system'].includes(value) ? value : 'system';
+  let preference = 'system';
+  try { preference = valid(localStorage.getItem(key)); } catch {}
+  function apply() {
+    root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
+    root.style.colorScheme = root.dataset.theme;
+    document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+      meta.removeAttribute('media');
+      meta.content = root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed';
+    });
+    document.querySelectorAll('[data-theme-select]').forEach(select => { select.value = preference; });
+  }
+  apply();
+  system.addEventListener('change', apply);
+  window.addEventListener('storage', event => {
+    if (event.key === key || event.key === null) { preference = valid(event.newValue); apply(); }
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    apply();
+    document.querySelectorAll('[data-theme-select]').forEach(select => {
+      select.addEventListener('change', () => {
+        preference = valid(select.value);
+        try { localStorage.setItem(key, preference); } catch {}
+        apply();
+      });
+    });
+  });
+})();
+</script>
 <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#2c3e50" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/icon-180.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/icon-16.png">
-  <link rel="mask-icon" href="/images/logo2.png" color="#1abc9c">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/19feea703b5317af8a94/images/icon-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/e99aabf66a599a385afc/images/icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/3ed03098ceadbe0fbf9b/images/icon-16.png">
+  <link rel="mask-icon" href="/assets/3fe837cc3814dfc3408b/images/logo2.png" color="#1abc9c">
 
 
 <style id="site-main-style">:root {
@@ -5646,11 +5680,11 @@ html.article-share-open {
 
 
 
-<link rel="stylesheet" href="/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
-  <link rel="stylesheet" href="/lib/pace-js/themes/green/pace-theme-minimal.css">
-  <script src="/lib/pace-js/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+<link rel="stylesheet" href="/assets/ef4fd0d00eeb1c096dfc/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-70/Q0A7rHAlt/Gh30htuHIh/2luU4nbqnDkLI/4CqUY=" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/231f9f65fef39756aa88/lib/pace-js/themes/green/pace-theme-minimal.css">
+  <script src="/assets/82a77b6138e0fc1b5fa9/lib/pace-js/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"neatblog.netlify.app","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#1abc9c","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"duration":300,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"neatblog.netlify.app","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#1abc9c","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"duration":300,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/assets/a65fc965d74fd991d506/js/config.js" defer></script>
 
     <meta name="description" content="ZJUers 轻首页浙大・教学学在浙大 教务网 (本) 大先生 AI 图书馆预约 智云课堂 网上报名 教务网 (研) 研在浙大 PTA 素质拓展网 教学资源管理 教师信息查询">
 <meta property="og:type" content="article">
@@ -5682,17 +5716,17 @@ html.article-share-open {
 
 
   
-  <script src="/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
-  <script src="/lib/medium-zoom/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
-  <script src="/lib/lozad/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="/assets/5cbda29ea5096ac9404c/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="/assets/6603320c02180d81b16d/lib/medium-zoom/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="/assets/98e15110586a9877906d/lib/lozad/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/assets/60f2d55963e871a3f456/js/utils.js" defer></script><script src="/assets/3b86726489e2c057c90a/js/sidebar.js" defer></script><script src="/assets/cdca8e5ae146bff43968/js/next-boot.js" defer></script>
 
   
 
 
 
 
-  <script src="/js/third-party/pace.js" defer></script>
+  <script src="/assets/f7cb3707b571ea4d98c0/js/third-party/pace.js" defer></script>
 
 
   
@@ -5705,7 +5739,7 @@ html.article-share-open {
 
 <link rel="dns-prefetch" href="https://comment-rose.vercel.app/">
   <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
+    <link rel="stylesheet" href="/assets/4e519d870cc065f121c7/css/noscript.css">
   </noscript>
 </head>
 
@@ -5731,7 +5765,7 @@ html.article-share-open {
       <i class="logo-line"></i>
     </a>
       <p class="site-subtitle" itemprop="description">爽世同学，Love♡</p>
-      <img class="custom-logo-image" src="/images/logo-lossless.webp" alt="Soyo Course" width="431" height="421">
+      <img class="custom-logo-image" src="/assets/b6e091a357dae19b6b98/images/logo-lossless.webp" alt="Soyo Course" width="431" height="421">
   </div>
 
   <div class="site-nav-right">
@@ -5785,7 +5819,7 @@ html.article-share-open {
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Lotta Moeea"
-      src="/images/Header.jpg" width="1440" height="1440">
+      src="/assets/13944982b24b46feb3a7/images/Header.jpg" width="1440" height="1440">
   <p class="site-author-name" itemprop="name">Lotta Moeea</p>
   <div class="site-description" itemprop="description">为什么要演奏春日影！？因为春日影是一首好歌。</div>
 </div>
@@ -5863,7 +5897,7 @@ html.article-share-open {
     <link itemprop="mainEntityOfPage" href="https://neatblog.netlify.app/2025/08/19/ZJUers%E8%BD%BB%E9%A6%96%E9%A1%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/Header.jpg">
+      <meta itemprop="image" content="/assets/13944982b24b46feb3a7/images/Header.jpg">
       <meta itemprop="name" content="Lotta Moeea">
     </span>
 
@@ -6093,7 +6127,7 @@ html.article-share-open {
   </div>
 </details>
 
-  <script src="/js/article-feedback.js" defer></script>
+  <script src="/assets/e01e61b7ccc84bee657b/js/article-feedback.js" defer></script>
   <div class="article-share">
   <button type="button" id="article-share-open">分享这篇文章</button>
   <dialog id="article-share-dialog" aria-labelledby="article-share-title">
@@ -6109,7 +6143,7 @@ html.article-share-open {
   </dialog>
 </div>
 
-  <script src="/js/article-share.js" defer></script>
+  <script src="/assets/285615383415a9a69349/js/article-share.js" defer></script>
 
 
     <div class="comments" id="waline"></div>
@@ -6120,7 +6154,7 @@ html.article-share-open {
     <div class="footer-inner">
 
   <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">春日影是一首好歌 </span>
-      <img src="/images/beian.jpg" alt=""><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5tcHMuZ292LmNuLyMvcXVlcnkvd2ViU2VhcmNoP2NvZGU9MTAyNw==">我想我大概…一辈子也忘不了CRYCHIC </span>
+      <img src="/assets/1e831dbbe626db69ce2e/images/beian.jpg" alt=""><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5tcHMuZ292LmNuLyMvcXVlcnkvd2ViU2VhcmNoP2NvZGU9MTAyNw==">我想我大概…一辈子也忘不了CRYCHIC </span>
   </div>
 
 
@@ -6177,7 +6211,7 @@ html.article-share-open {
   </dialog>
 </div>
 
-<script src="/js/blog-easter-eggs.js" defer></script>
+<script src="/assets/9df3a85d3a9d5518b845/js/blog-easter-eggs.js" defer></script>
 <script>
     var now = new Date(); 
     function createtime() { 
@@ -6291,9 +6325,9 @@ setInterval("createtime()",250);
     }
 })(window, document);
 </script>
-<template id="deferred-live2d"><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
-<script src="/js/deferred-widgets.js" defer></script>
-<dialog id="site-search" aria-labelledby="search-title" data-index-url="/search.json">
+<template id="deferred-live2d"><script src="/assets/a3af49f9d6b351450d19/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/a3af49f9d6b351450d19/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
+<script src="/assets/176b116ca1616962ee61/js/deferred-widgets.js" defer></script>
+<dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/d8d3c74fb1d8109e6e3f/search.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear>清空</button></div>
   <p id="search-status" role="status" aria-live="polite">试试课程名称、技术问题或文章标题。</p>
@@ -6302,7 +6336,7 @@ setInterval("createtime()",250);
   <nav class="search-shortcuts" aria-label="继续浏览"><a href="/categories/">浏览分类</a><a href="/archives/">查看归档</a></nav>
 </dialog>
 
-<script src="/js/site-search.js" defer></script>
+<script src="/assets/11677dc053ddd64dac5b/js/site-search.js" defer></script>
 <script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://comment-rose.vercel.app/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"path":"/2025/08/19/ZJUers%E8%BD%BB%E9%A6%96%E9%A1%B5/"}</script>
 
 </body>

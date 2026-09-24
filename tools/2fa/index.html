@@ -4,11 +4,45 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-nzNqvH63mtQTGDG5ciXpSeKhG3R+87mW/DtT0C8Q86w='; style-src 'unsafe-inline'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="description" content="在浏览器本地生成 TOTP 动态验证码，不上传、不保存密钥。">
   <title>2FA 验证器 | Soyo Course</title>
-  <link rel="icon" href="/images/icon-32.png">
-  <script src="/js/site-theme.js"></script>
+  <link rel="icon" href="/assets/e99aabf66a599a385afc/images/icon-32.png">
+  <script id="site-theme-init">/* Runs before styles/paint, including on the isolated 2FA page. */
+(function () {
+  'use strict';
+  const key = 'soyo-theme';
+  const root = document.documentElement;
+  const system = window.matchMedia('(prefers-color-scheme: dark)');
+  const valid = value => ['light', 'dark', 'system'].includes(value) ? value : 'system';
+  let preference = 'system';
+  try { preference = valid(localStorage.getItem(key)); } catch {}
+  function apply() {
+    root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
+    root.style.colorScheme = root.dataset.theme;
+    document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+      meta.removeAttribute('media');
+      meta.content = root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed';
+    });
+    document.querySelectorAll('[data-theme-select]').forEach(select => { select.value = preference; });
+  }
+  apply();
+  system.addEventListener('change', apply);
+  window.addEventListener('storage', event => {
+    if (event.key === key || event.key === null) { preference = valid(event.newValue); apply(); }
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    apply();
+    document.querySelectorAll('[data-theme-select]').forEach(select => {
+      select.addEventListener('change', () => {
+        preference = valid(select.value);
+        try { localStorage.setItem(key, preference); } catch {}
+        apply();
+      });
+    });
+  });
+})();
+</script>
   <style id="twofa-style">:root {
   color-scheme:light dark;
   --surface:#edf4ed;
@@ -443,8 +477,8 @@ html[data-theme='dark'] {
 .theme-control { display:flex; align-items:center; gap:12px; color:var(--muted); font-size:13px; padding:12px; }
 .theme-control select { font:inherit; color:var(--text); background:var(--low); border:1px solid var(--outline); border-radius:12px; padding:10px; min-height:44px; }
 </style>
-  <script src="/js/totp-core.js" defer></script>
-  <script src="/js/totp-page.js" defer></script>
+  <script src="/assets/da7f21a133009504cba6/js/totp-core.js" defer></script>
+  <script src="/assets/99afa69900aa2134bab0/js/totp-page.js" defer></script>
 </head>
 <body>
   <div class="shell">
