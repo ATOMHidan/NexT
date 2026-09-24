@@ -5392,6 +5392,256 @@ html.article-share-open {
   .article-feedback-panel {
     padding: 20px 16px;
   }
+}
+
+.blog-star {
+  grid-column: 2;
+  grid-row: 1/3;
+  align-self: center;
+  position: relative;
+  min-width: 0;
+}
+
+.blog-star-trigger {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.blog-star-bubble {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  top: calc(100% + 12px);
+  width: 248px;
+  max-width: calc(100vw - 64px);
+  box-sizing: border-box;
+  padding: 20px 36px 16px 18px;
+  border: 1px solid var(--md-outline);
+  border-radius: 20px 6px 20px 20px;
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+  box-shadow: var(--md-shadow);
+  text-align: left;
+}
+
+.blog-star-bubble p {
+  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.blog-star-bubble small {
+  font-size: 11px;
+}
+
+.blog-star-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  font: inherit;
+  font-size: 22px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.blog-star [hidden],
+.blog-guide [hidden] {
+  display: none !important;
+}
+
+.blog-star :focus-visible,
+.blog-guide :focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 4px;
+}
+
+#blog-guide-open {
+  padding: 8px 12px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--md-muted);
+  font: inherit;
+  cursor: pointer;
+  border-radius: 999px;
+}
+
+#blog-guide-open:hover {
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+}
+
+#blog-guide-dialog {
+  box-sizing: border-box;
+  width: calc(100% - 32px);
+  max-width: 500px;
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+  padding: 28px;
+  border: 1px solid var(--md-outline);
+  border-radius: 28px;
+  background: var(--md-container);
+  color: var(--md-text);
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+#blog-guide-dialog::backdrop {
+  background: rgba(6,18,12,0.55);
+}
+
+#blog-guide-dialog header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#blog-guide-dialog h2 {
+  margin: 6px 0 0;
+  font-size: 24px;
+}
+
+#blog-guide-dialog small {
+  color: var(--md-secondary);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+#blog-guide-dialog ol {
+  padding-left: 24px;
+  margin: 24px 0;
+}
+
+#blog-guide-dialog li {
+  margin: 12px 0;
+}
+
+#blog-guide-close {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--md-low);
+  color: var(--md-text);
+  font: inherit;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.blog-guide-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.blog-guide-actions button {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  cursor: pointer;
+}
+
+.blog-guide-actions button:hover {
+  background: var(--md-low);
+  color: var(--md-primary);
+}
+
+#blog-guide-rule {
+  position: relative;
+}
+
+#blog-guide-rule::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.blog-guide-answered #blog-guide-rule {
+  color: var(--md-muted);
+  text-decoration: line-through;
+}
+
+.blog-guide-answered #blog-guide-rule::after {
+  transform: scaleX(1);
+}
+
+#blog-guide-reply {
+  background: var(--md-tertiary-container);
+  color: var(--md-on-tertiary-container);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+@media (max-width: 600px) {
+  .blog-star {
+    grid-row: 1;
+  }
+
+  #blog-guide-dialog {
+    padding: 24px 20px;
+    border-radius: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .blog-star-finished .blog-star-trigger {
+    animation: blog-star-nod 0.45s ease-in-out;
+  }
+
+  #blog-guide-rule::after {
+    transition: transform 0.3s ease;
+  }
+
+  #blog-guide-dialog[open],
+  .blog-star-bubble:not([hidden]) {
+    animation: blog-egg-appear 0.18s ease-out;
+  }
+}
+
+@keyframes blog-star-nod {
+  0%, 100% {
+    transform: rotate(0);
+  }
+
+  45% {
+    transform: rotate(-7deg);
+  }
+}
+
+@keyframes blog-egg-appear {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }</style>
 
 
@@ -5828,6 +6078,23 @@ html.article-share-open {
 
 <div>
 <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<div class="blog-guide">
+  <button type="button" id="blog-guide-open" aria-haspopup="dialog">阅读须知 <span aria-hidden="true">✦</span></button>
+  <dialog id="blog-guide-dialog" aria-labelledby="blog-guide-title">
+    <header><div><small>SOYO COURSE · 小小彩蛋</small><h2 id="blog-guide-title">欢迎使用本博客</h2></div><button type="button" id="blog-guide-close" aria-label="关闭阅读须知">×</button></header>
+    <ol>
+      <li>可以随意阅读。</li>
+      <li>看不懂课程笔记很正常，作者隔一段时间也看不懂。</li>
+      <li>发现错字欢迎反馈。</li>
+      <li><span id="blog-guide-rule">请勿询问为什么要演奏春日影。</span></li>
+      <li>第 4 条无效。</li>
+    </ol>
+    <p id="blog-guide-reply" role="status" aria-live="polite" hidden>好吧，因为这是一首好歌。</p>
+    <div class="blog-guide-actions"><button type="button" id="blog-guide-ok">我知道了</button><button type="button" id="blog-guide-ask">我还是想问</button></div>
+  </dialog>
+</div>
+
+<script src="/js/blog-easter-eggs.js" defer></script>
 <script>
     var now = new Date(); 
     function createtime() { 
