@@ -5246,6 +5246,152 @@ html.article-share-open {
     padding: 20px;
     border-radius: 24px 24px 0 0;
   }
+}
+
+.article-feedback {
+  margin: 20px 0;
+  color: var(--md-muted);
+  font-size: 14px;
+}
+
+.article-feedback summary {
+  cursor: pointer;
+  padding: 10px 0;
+  line-height: 1.8;
+}
+
+.article-feedback summary span {
+  color: var(--md-primary);
+  font-weight: 600;
+}
+
+.article-feedback-panel {
+  margin-top: 12px;
+  padding: 24px;
+  border: 1px solid var(--md-outline);
+  border-radius: 24px;
+  background: var(--md-container);
+  color: var(--md-text);
+}
+
+.article-feedback h2 {
+  font-size: 20px;
+  margin: 0 0 12px;
+}
+
+.article-feedback-context {
+  overflow-wrap: anywhere;
+}
+
+.article-feedback fieldset {
+  margin: 16px 0;
+  padding: 0;
+  border: 0;
+}
+
+.article-feedback legend {
+  margin-bottom: 8px;
+}
+
+.article-feedback fieldset label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: 0 6px 6px 0;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--md-low);
+  cursor: pointer;
+}
+
+.article-feedback input {
+  accent-color: var(--md-primary);
+}
+
+.article-feedback input:checked + span {
+  color: var(--md-primary);
+  font-weight: 650;
+}
+
+.article-feedback-label {
+  display: block;
+}
+
+.article-feedback textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 8px 0 16px;
+  padding: 12px;
+  border: 1px solid var(--md-outline);
+  border-radius: 12px;
+  background: var(--md-low);
+  color: var(--md-text);
+  font: inherit;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.article-feedback textarea::placeholder {
+  color: var(--md-muted);
+}
+
+.article-feedback-actions {
+  display: flex;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.article-feedback-actions button,
+.article-feedback-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  cursor: pointer;
+}
+
+.article-feedback-actions button:hover,
+.article-feedback-actions a:hover {
+  background: var(--md-low);
+  color: var(--md-primary);
+}
+
+.article-feedback :focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 3px;
+}
+
+.article-feedback-hint {
+  color: var(--md-muted);
+  font-size: 12px;
+  margin: 14px 0 0;
+}
+
+#article-feedback-status {
+  color: var(--md-primary);
+  margin: 8px 0 0;
+}
+
+.article-feedback [hidden] {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  .article-feedback-panel {
+    padding: 20px 16px;
+  }
 }</style>
 
 
@@ -5575,6 +5721,30 @@ html.article-share-open {
 
 
 
+  <details class="article-feedback" id="article-feedback" data-email="ilahyvz@gmail.com">
+  <summary>发现错字、失效链接或内容有误？ <span>告诉我 ↗</span></summary>
+  <div class="article-feedback-panel">
+    <h2>反馈这篇文章的问题</h2>
+    <p class="article-feedback-context">当前文章：<strong>Ubuntu 安装移动到 D 盘</strong></p>
+    <fieldset><legend>问题类型</legend>
+      <label><input type="radio" name="article-feedback-kind" value="错字" checked><span>错字</span></label>
+      <label><input type="radio" name="article-feedback-kind" value="链接失效"><span>链接失效</span></label>
+      <label><input type="radio" name="article-feedback-kind" value="内容疑问"><span>内容疑问</span></label>
+    </fieldset>
+    <label class="article-feedback-label" for="article-feedback-note">问题描述（选填）</label>
+    <textarea id="article-feedback-note" rows="3" maxlength="1200" placeholder="例如：哪一段有错字，或哪个链接无法打开？"></textarea>
+    <div class="article-feedback-actions">
+      <button type="button" id="article-feedback-copy">复制反馈模板</button>
+      <a id="article-feedback-mail" href="mailto:ilahyvz@gmail.com">通过邮件反馈 ↗</a>
+    </div>
+    <p class="article-feedback-hint">将打开邮件应用，由你确认并发送。此面板不会自动发送或保存输入内容。</p>
+    <p id="article-feedback-status" role="status" aria-live="polite"></p>
+    <label id="article-feedback-fallback" hidden>无法自动复制，请手动复制下面的内容<textarea readonly rows="6" aria-label="待复制的反馈内容"></textarea></label>
+    <noscript>请在邮件中附上文章标题和网址。</noscript>
+  </div>
+</details>
+
+  <script src="/js/article-feedback.js" defer></script>
   <div class="article-share">
   <button type="button" id="article-share-open">分享这篇文章</button>
   <dialog id="article-share-dialog" aria-labelledby="article-share-title">
