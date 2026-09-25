@@ -4637,9 +4637,37 @@ button[data-music-url]:hover {
 }
 
 .music-player-slot {
-  height: 86px;
+  min-height: 116px;
   display: grid;
   place-items: center;
+  gap: 6px;
+}
+
+.music-track-title {
+  font-size: 14px;
+  color: var(--md-text);
+}
+
+.music-track-title span {
+  color: var(--md-muted);
+}
+
+.local-music-audio {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  border-radius: 24px;
+}
+
+.music-player-slot [hidden] {
+  display: none !important;
+}
+
+.music-status {
+  min-height: 18px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--md-muted);
 }
 
 #waline {
@@ -5870,7 +5898,10 @@ html.article-share-open {
         </div>
         <div class="links-of-blogroll-list">
           <div class="music-player-slot">
-            <button type="button" class="btn" data-music-url="https://music.163.com/outchain/player?type=2&id=1346111938&auto=0&height=66">加载音乐</button>
+            <div class="music-track-title">Earthing <span>· Vanbur</span></div>
+            <button type="button" class="btn" data-music-url="/assets/708a6ba302c38e6c7d03/music/earthing-vanbur.mp3">播放音乐</button>
+            <audio class="local-music-audio" controls preload="none" hidden aria-label="Earthing — Vanbur"></audio>
+            <span class="music-status" role="status" aria-live="polite"></span>
           </div>
         </div>
       </div>
@@ -6227,7 +6258,7 @@ setInterval("createtime()",250);
 })(window, document);
 </script>
 <template id="deferred-live2d"><script src="/assets/a3af49f9d6b351450d19/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/a3af49f9d6b351450d19/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
-<script src="/assets/176b116ca1616962ee61/js/deferred-widgets.js" defer></script>
+<script src="/assets/7a47a4b31ad7e1dea3b4/js/deferred-widgets.js" defer></script>
 <dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/d8d3c74fb1d8109e6e3f/search.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear>清空</button></div>
