@@ -4637,10 +4637,12 @@ button[data-music-url]:hover {
 }
 
 .music-player-slot {
-  min-height: 116px;
+  min-height: 174px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   gap: 6px;
+  min-width: 0;
 }
 
 .music-track-title {
@@ -4667,6 +4669,78 @@ button[data-music-url]:hover {
   min-height: 18px;
   font-size: 12px;
   line-height: 18px;
+  color: var(--md-muted);
+}
+
+.music-controls {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 18px;
+  background: var(--md-low);
+}
+
+.music-playback-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.music-time {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--md-muted);
+}
+
+.music-controls button {
+  border: 0;
+  border-radius: 999px;
+  min-height: 36px;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--md-on-tonal);
+  background: var(--md-tonal);
+}
+
+.music-controls button:hover {
+  color: var(--md-on-primary);
+  background: var(--md-primary);
+}
+
+.music-controls input[type='range'] {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  height: 28px;
+  accent-color: var(--md-primary);
+  cursor: pointer;
+}
+
+.music-controls input:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.music-volume-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 32px;
+  gap: 6px;
+  align-items: center;
+}
+
+.music-volume-value {
+  font-size: 10px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
   color: var(--md-muted);
 }
 
@@ -5990,7 +6064,12 @@ html.article-share-open {
           <div class="music-player-slot">
             <div class="music-track-title">Earthing <span>· Vanbur</span></div>
             <button type="button" class="btn" data-music-url="/assets/708a6ba302c38e6c7d03/music/earthing-vanbur.mp3">播放音乐</button>
-            <audio class="local-music-audio" controls preload="none" hidden aria-label="Earthing — Vanbur"></audio>
+            <audio class="local-music-audio" preload="none" hidden aria-label="Earthing — Vanbur"></audio>
+            <div class="music-controls" hidden role="group" aria-label="音乐播放控制">
+              <div class="music-playback-row"><button class="music-toggle" type="button" aria-label="播放音乐">播放</button><span class="music-time">0:00 / --:--</span></div>
+              <input class="music-seek" type="range" min="0" max="100" step="0.1" value="0" disabled aria-label="播放进度">
+              <div class="music-volume-row"><button class="music-mute" type="button" aria-label="静音" aria-pressed="false">音量</button><input class="music-volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="音量"><span class="music-volume-value">100%</span></div>
+            </div>
             <span class="music-status" role="status" aria-live="polite"></span>
           </div>
         </div>
@@ -6450,7 +6529,7 @@ setInterval("createtime()",250);
 })(window, document);
 </script>
 <template id="deferred-live2d"><script src="/assets/a3af49f9d6b351450d19/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/a3af49f9d6b351450d19/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
-<script src="/assets/7a47a4b31ad7e1dea3b4/js/deferred-widgets.js" defer></script>
+<script src="/assets/9cde36972bdf865f2aa8/js/deferred-widgets.js" defer></script>
 <dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/d8d3c74fb1d8109e6e3f/search.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear>清空</button></div>
