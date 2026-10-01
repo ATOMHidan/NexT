@@ -3906,9 +3906,7 @@ header.header {
 }
 
 .nav-extras {
-  margin: 8px 20px 16px;
-  border-top: 1px solid var(--md-outline);
-  padding-top: 6px;
+  margin: 4px 12px 14px;
   font-size: 13px;
   color: var(--md-muted);
 }
@@ -3916,10 +3914,10 @@ header.header {
 .nav-extras summary {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   min-height: 44px;
-  padding: 0 12px;
-  border-radius: 12px;
+  padding: 0 20px;
+  border-radius: 999px;
   cursor: pointer;
   list-style: none;
 }
@@ -3928,30 +3926,58 @@ header.header {
   display: none;
 }
 
-.nav-extras summary span {
-  font-size: 16px;
+.nav-extra-icon,
+.nav-extra-chevron {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.nav-extras[open] summary span {
+.nav-extra-chevron {
+  margin-left: auto;
+  width: 16px;
+  height: 16px;
+}
+
+.nav-extras[open] .nav-extra-chevron {
   transform: rotate(180deg);
+}
+
+.nav-extra-links {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  padding: 4px 0 0;
+}
+
+.nav-extras:not([open]) .nav-extra-links {
+  display: none;
 }
 
 .nav-extras a {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   min-height: 44px;
-  padding: 0 12px;
+  min-width: 0;
+  padding: 0 20px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 999px;
   color: var(--md-muted);
   font-size: 13px;
 }
 
-.nav-extras summary:hover,
-.nav-extras a:hover {
-  background: var(--md-low);
-  color: var(--md-primary);
+@media (hover: hover) {
+  .nav-extras summary:hover,
+  .nav-extras a:hover {
+    background: var(--md-low);
+    color: var(--md-primary);
+  }
 }
 
 .nav-extras :focus-visible {
@@ -4126,6 +4152,32 @@ header.header {
 
   .site-nav-on .site-brand-container {
     box-shadow: none;
+  }
+
+  body.site-nav-on .site-nav {
+    height: auto;
+  }
+
+  .nav-extras {
+    margin: 0 12px 12px;
+  }
+
+  .nav-extras summary {
+    padding: 0 16px;
+  }
+
+  .nav-extra-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 4px 4px 8px;
+  }
+
+  .nav-extras a {
+    padding: 8px 12px;
+    box-sizing: border-box;
+    gap: 8px;
+    background: var(--md-low);
+    line-height: 1.6;
   }
 
   .menu {
@@ -6037,9 +6089,11 @@ html.article-share-open {
 </label>
 
   <details class="nav-extras">
-    <summary>更多<span aria-hidden="true">⌄</span></summary>
-    <a href="/map/">文章地图<span aria-hidden="true">↗</span></a>
-    <a href="/ask/">留一个问题<span aria-hidden="true">↗</span></a>
+    <summary><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>更多</span><svg class="nav-extra-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+    <div class="nav-extra-links">
+      <a href="/map/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z M9 3v16 M15 5v16"/></svg><span>文章地图</span></a>
+      <a href="/ask/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4v13h5l3 4 3-4h5Z M8 9h8 M8 13h5"/></svg><span>留一个问题</span></a>
+    </div>
   </details>
 </nav>
 
