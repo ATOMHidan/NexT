@@ -11,23 +11,35 @@
   const system = window.matchMedia('(prefers-color-scheme: dark)');
   const valid = value => ['light', 'dark', 'system'].includes(value) ? value : 'system';
   let preference = 'system';
+  const paletteKey = 'soyo-palette';
+  const validPalette = value => ['green', 'blue', 'purple', 'apricot'].includes(value) ? value : 'green';
+  let palette = 'green';
   try { preference = valid(localStorage.getItem(key)); } catch {}
+  try { palette = validPalette(localStorage.getItem(paletteKey)); } catch {}
   function apply() {
+    root.dataset.palette = palette;
     root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
     root.style.colorScheme = root.dataset.theme;
     document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
       meta.removeAttribute('media');
-      meta.content = root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed';
+      meta.content = palette === 'green' ? (root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed') : (root.dataset.theme === 'dark' ? '#191b1e' : '#f3f4f6');
     });
     document.querySelectorAll('[data-theme-select]').forEach(select => { select.value = preference; });
+    document.querySelectorAll('button[data-palette]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.palette === palette)));
   }
   apply();
   system.addEventListener('change', apply);
   window.addEventListener('storage', event => {
     if (event.key === key || event.key === null) { preference = valid(event.newValue); apply(); }
+    if (event.key === paletteKey || event.key === null) { palette = validPalette(event.newValue); apply(); }
   });
   document.addEventListener('DOMContentLoaded', () => {
     apply();
+    document.querySelectorAll('button[data-palette]').forEach(button => button.addEventListener('click', () => {
+      palette = validPalette(button.dataset.palette);
+      try { localStorage.setItem(paletteKey, palette); } catch {}
+      apply();
+    }));
     document.querySelectorAll('[data-theme-select]').forEach(select => {
       select.addEventListener('change', () => {
         preference = valid(select.value);
@@ -37,6 +49,7 @@
     });
   });
 })();
+
 </script>
 <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#2c3e50" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
@@ -5289,6 +5302,38 @@ button[data-music-url]:active {
   margin-top: 16px;
 }
 
+.search-passages {
+  margin: -4px 0 16px;
+  padding: 0 16px 12px;
+  border-bottom: 1px solid var(--md-outline);
+  font-size: 14px;
+}
+
+.search-passages summary {
+  cursor: pointer;
+  padding: 10px 0;
+  color: var(--md-primary);
+  min-height: 24px;
+}
+
+.search-passages a {
+  display: block;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid var(--md-outline);
+  border-radius: 12px;
+  color: var(--md-text);
+  overflow-wrap: anywhere;
+}
+
+.post-body .search-passage-hit {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+  outline: 2px solid var(--md-secondary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 @media (max-width: 991px) {
   .site-search-open {
     display: none;
@@ -6036,6 +6081,55 @@ html.article-share-open {
 
 
 <link rel="dns-prefetch" href="https://comment-rose.vercel.app/">
+  <style id="palette-style">/* Tonal accent families; quiet neutral reading surfaces for optional palettes. */
+:root[data-palette]:not([data-palette="green"]) {
+  --md-surface:#f3f4f6; --md-container:#fff; --md-low:#edeef1; --md-outline:#dbdde2;
+  --md-on-primary:#fff;
+}
+:root[data-theme="dark"][data-palette]:not([data-palette="green"]) {
+  --md-surface:#191b1e; --md-container:#202327; --md-low:#2a2d32; --md-outline:#41464e;
+}
+:root[data-palette="blue"] {
+  --md-primary:#355e87; --md-tonal:#d4e5fa; --md-on-tonal:#14344f;
+  --md-secondary:#536477; --md-secondary-container:#e0e8f1; --md-on-secondary-container:#263748;
+  --md-tertiary:#765775; --md-tertiary-container:#f0dfef; --md-on-tertiary-container:#4d344c;
+}
+:root[data-theme="dark"][data-palette="blue"] {
+  --md-primary:#a7c9ee; --md-on-primary:#11334f; --md-tonal:#2b4661; --md-on-tonal:#d4e5fa;
+  --md-secondary:#bdc9d8; --md-secondary-container:#394857; --md-on-secondary-container:#e0e8f1;
+  --md-tertiary:#dfbddd; --md-tertiary-container:#513b50; --md-on-tertiary-container:#f0dfef;
+}
+:root[data-palette="purple"] {
+  --md-primary:#685487; --md-tonal:#eaddf8; --md-on-tonal:#352348;
+  --md-secondary:#645e70; --md-secondary-container:#e9e2ee; --md-on-secondary-container:#36303f;
+  --md-tertiary:#85535f; --md-tertiary-container:#f8dde4; --md-on-tertiary-container:#522e38;
+}
+:root[data-theme="dark"][data-palette="purple"] {
+  --md-primary:#d0bceb; --md-on-primary:#36234e; --md-tonal:#4e3d65; --md-on-tonal:#eaddf8;
+  --md-secondary:#cec4d8; --md-secondary-container:#494151; --md-on-secondary-container:#e9e2ee;
+  --md-tertiary:#ecb8c5; --md-tertiary-container:#643c47; --md-on-tertiary-container:#f8dde4;
+}
+:root[data-palette="apricot"] {
+  --md-primary:#805632; --md-tonal:#f5dfc7; --md-on-tonal:#492a11;
+  --md-secondary:#73604d; --md-secondary-container:#eee2d4; --md-on-secondary-container:#403224;
+  --md-tertiary:#53694c; --md-tertiary-container:#dcebd4; --md-on-tertiary-container:#2b3e26;
+}
+:root[data-theme="dark"][data-palette="apricot"] {
+  --md-primary:#e8bd94; --md-on-primary:#472b13; --md-tonal:#60442d; --md-on-tonal:#f5dfc7;
+  --md-secondary:#d9c4ae; --md-secondary-container:#514437; --md-on-secondary-container:#eee2d4;
+  --md-tertiary:#b7cfa9; --md-tertiary-container:#3c5035; --md-on-tertiary-container:#dcebd4;
+}
+.palette-control { display:flex; justify-content:space-between; gap:2px; padding:0 16px 10px; }
+.palette-control button { --swatch:#286a50; display:grid; place-items:center; width:44px; height:44px; flex:0 1 44px; padding:0; border:0; border-radius:50%; background:transparent; cursor:pointer; }
+.palette-control button[data-palette="blue"] { --swatch:#355e87; }
+.palette-control button[data-palette="purple"] { --swatch:#685487; }
+.palette-control button[data-palette="apricot"] { --swatch:#805632; }
+.palette-control button span { display:grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--swatch); color:#fff; font:16px/1 system-ui; }
+.palette-control button[aria-pressed="true"] span:after { content:'✓'; }
+.palette-control button[aria-pressed="true"] { outline:1px solid var(--md-outline, var(--outline)); outline-offset:-4px; }
+.palette-control button:focus-visible { outline:2px solid var(--md-primary, var(--primary)); outline-offset:0; }
+@media(max-width:991px) { .palette-control { justify-content:flex-end; gap:8px; padding:0 20px 12px; } }
+</style>
   <noscript>
     <link rel="stylesheet" href="/assets/4e519d870cc065f121c7/css/noscript.css">
   </noscript>
@@ -6086,6 +6180,12 @@ html.article-share-open {
     <option value="dark">深色</option>
   </select>
 </label>
+<div class="palette-control" role="group" aria-label="博客配色">
+  <button type="button" data-palette="green" aria-label="松绿" title="松绿" aria-pressed="true"><span aria-hidden="true"></span></button>
+  <button type="button" data-palette="blue" aria-label="雾蓝" title="雾蓝" aria-pressed="false"><span aria-hidden="true"></span></button>
+  <button type="button" data-palette="purple" aria-label="藤紫" title="藤紫" aria-pressed="false"><span aria-hidden="true"></span></button>
+  <button type="button" data-palette="apricot" aria-label="暖杏" title="暖杏" aria-pressed="false"><span aria-hidden="true"></span></button>
+</div>
 
   <details class="nav-extras">
     <summary><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>更多</span><svg class="nav-extra-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
@@ -6424,7 +6524,7 @@ setInterval("createtime()",250);
 </script>
 <template id="deferred-live2d"><script src="/assets/a3af49f9d6b351450d19/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/a3af49f9d6b351450d19/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
 <script src="/assets/1f24ecfaaef93c1f1abf/js/deferred-widgets.js" defer></script>
-<dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/d8d3c74fb1d8109e6e3f/search.json">
+<dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/e78fa95bb36914aa437e/search.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear>清空</button></div>
   <p id="search-status" role="status" aria-live="polite">试试课程名称、技术问题或文章标题。</p>
@@ -6433,7 +6533,7 @@ setInterval("createtime()",250);
   <nav class="search-shortcuts" aria-label="继续浏览"><a href="/categories/">浏览分类</a><a href="/archives/">查看归档</a></nav>
 </dialog>
 
-<script src="/assets/11677dc053ddd64dac5b/js/site-search.js" defer></script>
+<script src="/assets/4dda5a1936ea9b28f2cd/js/site-search.js" defer></script>
 <script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://comment-rose.vercel.app/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"path":"/about/"}</script>
 
 </body>

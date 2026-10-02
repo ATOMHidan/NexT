@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
+<!DOCTYPE html><html lang="zh-CN"><head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
 <script id="site-theme-init">/* Runs before styles/paint, including on the isolated 2FA page. */
@@ -11,23 +9,35 @@
   const system = window.matchMedia('(prefers-color-scheme: dark)');
   const valid = value => ['light', 'dark', 'system'].includes(value) ? value : 'system';
   let preference = 'system';
+  const paletteKey = 'soyo-palette';
+  const validPalette = value => ['green', 'blue', 'purple', 'apricot'].includes(value) ? value : 'green';
+  let palette = 'green';
   try { preference = valid(localStorage.getItem(key)); } catch {}
+  try { palette = validPalette(localStorage.getItem(paletteKey)); } catch {}
   function apply() {
+    root.dataset.palette = palette;
     root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
     root.style.colorScheme = root.dataset.theme;
     document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
       meta.removeAttribute('media');
-      meta.content = root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed';
+      meta.content = palette === 'green' ? (root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed') : (root.dataset.theme === 'dark' ? '#191b1e' : '#f3f4f6');
     });
     document.querySelectorAll('[data-theme-select]').forEach(select => { select.value = preference; });
+    document.querySelectorAll('button[data-palette]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.palette === palette)));
   }
   apply();
   system.addEventListener('change', apply);
   window.addEventListener('storage', event => {
     if (event.key === key || event.key === null) { preference = valid(event.newValue); apply(); }
+    if (event.key === paletteKey || event.key === null) { palette = validPalette(event.newValue); apply(); }
   });
   document.addEventListener('DOMContentLoaded', () => {
     apply();
+    document.querySelectorAll('button[data-palette]').forEach(button => button.addEventListener('click', () => {
+      palette = validPalette(button.dataset.palette);
+      try { localStorage.setItem(paletteKey, palette); } catch {}
+      apply();
+    }));
     document.querySelectorAll('[data-theme-select]').forEach(select => {
       select.addEventListener('change', () => {
         preference = valid(select.value);
@@ -37,6 +47,7 @@
     });
   });
 })();
+
 </script>
 <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#2c3e50" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
@@ -5289,6 +5300,38 @@ button[data-music-url]:active {
   margin-top: 16px;
 }
 
+.search-passages {
+  margin: -4px 0 16px;
+  padding: 0 16px 12px;
+  border-bottom: 1px solid var(--md-outline);
+  font-size: 14px;
+}
+
+.search-passages summary {
+  cursor: pointer;
+  padding: 10px 0;
+  color: var(--md-primary);
+  min-height: 24px;
+}
+
+.search-passages a {
+  display: block;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid var(--md-outline);
+  border-radius: 12px;
+  color: var(--md-text);
+  overflow-wrap: anywhere;
+}
+
+.post-body .search-passage-hit {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+  outline: 2px solid var(--md-secondary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 @media (max-width: 991px) {
   .site-search-open {
     display: none;
@@ -5977,9 +6020,9 @@ html.article-share-open {
 
 <link rel="stylesheet" href="/assets/ef4fd0d00eeb1c096dfc/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-70/Q0A7rHAlt/Gh30htuHIh/2luU4nbqnDkLI/4CqUY=" crossorigin="anonymous">
   <link rel="stylesheet" href="/assets/231f9f65fef39756aa88/lib/pace-js/themes/green/pace-theme-minimal.css">
-  <script src="/assets/82a77b6138e0fc1b5fa9/lib/pace-js/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+  <script src="/assets/82a77b6138e0fc1b5fa9/lib/pace-js/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer=""></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"neatblog.netlify.app","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#1abc9c","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"duration":300,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/assets/a65fc965d74fd991d506/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"neatblog.netlify.app","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#1abc9c","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"duration":300,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/assets/a65fc965d74fd991d506/js/config.js" defer=""></script>
 
     <meta name="description" content="Welcome to My Space!Sit Down and Relax. If you want to contact with me,please leave your comments here.">
 <meta property="og:type" content="article">
@@ -6011,39 +6054,88 @@ html.article-share-open {
 
 
   
-  <script src="/assets/5cbda29ea5096ac9404c/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
-  <script src="/assets/6603320c02180d81b16d/lib/medium-zoom/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
-  <script src="/assets/98e15110586a9877906d/lib/lozad/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
-<script src="/assets/fde590a637b4a0466d92/js/utils.js" defer></script><script src="/assets/3b86726489e2c057c90a/js/sidebar.js" defer></script><script src="/assets/cdca8e5ae146bff43968/js/next-boot.js" defer></script>
+  <script src="/assets/5cbda29ea5096ac9404c/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer=""></script>
+  <script src="/assets/6603320c02180d81b16d/lib/medium-zoom/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer=""></script>
+  <script src="/assets/98e15110586a9877906d/lib/lozad/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer=""></script>
+<script src="/assets/fde590a637b4a0466d92/js/utils.js" defer=""></script><script src="/assets/3b86726489e2c057c90a/js/sidebar.js" defer=""></script><script src="/assets/cdca8e5ae146bff43968/js/next-boot.js" defer=""></script>
 
   
 
 
 
 
-  <script src="/assets/f7cb3707b571ea4d98c0/js/third-party/pace.js" defer></script>
+  <script src="/assets/f7cb3707b571ea4d98c0/js/third-party/pace.js" defer=""></script>
 
 
   
 <template id="deferred-statistics">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script async="" src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </template>
 
 
 
 
 <link rel="dns-prefetch" href="https://comment-rose.vercel.app/">
+  <style id="palette-style">/* Tonal accent families; quiet neutral reading surfaces for optional palettes. */
+:root[data-palette]:not([data-palette="green"]) {
+  --md-surface:#f3f4f6; --md-container:#fff; --md-low:#edeef1; --md-outline:#dbdde2;
+  --md-on-primary:#fff;
+}
+:root[data-theme="dark"][data-palette]:not([data-palette="green"]) {
+  --md-surface:#191b1e; --md-container:#202327; --md-low:#2a2d32; --md-outline:#41464e;
+}
+:root[data-palette="blue"] {
+  --md-primary:#355e87; --md-tonal:#d4e5fa; --md-on-tonal:#14344f;
+  --md-secondary:#536477; --md-secondary-container:#e0e8f1; --md-on-secondary-container:#263748;
+  --md-tertiary:#765775; --md-tertiary-container:#f0dfef; --md-on-tertiary-container:#4d344c;
+}
+:root[data-theme="dark"][data-palette="blue"] {
+  --md-primary:#a7c9ee; --md-on-primary:#11334f; --md-tonal:#2b4661; --md-on-tonal:#d4e5fa;
+  --md-secondary:#bdc9d8; --md-secondary-container:#394857; --md-on-secondary-container:#e0e8f1;
+  --md-tertiary:#dfbddd; --md-tertiary-container:#513b50; --md-on-tertiary-container:#f0dfef;
+}
+:root[data-palette="purple"] {
+  --md-primary:#685487; --md-tonal:#eaddf8; --md-on-tonal:#352348;
+  --md-secondary:#645e70; --md-secondary-container:#e9e2ee; --md-on-secondary-container:#36303f;
+  --md-tertiary:#85535f; --md-tertiary-container:#f8dde4; --md-on-tertiary-container:#522e38;
+}
+:root[data-theme="dark"][data-palette="purple"] {
+  --md-primary:#d0bceb; --md-on-primary:#36234e; --md-tonal:#4e3d65; --md-on-tonal:#eaddf8;
+  --md-secondary:#cec4d8; --md-secondary-container:#494151; --md-on-secondary-container:#e9e2ee;
+  --md-tertiary:#ecb8c5; --md-tertiary-container:#643c47; --md-on-tertiary-container:#f8dde4;
+}
+:root[data-palette="apricot"] {
+  --md-primary:#805632; --md-tonal:#f5dfc7; --md-on-tonal:#492a11;
+  --md-secondary:#73604d; --md-secondary-container:#eee2d4; --md-on-secondary-container:#403224;
+  --md-tertiary:#53694c; --md-tertiary-container:#dcebd4; --md-on-tertiary-container:#2b3e26;
+}
+:root[data-theme="dark"][data-palette="apricot"] {
+  --md-primary:#e8bd94; --md-on-primary:#472b13; --md-tonal:#60442d; --md-on-tonal:#f5dfc7;
+  --md-secondary:#d9c4ae; --md-secondary-container:#514437; --md-on-secondary-container:#eee2d4;
+  --md-tertiary:#b7cfa9; --md-tertiary-container:#3c5035; --md-on-tertiary-container:#dcebd4;
+}
+.palette-control { display:flex; justify-content:space-between; gap:2px; padding:0 16px 10px; }
+.palette-control button { --swatch:#286a50; display:grid; place-items:center; width:44px; height:44px; flex:0 1 44px; padding:0; border:0; border-radius:50%; background:transparent; cursor:pointer; }
+.palette-control button[data-palette="blue"] { --swatch:#355e87; }
+.palette-control button[data-palette="purple"] { --swatch:#685487; }
+.palette-control button[data-palette="apricot"] { --swatch:#805632; }
+.palette-control button span { display:grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--swatch); color:#fff; font:16px/1 system-ui; }
+.palette-control button[aria-pressed="true"] span:after { content:'✓'; }
+.palette-control button[aria-pressed="true"] { outline:1px solid var(--md-outline, var(--outline)); outline-offset:-4px; }
+.palette-control button:focus-visible { outline:2px solid var(--md-primary, var(--primary)); outline-offset:0; }
+@media(max-width:991px) { .palette-control { justify-content:flex-end; gap:8px; padding:0 20px 12px; } }
+</style>
   <noscript>
     <link rel="stylesheet" href="/assets/4e519d870cc065f121c7/css/noscript.css">
   </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
+<body itemscope="" itemtype="http://schema.org/WebPage">
   <div class="headband"></div>
 
   <main class="main">
     <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+      <header class="header" itemscope="" itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="切换导航栏" role="button">
         <span class="toggle-line"></span>
@@ -6064,7 +6156,7 @@ html.article-share-open {
   </div>
 
   <div class="site-nav-right">
-    <button type="button" class="toggle" data-search-open aria-label="搜索博客">
+    <button type="button" class="toggle" data-search-open="" aria-label="搜索博客">
         <i class="fa fa-search fa-fw fa-lg"></i>
     </button>
   </div>
@@ -6075,20 +6167,26 @@ html.article-share-open {
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th-large fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-工具箱"><a href="/tools/2fa/" rel="section"><i class="fa fa-key fa-fw"></i>工具箱</a></li>
   </ul>
-  <button type="button" class="site-search-open" data-search-open><i class="fa fa-search" aria-hidden="true"></i> 搜索</button>
+  <button type="button" class="site-search-open" data-search-open=""><i class="fa fa-search" aria-hidden="true"></i> 搜索</button>
   <label class="theme-control">外观
-  <select data-theme-select aria-label="外观主题">
+  <select data-theme-select="" aria-label="外观主题">
     <option value="system">跟随系统</option>
     <option value="light">浅色</option>
     <option value="dark">深色</option>
   </select>
 </label>
+<div class="palette-control" role="group" aria-label="博客配色">
+  <button type="button" data-palette="green" aria-label="松绿" title="松绿" aria-pressed="true"><span aria-hidden="true"></span></button>
+  <button type="button" data-palette="blue" aria-label="雾蓝" title="雾蓝" aria-pressed="false"><span aria-hidden="true"></span></button>
+  <button type="button" data-palette="purple" aria-label="藤紫" title="藤紫" aria-pressed="false"><span aria-hidden="true"></span></button>
+  <button type="button" data-palette="apricot" aria-label="暖杏" title="暖杏" aria-pressed="false"><span aria-hidden="true"></span></button>
+</div>
 
   <details class="nav-extras">
-    <summary><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>更多</span><svg class="nav-extra-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+    <summary><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg><span>更多</span><svg class="nav-extra-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"></path></svg></summary>
     <div class="nav-extra-links">
-      <a href="/map/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z M9 3v16 M15 5v16"/></svg><span>文章地图</span></a>
-      <a href="/ask/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4v13h5l3 4 3-4h5Z M8 9h8 M8 13h5"/></svg><span>留一个问题</span></a>
+      <a href="/map/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z M9 3v16 M15 5v16"></path></svg><span>文章地图</span></a>
+      <a href="/ask/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4v13h5l3 4 3-4h5Z M8 9h8 M8 13h5"></path></svg><span>留一个问题</span></a>
     </div>
   </details>
 </nav>
@@ -6119,9 +6217,8 @@ html.article-share-open {
         <!--/noindex-->
 
         <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Lotta Moeea"
-      src="/assets/13944982b24b46feb3a7/images/Header.jpg" width="1440" height="1440">
+          <div class="site-author animated" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Lotta Moeea" src="/assets/13944982b24b46feb3a7/images/Header.jpg" width="1440" height="1440">
   <p class="site-author-name" itemprop="name">Lotta Moeea</p>
   <div class="site-description" itemprop="description">为什么要演奏春日影！？因为春日影是一首好歌。</div>
 </div>
@@ -6142,10 +6239,10 @@ html.article-share-open {
 </div>
   <div class="links-of-author animated"> <!-- DEBUG: Social Links Rendered -->
       <span class="links-of-author-item">
-        <span class="exturl" data-url="aHR0cHM6Ly9zci5taWhveW8uY29tLw==" title="E-Mail → https:&#x2F;&#x2F;sr.mihoyo.com&#x2F;"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+        <span class="exturl" data-url="aHR0cHM6Ly9zci5taWhveW8uY29tLw==" title="E-Mail → https://sr.mihoyo.com/"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
       </span>
       <span class="links-of-author-item">
-        <span class="exturl" data-url="aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL2F2MTQwMzczMjA3MC8/dmRfc291cmNlPTNiY2I4ZmEzZjA2YzhkYjkzZjMzZGVhNGJlZTYxMThm" title="Weibo → https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;av1403732070&#x2F;?vd_source&#x3D;3bcb8fa3f06c8db93f33dea4bee6118f"><i class="fab fa-weibo fa-fw"></i>Weibo</span>
+        <span class="exturl" data-url="aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL2F2MTQwMzczMjA3MC8/dmRfc291cmNlPTNiY2I4ZmEzZjA2YzhkYjkzZjMzZGVhNGJlZTYxMThm" title="Weibo → https://www.bilibili.com/video/av1403732070/?vd_source=3bcb8fa3f06c8db93f33dea4bee6118f"><i class="fab fa-weibo fa-fw"></i>Weibo</span>
       </span>
   </div>
 
@@ -6161,7 +6258,7 @@ html.article-share-open {
         </div>
         <ul class="links-of-blogroll-list">
             <li class="links-of-blogroll-item">
-              <span class="exturl" data-url="aHR0cHM6Ly95cy5taWhveW8uY29tL2Nsb3VkLyMv" title="https:&#x2F;&#x2F;ys.mihoyo.com&#x2F;cloud&#x2F;#&#x2F;">外链</span>
+              <span class="exturl" data-url="aHR0cHM6Ly95cy5taWhveW8uY29tL2Nsb3VkLyMv" title="https://ys.mihoyo.com/cloud/#/">外链</span>
             </li>
         </ul>
       </div>
@@ -6177,10 +6274,10 @@ html.article-share-open {
           <div class="music-player-slot">
             <div class="music-track-title">Earthing <span>· Vanbur</span></div>
             <button type="button" class="btn" data-music-url="/assets/708a6ba302c38e6c7d03/music/earthing-vanbur.mp3">播放音乐</button>
-            <audio class="local-music-audio" preload="none" hidden aria-label="Earthing — Vanbur"></audio>
-            <div class="music-controls" hidden role="group" aria-label="音乐播放控制">
+            <audio class="local-music-audio" preload="none" hidden="" aria-label="Earthing — Vanbur"></audio>
+            <div class="music-controls" hidden="" role="group" aria-label="音乐播放控制">
               <div class="music-playback-row"><button class="music-toggle" type="button" aria-label="播放音乐">播放</button><span class="music-time">0:00 / --:--</span></div>
-              <input class="music-seek" type="range" min="0" max="100" step="0.1" value="0" disabled aria-label="播放进度">
+              <input class="music-seek" type="range" min="0" max="100" step="0.1" value="0" disabled="" aria-label="播放进度">
               <div class="music-volume-row"><button class="music-mute" type="button" aria-label="静音" aria-pressed="false">音量</button><input class="music-volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="音量"><span class="music-volume-value">100%</span></div>
             </div>
             <span class="music-status" role="status" aria-live="polite"></span>
@@ -6203,20 +6300,20 @@ html.article-share-open {
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+  <article itemscope="" itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://neatblog.netlify.app/2025/06/21/post1/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden="" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/assets/13944982b24b46feb3a7/images/Header.jpg">
       <meta itemprop="name" content="Lotta Moeea">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden="" itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Soyo Course">
       <meta itemprop="description" content="为什么要演奏春日影！？因为春日影是一首好歌。">
     </span>
 
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+    <span hidden="" itemprop="post" itemscope="" itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="Welcome! | Soyo Course">
       <meta itemprop="description" content="">
     </span>
@@ -6247,7 +6344,7 @@ html.article-share-open {
         <i class="far fa-folder"></i>
       </span>
       <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
           <a href="/categories/Welcome/" itemprop="url" rel="index"><span itemprop="name">Welcome</span></a>
         </span>
     </span>
@@ -6272,7 +6369,7 @@ html.article-share-open {
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span class="post-meta-item-text">阅读时长 ≈</span>
       <span>1 分钟</span>
     </span>
 </div>
@@ -6283,8 +6380,8 @@ html.article-share-open {
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="Welcome-to-My-Space"><a href="#Welcome-to-My-Space" class="headerlink" title="Welcome to My Space!"></a>Welcome to My Space!</h1><h2 id="Sit-Down-and-Relax"><a href="#Sit-Down-and-Relax" class="headerlink" title="Sit Down and Relax."></a>Sit Down and Relax.</h2><ul>
-<li>If you want to contact with me,please leave your comments here.</li>
+    <div class="post-body" itemprop="articleBody"><h1 id="Welcome-to-My-Space"><a href="#Welcome-to-My-Space" class="headerlink" title="Welcome to My Space!"></a>Welcome to My Space!</h1><h2 id="Sit-Down-and-Relax" data-search-passage=""><a href="#Sit-Down-and-Relax" class="headerlink" title="Sit Down and Relax."></a>Sit Down and Relax.</h2><ul>
+<li id="search-passage-15c499b5c0776f" data-search-passage="">If you want to contact with me,please leave your comments here.</li>
 </ul>
 
     </div>
@@ -6319,7 +6416,7 @@ html.article-share-open {
     <h2>反馈这篇文章的问题</h2>
     <p class="article-feedback-context">当前文章：<strong>Welcome!</strong></p>
     <fieldset><legend>问题类型</legend>
-      <label><input type="radio" name="article-feedback-kind" value="错字" checked><span>错字</span></label>
+      <label><input type="radio" name="article-feedback-kind" value="错字" checked=""><span>错字</span></label>
       <label><input type="radio" name="article-feedback-kind" value="链接失效"><span>链接失效</span></label>
       <label><input type="radio" name="article-feedback-kind" value="内容疑问"><span>内容疑问</span></label>
     </fieldset>
@@ -6331,28 +6428,28 @@ html.article-share-open {
     </div>
     <p class="article-feedback-hint">将打开邮件应用，由你确认并发送。此面板不会自动发送或保存输入内容。</p>
     <p id="article-feedback-status" role="status" aria-live="polite"></p>
-    <label id="article-feedback-fallback" hidden>无法自动复制，请手动复制下面的内容<textarea readonly rows="6" aria-label="待复制的反馈内容"></textarea></label>
+    <label id="article-feedback-fallback" hidden="">无法自动复制，请手动复制下面的内容<textarea readonly="" rows="6" aria-label="待复制的反馈内容"></textarea></label>
     <noscript>请在邮件中附上文章标题和网址。</noscript>
   </div>
 </details>
 
-  <script src="/assets/e01e61b7ccc84bee657b/js/article-feedback.js" defer></script>
+  <script src="/assets/e01e61b7ccc84bee657b/js/article-feedback.js" defer=""></script>
   <div class="article-share">
   <button type="button" id="article-share-open">分享这篇文章</button>
   <dialog id="article-share-dialog" aria-labelledby="article-share-title">
     <header><h2 id="article-share-title">分享文章</h2><button type="button" id="article-share-close">关闭</button></header>
     <div class="article-share-actions">
-      <button type="button" id="article-share-native" hidden>系统分享</button>
+      <button type="button" id="article-share-native" hidden="">系统分享</button>
       <button type="button" id="article-share-url">复制文章链接</button>
       <button type="button" id="article-share-text">复制标题与链接</button>
     </div>
-    <div id="article-share-section" hidden><label for="article-share-heading">分享某一章节</label><select id="article-share-heading"></select><button type="button" id="article-share-anchor">复制章节链接</button></div>
+    <div id="article-share-section" hidden=""><label for="article-share-heading">分享某一章节</label><select id="article-share-heading"></select><button type="button" id="article-share-anchor">复制章节链接</button></div>
     <p id="article-share-status" role="status" aria-live="polite"></p>
-    <label id="article-share-fallback" hidden>未能自动复制，请选中下方内容复制<textarea readonly aria-label="待复制内容"></textarea></label>
+    <label id="article-share-fallback" hidden="">未能自动复制，请选中下方内容复制<textarea readonly="" aria-label="待复制内容"></textarea></label>
   </dialog>
 </div>
 
-  <script src="/assets/285615383415a9a69349/js/article-share.js" defer></script>
+  <script src="/assets/285615383415a9a69349/js/article-share.js" defer=""></script>
 
 
     <div class="comments" id="waline"></div>
@@ -6415,12 +6512,12 @@ html.article-share-open {
       <li><span id="blog-guide-rule">请勿询问为什么要演奏春日影。</span></li>
       <li>第 4 条无效。</li>
     </ol>
-    <p id="blog-guide-reply" role="status" aria-live="polite" hidden>好吧，因为这是一首好歌。</p>
+    <p id="blog-guide-reply" role="status" aria-live="polite" hidden="">好吧，因为这是一首好歌。</p>
     <div class="blog-guide-actions"><button type="button" id="blog-guide-ok">我知道了</button><button type="button" id="blog-guide-ask">我还是想问</button></div>
   </dialog>
 </div>
 
-<script src="/assets/9df3a85d3a9d5518b845/js/blog-easter-eggs.js" defer></script>
+<script src="/assets/9df3a85d3a9d5518b845/js/blog-easter-eggs.js" defer=""></script>
 <script>
     var now = new Date(); 
     function createtime() { 
@@ -6453,9 +6550,9 @@ setInterval("createtime()",250);
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
-  <div class="reading-progress-bar" role="progressbar" aria-label="浏览进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden>
+  <div class="reading-progress-bar" role="progressbar" aria-label="浏览进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden="">
     <div class="reading-progress-dial" aria-hidden="true">
-      <svg viewBox="0 0 52 52" focusable="false"><circle class="reading-progress-ticks" cx="26" cy="26" r="24" pathLength="100"/><circle class="reading-progress-orbit" cx="26" cy="26" r="19"/><circle class="reading-progress-arc" cx="26" cy="26" r="19" pathLength="100"/></svg>
+      <svg viewBox="0 0 52 52" focusable="false"><circle class="reading-progress-ticks" cx="26" cy="26" r="24" pathLength="100"></circle><circle class="reading-progress-orbit" cx="26" cy="26" r="19"></circle><circle class="reading-progress-arc" cx="26" cy="26" r="19" pathLength="100"></circle></svg>
       <span class="reading-progress-value">0%</span>
     </div>
     <span class="reading-progress-caption" aria-hidden="true">浏览<br>进度</span>
@@ -6541,18 +6638,19 @@ setInterval("createtime()",250);
 })(window, document);
 </script>
 <template id="deferred-live2d"><script src="/assets/a3af49f9d6b351450d19/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/a3af49f9d6b351450d19/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
-<script src="/assets/1f24ecfaaef93c1f1abf/js/deferred-widgets.js" defer></script>
-<dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/d8d3c74fb1d8109e6e3f/search.json">
-  <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
-  <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear>清空</button></div>
+<script src="/assets/1f24ecfaaef93c1f1abf/js/deferred-widgets.js" defer=""></script>
+<dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/e78fa95bb36914aa437e/search.json">
+  <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close="" aria-label="关闭搜索">关闭</button></header>
+  <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear="">清空</button></div>
   <p id="search-status" role="status" aria-live="polite">试试课程名称、技术问题或文章标题。</p>
-  <button type="button" id="search-retry" hidden>重新加载</button>
+  <button type="button" id="search-retry" hidden="">重新加载</button>
   <div id="search-results"></div>
   <nav class="search-shortcuts" aria-label="继续浏览"><a href="/categories/">浏览分类</a><a href="/archives/">查看归档</a></nav>
 </dialog>
 
-<script src="/assets/11677dc053ddd64dac5b/js/site-search.js" defer></script>
+<script src="/assets/4dda5a1936ea9b28f2cd/js/site-search.js" defer=""></script>
 <script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://comment-rose.vercel.app/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"path":"/2025/06/21/post1/"}</script>
 
-</body>
-</html>
+
+
+</body></html>
