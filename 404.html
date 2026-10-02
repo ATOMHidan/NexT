@@ -8,6 +8,21 @@
   'use strict';
   const key = 'soyo-theme';
   const root = document.documentElement;
+  const homeDefaults = {welcome:'full', density:'comfortable', profile:'show', music:'show', mainOrder:'welcome', sideOrder:'profile'};
+  const homeChoices = {welcome:['full','brief'],density:['comfortable','compact'],profile:['show','hide'],music:['show','hide'],mainOrder:['welcome','posts'],sideOrder:['profile','music']};
+  let home = {...homeDefaults};
+  function setHome(value, save) {
+    for (const name of Object.keys(homeDefaults)) {
+      home[name] = homeChoices[name].includes(value?.[name]) ? value[name] : homeDefaults[name];
+      root.setAttribute('data-home-' + name.toLowerCase(),home[name]);
+    }
+    if(save) { try { localStorage.setItem('soyo-home-layout',JSON.stringify(home)); } catch {} }
+    if(home.music==='hide' && document.querySelector('.main-inner.index')) document.querySelector('.local-music-audio')?.pause();
+    document.dispatchEvent(new CustomEvent('home-layout-change'));
+  }
+  try { setHome(JSON.parse(localStorage.getItem('soyo-home-layout')),false); } catch { setHome(null,false); }
+  window.SoyoHomeLayout={get:()=>({...home}),set:value=>setHome(value,true),reset:()=>setHome(null,true)};
+  window.addEventListener('storage',event=>{if(event.key==='soyo-home-layout'||event.key===null){try{setHome(JSON.parse(event.newValue),false);}catch{setHome(null,false);}}});
   const system = window.matchMedia('(prefers-color-scheme: dark)');
   const valid = value => ['light', 'dark', 'system'].includes(value) ? value : 'system';
   let preference = 'system';
@@ -49,7 +64,6 @@
     });
   });
 })();
-
 </script>
 <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#2c3e50" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
@@ -6016,6 +6030,177 @@ html.article-share-open {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.home-layout-entry {
+  display: block;
+  margin: 0 20px 8px;
+  padding: 8px 12px;
+  min-height: 28px;
+  border: 0;
+  color: var(--md-muted);
+  font-size: 13px;
+  border-radius: 999px;
+}
+
+.home-layout-entry:hover {
+  color: var(--md-primary);
+  background: var(--md-low);
+}
+
+.main-inner.index {
+  display: flex;
+  flex-direction: column;
+}
+
+.index .home-welcome {
+  order: 0;
+}
+
+.index #home-posts {
+  order: 1;
+}
+
+.index .pagination {
+  order: 3;
+}
+
+:root[data-home-mainorder='posts'] .index .home-welcome {
+  order: 2;
+}
+
+:root[data-home-welcome='brief'] .index .home-welcome {
+  display: block;
+  padding: 24px;
+}
+
+:root[data-home-welcome='brief'] .index .home-welcome .blog-star,
+:root[data-home-welcome='brief'] .index .home-welcome-description,
+:root[data-home-welcome='brief'] .index .home-welcome-actions {
+  display: none;
+}
+
+:root[data-home-welcome='brief'] .index #welcome-title {
+  font-size: 26px;
+}
+
+:root[data-home-density='compact'] .index .post-block {
+  padding: 24px;
+}
+
+:root[data-home-density='compact'] .index .home-excerpt {
+  max-height: 7.2em;
+  overflow: hidden;
+}
+
+.compact-read-more {
+  display: none;
+}
+
+:root[data-home-density='compact'] .index .compact-read-more {
+  display: block;
+}
+
+:root[data-home-density='compact'] .index .post-header {
+  margin-bottom: 18px;
+}
+
+:root[data-home-density='compact'] .index .post-button {
+  margin-top: 16px;
+}
+
+body:has(.main-inner.index) .sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+body:has(.main-inner.index) .sidebar-profile {
+  order: 0;
+}
+
+body:has(.main-inner.index) .sidebar-music-player {
+  order: 2;
+}
+
+body:has(.main-inner.index) .sidebar-blogroll {
+  order: 1;
+}
+
+:root[data-home-sideorder='music'] body:has(.main-inner.index) .sidebar-music-player {
+  order: -1;
+}
+
+:root[data-home-profile='hide'] body:has(.main-inner.index) .sidebar-profile,
+:root[data-home-music='hide'] body:has(.main-inner.index) .sidebar-music-player {
+  display: none;
+}
+
+#home-layout-dialog {
+  width: calc(100% - 32px);
+  max-width: 440px;
+  max-height: calc(100dvh - 40px);
+  box-sizing: border-box;
+  padding: 24px;
+  border: 1px solid var(--md-outline);
+  border-radius: 24px;
+  color: var(--md-text);
+  background: var(--md-container);
+  overflow: auto;
+}
+
+#home-layout-dialog::backdrop {
+  background: rgba(0,0,0,0.45);
+}
+
+#home-layout-dialog header,
+#home-layout-dialog footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+#home-layout-dialog h2 {
+  font-size: 22px;
+  margin: 0;
+}
+
+#home-layout-dialog p {
+  color: var(--md-muted);
+  font-size: 13px;
+}
+
+#home-layout-dialog label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+#home-layout-dialog select {
+  width: 60%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px;
+  font: inherit;
+  color: var(--md-text);
+  background: var(--md-low);
+  border: 1px solid var(--md-outline);
+  border-radius: 12px;
+}
+
+#home-layout-dialog button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  font: inherit;
+  cursor: pointer;
 }</style>
 
 
@@ -6061,7 +6246,7 @@ html.article-share-open {
   <script src="/assets/5cbda29ea5096ac9404c/lib/animejs/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="/assets/6603320c02180d81b16d/lib/medium-zoom/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
   <script src="/assets/98e15110586a9877906d/lib/lozad/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
-<script src="/assets/fde590a637b4a0466d92/js/utils.js" defer></script><script src="/assets/3b86726489e2c057c90a/js/sidebar.js" defer></script><script src="/assets/cdca8e5ae146bff43968/js/next-boot.js" defer></script>
+<script src="/assets/d2bed828ffbb40bd7dee/js/utils.js" defer></script><script src="/assets/3b86726489e2c057c90a/js/sidebar.js" defer></script><script src="/assets/cdca8e5ae146bff43968/js/next-boot.js" defer></script>
 
   
 
@@ -6186,9 +6371,11 @@ html.article-share-open {
   <button type="button" data-palette="apricot" aria-label="暖杏" title="暖杏" aria-pressed="false"><span aria-hidden="true"></span></button>
 </div>
 
+  <a class="home-layout-entry" href="/#customize-home">布置首页</a>
   <details class="nav-extras">
     <summary><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>更多</span><svg class="nav-extra-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
     <div class="nav-extra-links">
+      <a href="/book/"><span class="nav-extra-icon" aria-hidden="true">▤</span><span>数字文集</span></a>
       <a href="/map/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z M9 3v16 M15 5v16"/></svg><span>文章地图</span></a>
       <a href="/ask/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4v13h5l3 4 3-4h5Z M8 9h8 M8 13h5"/></svg><span>留一个问题</span></a>
     </div>
