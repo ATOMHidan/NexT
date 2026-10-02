@@ -6170,25 +6170,112 @@ body:has(.main-inner.index) .sidebar-blogroll {
   font-size: 13px;
 }
 
-#home-layout-dialog label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+#home-layout-dialog .layout-choice-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: start;
   gap: 12px;
   margin: 12px 0;
   font-size: 14px;
 }
 
-#home-layout-dialog select {
-  width: 60%;
+.layout-choice-row > span {
+  padding-top: 12px;
+}
+
+.layout-choice {
   min-width: 0;
+}
+
+.layout-choice summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   min-height: 44px;
-  padding: 8px;
-  font: inherit;
-  color: var(--md-text);
-  background: var(--md-low);
+  box-sizing: border-box;
+  padding: 10px 12px;
   border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-low);
+  color: var(--md-text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.layout-choice summary::-webkit-details-marker {
+  display: none;
+}
+
+.layout-choice summary svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.layout-choice[open] summary {
+  border-color: var(--md-primary);
+}
+
+.layout-choice[open] summary svg {
+  transform: rotate(180deg);
+}
+
+.layout-choice fieldset {
+  min-width: 0;
+  margin: 6px 0 0;
+  padding: 6px;
+  border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-container);
+  box-shadow: var(--md-shadow);
+}
+
+#home-layout-dialog .layout-choice label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 8px;
+  margin: 2px 0;
   border-radius: 12px;
+  cursor: pointer;
+  line-height: 1.6;
+}
+
+.layout-choice label:has(input:checked) {
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+}
+
+.layout-choice label:has(input:focus-visible) {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 1px;
+}
+
+.layout-choice input {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--md-primary);
+}
+
+@media (max-width: 380px) {
+  #home-layout-dialog {
+    padding: 20px 16px;
+  }
+
+  #home-layout-dialog .layout-choice-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 8px;
+  }
 }
 
 #home-layout-dialog button {
@@ -7572,20 +7659,105 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
   </section>
+
 <dialog id="home-layout-dialog" aria-labelledby="home-layout-title">
   <header><h2 id="home-layout-title">布置我的首页</h2><button type="button" data-layout-close aria-label="关闭首页布置">×</button></header>
   <p>修改后立即预览，仅保存在当前浏览器。</p>
-  <label>欢迎区 <select data-home-option="welcome"><option value="full">完整</option><option value="brief">简洁</option></select></label>
-  <label>文章列表 <select data-home-option="density"><option value="comfortable">舒展</option><option value="compact">紧凑</option></select></label>
-  <label>个人资料 <select data-home-option="profile"><option value="show">显示</option><option value="hide">收起</option></select></label>
-  <label>音乐模块 <select data-home-option="music"><option value="show">显示</option><option value="hide">收起</option></select></label>
-  <label>内容顺序 <select data-home-option="mainOrder"><option value="welcome">欢迎区 → 文章</option><option value="posts">文章 → 欢迎区</option></select></label>
-  <label>侧栏顺序 <select data-home-option="sideOrder"><option value="profile">资料 → 音乐</option><option value="music">音乐 → 资料</option></select></label>
+  
+  <div class="layout-choice-row">
+    <span id="layout-label-welcome">欢迎区</span>
+    <details class="layout-choice" data-choice="welcome">
+      <summary aria-labelledby="layout-label-welcome layout-value-welcome"><span id="layout-value-welcome" data-choice-value></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+      <fieldset aria-labelledby="layout-label-welcome">
+      
+        <label><input type="radio" name="layout-welcome" data-home-option="welcome" value="full"><span>完整</span></label>
+      
+        <label><input type="radio" name="layout-welcome" data-home-option="welcome" value="brief"><span>简洁</span></label>
+      
+      </fieldset>
+    </details>
+  </div>
+
+  
+  <div class="layout-choice-row">
+    <span id="layout-label-density">文章列表</span>
+    <details class="layout-choice" data-choice="density">
+      <summary aria-labelledby="layout-label-density layout-value-density"><span id="layout-value-density" data-choice-value></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+      <fieldset aria-labelledby="layout-label-density">
+      
+        <label><input type="radio" name="layout-density" data-home-option="density" value="comfortable"><span>舒展</span></label>
+      
+        <label><input type="radio" name="layout-density" data-home-option="density" value="compact"><span>紧凑</span></label>
+      
+      </fieldset>
+    </details>
+  </div>
+
+  
+  <div class="layout-choice-row">
+    <span id="layout-label-profile">个人资料</span>
+    <details class="layout-choice" data-choice="profile">
+      <summary aria-labelledby="layout-label-profile layout-value-profile"><span id="layout-value-profile" data-choice-value></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+      <fieldset aria-labelledby="layout-label-profile">
+      
+        <label><input type="radio" name="layout-profile" data-home-option="profile" value="show"><span>显示</span></label>
+      
+        <label><input type="radio" name="layout-profile" data-home-option="profile" value="hide"><span>收起</span></label>
+      
+      </fieldset>
+    </details>
+  </div>
+
+  
+  <div class="layout-choice-row">
+    <span id="layout-label-music">音乐模块</span>
+    <details class="layout-choice" data-choice="music">
+      <summary aria-labelledby="layout-label-music layout-value-music"><span id="layout-value-music" data-choice-value></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+      <fieldset aria-labelledby="layout-label-music">
+      
+        <label><input type="radio" name="layout-music" data-home-option="music" value="show"><span>显示</span></label>
+      
+        <label><input type="radio" name="layout-music" data-home-option="music" value="hide"><span>收起</span></label>
+      
+      </fieldset>
+    </details>
+  </div>
+
+  
+  <div class="layout-choice-row">
+    <span id="layout-label-mainOrder">内容顺序</span>
+    <details class="layout-choice" data-choice="mainOrder">
+      <summary aria-labelledby="layout-label-mainOrder layout-value-mainOrder"><span id="layout-value-mainOrder" data-choice-value></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+      <fieldset aria-labelledby="layout-label-mainOrder">
+      
+        <label><input type="radio" name="layout-mainOrder" data-home-option="mainOrder" value="welcome"><span>欢迎区 → 文章</span></label>
+      
+        <label><input type="radio" name="layout-mainOrder" data-home-option="mainOrder" value="posts"><span>文章 → 欢迎区</span></label>
+      
+      </fieldset>
+    </details>
+  </div>
+
+  
+  <div class="layout-choice-row">
+    <span id="layout-label-sideOrder">侧栏顺序</span>
+    <details class="layout-choice" data-choice="sideOrder">
+      <summary aria-labelledby="layout-label-sideOrder layout-value-sideOrder"><span id="layout-value-sideOrder" data-choice-value></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+      <fieldset aria-labelledby="layout-label-sideOrder">
+      
+        <label><input type="radio" name="layout-sideOrder" data-home-option="sideOrder" value="profile"><span>资料 → 音乐</span></label>
+      
+        <label><input type="radio" name="layout-sideOrder" data-home-option="sideOrder" value="music"><span>音乐 → 资料</span></label>
+      
+      </fieldset>
+    </details>
+  </div>
+
   <p class="home-layout-note">手机上的资料与音乐仍在侧栏抽屉中。紧凑模式保留摘要和阅读全文入口。</p>
   <footer><button type="button" data-layout-reset>恢复默认</button><button type="button" data-layout-close>完成</button></footer>
 </dialog>
 
-  <script src="/assets/0104e2d7d9a191c34f8e/js/home-layout.js" defer></script>
+  <script src="/assets/a07cf893d4112506e621/js/home-layout.js" defer></script>
 
 
 </div>

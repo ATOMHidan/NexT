@@ -6170,25 +6170,112 @@ body:has(.main-inner.index) .sidebar-blogroll {
   font-size: 13px;
 }
 
-#home-layout-dialog label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+#home-layout-dialog .layout-choice-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: start;
   gap: 12px;
   margin: 12px 0;
   font-size: 14px;
 }
 
-#home-layout-dialog select {
-  width: 60%;
+.layout-choice-row > span {
+  padding-top: 12px;
+}
+
+.layout-choice {
   min-width: 0;
+}
+
+.layout-choice summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   min-height: 44px;
-  padding: 8px;
-  font: inherit;
-  color: var(--md-text);
-  background: var(--md-low);
+  box-sizing: border-box;
+  padding: 10px 12px;
   border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-low);
+  color: var(--md-text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.layout-choice summary::-webkit-details-marker {
+  display: none;
+}
+
+.layout-choice summary svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.layout-choice[open] summary {
+  border-color: var(--md-primary);
+}
+
+.layout-choice[open] summary svg {
+  transform: rotate(180deg);
+}
+
+.layout-choice fieldset {
+  min-width: 0;
+  margin: 6px 0 0;
+  padding: 6px;
+  border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-container);
+  box-shadow: var(--md-shadow);
+}
+
+#home-layout-dialog .layout-choice label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 8px;
+  margin: 2px 0;
   border-radius: 12px;
+  cursor: pointer;
+  line-height: 1.6;
+}
+
+.layout-choice label:has(input:checked) {
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+}
+
+.layout-choice label:has(input:focus-visible) {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 1px;
+}
+
+.layout-choice input {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--md-primary);
+}
+
+@media (max-width: 380px) {
+  #home-layout-dialog {
+    padding: 20px 16px;
+  }
+
+  #home-layout-dialog .layout-choice-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 8px;
+  }
 }
 
 #home-layout-dialog button {
@@ -6411,7 +6498,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 .book-end { text-align:center; color:var(--md-muted); padding:30px 0; }
 </style>
 <div class="post-block digital-book">
-  <header class="book-cover"><small>SOYO COURSE · COLLECTED NOTES</small><h1>写下来的日子</h1><p>学习、实践与生活 · 个人记录集</p><p>8 篇公开文章，随每次发布自动整理。</p><a class="book-open" href="#book-contents">打开这本书 ↓</a></header>
+  <header class="book-cover"><small>SOYO COURSE · COLLECTED NOTES</small><h1 lang="en">My Book</h1><p>学习、实践与生活 · 个人记录集</p><p>8 篇公开文章，随每次发布自动整理。</p><a class="book-open" href="#book-contents">打开这本书 ↓</a></header>
   <div class="book-filters" hidden><label>年份 <select id="book-year"><option value="">全部年份</option><option>2026</option><option>2025</option></select></label><label>分卷 <select id="book-category"><option value="">全部分类</option><option>Anime</option><option>Entermainment</option><option>Study</option><option>Welcome</option></select></label></div>
   <details class="book-index" id="book-contents" open><summary>文集目录 <span id="book-count">8 篇</span></summary><ol><li data-book-entry="1"><a href="#book-chapter-1">Welcome!</a></li><li data-book-entry="2"><a href="#book-chapter-2">《葬送的芙莉莲》</a></li><li data-book-entry="3"><a href="#book-chapter-3">ZJUers 轻首页</a></li><li data-book-entry="4"><a href="#book-chapter-4">原神介绍（Powerer By Wiki）</a></li><li data-book-entry="5"><a href="#book-chapter-5">Ubuntu 安装移动到 D 盘</a></li><li data-book-entry="6"><a href="#book-chapter-6">CS61C-Proj1 微记录</a></li><li data-book-entry="7"><a href="#book-chapter-7">志愿者心得 backup</a></li><li data-book-entry="8"><a href="#book-chapter-8">迷惑的 Error: Spawn failed 报错</a></li></ol></details>
   <p class="book-meta">按发表时间排列。加密文章不收录；评论、互动及完整功能请前往原文章。</p>

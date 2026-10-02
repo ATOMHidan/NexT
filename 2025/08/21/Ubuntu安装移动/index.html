@@ -6168,25 +6168,112 @@ body:has(.main-inner.index) .sidebar-blogroll {
   font-size: 13px;
 }
 
-#home-layout-dialog label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+#home-layout-dialog .layout-choice-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: start;
   gap: 12px;
   margin: 12px 0;
   font-size: 14px;
 }
 
-#home-layout-dialog select {
-  width: 60%;
+.layout-choice-row > span {
+  padding-top: 12px;
+}
+
+.layout-choice {
   min-width: 0;
+}
+
+.layout-choice summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   min-height: 44px;
-  padding: 8px;
-  font: inherit;
-  color: var(--md-text);
-  background: var(--md-low);
+  box-sizing: border-box;
+  padding: 10px 12px;
   border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-low);
+  color: var(--md-text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.layout-choice summary::-webkit-details-marker {
+  display: none;
+}
+
+.layout-choice summary svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.layout-choice[open] summary {
+  border-color: var(--md-primary);
+}
+
+.layout-choice[open] summary svg {
+  transform: rotate(180deg);
+}
+
+.layout-choice fieldset {
+  min-width: 0;
+  margin: 6px 0 0;
+  padding: 6px;
+  border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-container);
+  box-shadow: var(--md-shadow);
+}
+
+#home-layout-dialog .layout-choice label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 8px;
+  margin: 2px 0;
   border-radius: 12px;
+  cursor: pointer;
+  line-height: 1.6;
+}
+
+.layout-choice label:has(input:checked) {
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+}
+
+.layout-choice label:has(input:focus-visible) {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 1px;
+}
+
+.layout-choice input {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--md-primary);
+}
+
+@media (max-width: 380px) {
+  #home-layout-dialog {
+    padding: 20px 16px;
+  }
+
+  #home-layout-dialog .layout-choice-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 8px;
+  }
 }
 
 #home-layout-dialog button {
