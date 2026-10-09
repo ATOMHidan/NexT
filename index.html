@@ -6509,6 +6509,80 @@ body:has(.main-inner.index) .sidebar-blogroll {
     opacity: 1;
     transform: none;
   }
+}
+
+.index .article-cover {
+  --cover-bg: var(--md-low);
+  --cover-tone: var(--md-tonal);
+  --cover-ink: var(--md-primary);
+  --cover-warm: var(--md-tertiary-container);
+  position: relative;
+  height: clamp(132px, 19vw, 192px);
+  margin: 0 0 28px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--cover-bg);
+  isolation: isolate;
+}
+
+.index .article-cover.cover-ink-1 {
+  --cover-tone: var(--md-secondary-container);
+  --cover-ink: var(--md-secondary);
+  --cover-warm: var(--md-tonal);
+}
+
+.index .article-cover.cover-ink-2 {
+  --cover-tone: var(--md-tertiary-container);
+  --cover-ink: var(--md-tertiary);
+  --cover-warm: var(--md-secondary-container);
+}
+
+.article-cover svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.article-cover .cover-base {
+  fill: var(--cover-bg);
+}
+
+.article-cover .cover-tone {
+  fill: var(--cover-tone);
+}
+
+.article-cover .cover-accent {
+  fill: var(--cover-ink);
+  opacity: 0.72;
+}
+
+.article-cover .cover-warm {
+  fill: var(--cover-warm);
+}
+
+.article-cover .cover-line {
+  fill: none;
+  stroke: var(--cover-ink);
+  stroke-width: 1.5;
+  opacity: 0.42;
+  stroke-linecap: round;
+}
+
+:root[data-home-density='compact'] .index .article-cover {
+  height: 112px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .index .article-cover {
+    height: 128px;
+    border-radius: 16px;
+    margin-bottom: 22px;
+  }
+
+  :root[data-home-density='compact'] .index .article-cover {
+    height: 104px;
+  }
 }</style>
 
 
@@ -6818,6 +6892,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g><g transform="translate(400 120) rotate(-5)"><rect class="cover-tone" x="-115" y="-106" width="112" height="102" rx="50"/><rect class="cover-accent" x="3" y="-106" width="112" height="102" rx="50"/><rect class="cover-accent" x="-115" y="4" width="112" height="102" rx="50"/><rect class="cover-tone" x="3" y="4" width="112" height="102" rx="50"/><circle class="cover-warm" r="26"/></g><path class="cover-line" d="M140 85a35 35 0 1 1 0 70m0-58a23 23 0 1 1 0 46"/><circle class="cover-tone" cx="670" cy="190" r="24"/></g></svg></div>
   
   
 
@@ -6925,6 +7000,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><rect class="cover-tone" x="288" y="-65" width="182" height="345" rx="86" transform="rotate(32 379 120)"/><rect class="cover-accent" x="419" y="-48" width="132" height="322" rx="66" transform="rotate(32 485 120)"/><path class="cover-line" d="M233 258  391 -18m-136 276 158-276"/><circle class="cover-warm" cx="607" cy="67" r="37.5"/><path class="cover-line" d="M99 178h75m-75 13h45"/></g></svg></div>
   
   
 
@@ -7027,6 +7103,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g><g transform="translate(505 120) rotate(8)"><rect class="cover-tone" x="-115" y="-106" width="112" height="102" rx="50"/><rect class="cover-accent" x="3" y="-106" width="112" height="102" rx="50"/><rect class="cover-accent" x="-115" y="4" width="112" height="102" rx="50"/><rect class="cover-tone" x="3" y="4" width="112" height="102" rx="50"/><circle class="cover-warm" r="26"/></g><path class="cover-line" d="M140 85a35 35 0 1 1 0 70m0-58a23 23 0 1 1 0 46"/><circle class="cover-tone" cx="670" cy="190" r="24"/></g></svg></div>
   
   
 
@@ -7135,6 +7212,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><rect class="cover-tone" x="336" y="-65" width="182" height="345" rx="86" transform="rotate(32 427 120)"/><rect class="cover-accent" x="467" y="-48" width="132" height="322" rx="66" transform="rotate(32 533 120)"/><path class="cover-line" d="M281 258  439 -18m-136 276 158-276"/><circle class="cover-warm" cx="655" cy="67" r="40"/><path class="cover-line" d="M99 178h75m-75 13h45"/></g></svg></div>
   
   
 
@@ -7241,6 +7319,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g><circle class="cover-tone" cx="457" cy="120" r="124"/><circle class="cover-accent" cx="510" cy="152" r="88"/><circle class="cover-base" cx="536" cy="130" r="67"/><ellipse class="cover-line" cx="432" cy="120" rx="196" ry="67" transform="rotate(-22 432 120)"/><circle class="cover-warm" cx="282" cy="164" r="22"/><path class="cover-line" d="M100 66h58m-29-29v58"/></g></svg></div>
   
   
 
@@ -7342,6 +7421,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><rect class="cover-tone" x="249" y="-65" width="182" height="345" rx="86" transform="rotate(32 340 120)"/><rect class="cover-accent" x="380" y="-48" width="132" height="322" rx="66" transform="rotate(32 446 120)"/><path class="cover-line" d="M194 258  352 -18m-136 276 158-276"/><circle class="cover-warm" cx="568" cy="67" r="43"/><path class="cover-line" d="M99 178h75m-75 13h45"/></g></svg></div>
   
   
 
@@ -7449,6 +7529,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g><g transform="translate(464 120) rotate(-3)"><rect class="cover-tone" x="-115" y="-106" width="112" height="102" rx="50"/><rect class="cover-accent" x="3" y="-106" width="112" height="102" rx="50"/><rect class="cover-accent" x="-115" y="4" width="112" height="102" rx="50"/><rect class="cover-tone" x="3" y="4" width="112" height="102" rx="50"/><circle class="cover-warm" r="26"/></g><path class="cover-line" d="M140 85a35 35 0 1 1 0 70m0-58a23 23 0 1 1 0 46"/><circle class="cover-tone" cx="670" cy="190" r="24"/></g></svg></div>
   
   
 
@@ -7556,6 +7637,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><rect class="cover-tone" x="332" y="-65" width="182" height="345" rx="86" transform="rotate(32 423 120)"/><rect class="cover-accent" x="463" y="-48" width="132" height="322" rx="66" transform="rotate(32 529 120)"/><path class="cover-line" d="M277 258  435 -18m-136 276 158-276"/><circle class="cover-warm" cx="651" cy="67" r="39.5"/><path class="cover-line" d="M99 178h75m-75 13h45"/></g></svg></div>
   
   
 
@@ -7674,6 +7756,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g><rect class="cover-tone" x="274" y="-65" width="182" height="345" rx="86" transform="rotate(32 365 120)"/><rect class="cover-accent" x="405" y="-48" width="132" height="322" rx="66" transform="rotate(32 471 120)"/><path class="cover-line" d="M219 258  377 -18m-136 276 158-276"/><circle class="cover-warm" cx="593" cy="67" r="33.5"/><path class="cover-line" d="M99 178h75m-75 13h45"/></g></svg></div>
   
   
 
@@ -7781,6 +7864,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
+  <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><path class="cover-tone" d="M259 256V144a142 142 0 0 1 284 0v112Z"/><path class="cover-base" d="M307 256V144a94 94 0 0 1 188 0v112Z"/><path class="cover-accent" d="M354 256V144a47 47 0 0 1 94 0v112Z"/><circle class="cover-warm" cx="186" cy="88" r="39.5"/><path class="cover-line" d="M88 190h150m-150 12h96"/></g></svg></div>
   
   
 

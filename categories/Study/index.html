@@ -6509,6 +6509,80 @@ body:has(.main-inner.index) .sidebar-blogroll {
     opacity: 1;
     transform: none;
   }
+}
+
+.index .article-cover {
+  --cover-bg: var(--md-low);
+  --cover-tone: var(--md-tonal);
+  --cover-ink: var(--md-primary);
+  --cover-warm: var(--md-tertiary-container);
+  position: relative;
+  height: clamp(132px, 19vw, 192px);
+  margin: 0 0 28px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--cover-bg);
+  isolation: isolate;
+}
+
+.index .article-cover.cover-ink-1 {
+  --cover-tone: var(--md-secondary-container);
+  --cover-ink: var(--md-secondary);
+  --cover-warm: var(--md-tonal);
+}
+
+.index .article-cover.cover-ink-2 {
+  --cover-tone: var(--md-tertiary-container);
+  --cover-ink: var(--md-tertiary);
+  --cover-warm: var(--md-secondary-container);
+}
+
+.article-cover svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.article-cover .cover-base {
+  fill: var(--cover-bg);
+}
+
+.article-cover .cover-tone {
+  fill: var(--cover-tone);
+}
+
+.article-cover .cover-accent {
+  fill: var(--cover-ink);
+  opacity: 0.72;
+}
+
+.article-cover .cover-warm {
+  fill: var(--cover-warm);
+}
+
+.article-cover .cover-line {
+  fill: none;
+  stroke: var(--cover-ink);
+  stroke-width: 1.5;
+  opacity: 0.42;
+  stroke-linecap: round;
+}
+
+:root[data-home-density='compact'] .index .article-cover {
+  height: 112px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .index .article-cover {
+    height: 128px;
+    border-radius: 16px;
+    margin-bottom: 22px;
+  }
+
+  :root[data-home-density='compact'] .index .article-cover {
+    height: 104px;
+  }
 }</style>
 
 
