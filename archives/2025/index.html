@@ -6912,6 +6912,141 @@ body:has(.main-inner.index) .sidebar-blogroll {
     height: 14px;
     flex-basis: 14px;
   }
+}
+
+.footer-inner .footer-note {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 28px;
+  margin: 0 0 20px;
+  padding: 20px;
+  border: 1px solid var(--md-outline);
+  border-radius: 28px;
+  background: var(--md-container);
+  color: var(--md-text);
+  text-align: left;
+  font-family: inherit;
+}
+
+.footer-note-image {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--md-low);
+}
+
+.footer-inner .footer-note-image img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  opacity: 1;
+}
+
+.footer-note-copy {
+  min-width: 0;
+  padding: 8px 8px 8px 0;
+}
+
+.footer-note-intro {
+  margin-bottom: 14px;
+}
+
+.footer-note-intro a,
+.footer-note-intro .exturl {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--md-low);
+  color: var(--md-primary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.footer-note-quote {
+  padding-left: 16px;
+  border-left: 2px solid var(--md-tonal);
+}
+
+.footer-note-quote a,
+.footer-note-quote .exturl {
+  display: block;
+  min-height: 44px;
+  padding: 4px 0;
+  border: 0;
+  color: var(--md-text);
+  font-size: clamp(17px, 1.55vw, 20px);
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: 0.015em;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.footer-note :focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.footer-inner .footer-note-text-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (hover: hover) {
+  .footer-note-intro a:hover {
+    background: var(--md-tonal);
+    color: var(--md-on-tonal);
+  }
+
+  .footer-note-quote a:hover {
+    color: var(--md-primary);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-inner .footer-note {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding: 16px;
+    border-radius: 24px;
+    margin-bottom: 16px;
+  }
+
+  .footer-note-image {
+    border-radius: 14px;
+  }
+
+  .footer-note-copy {
+    padding: 0 2px 4px;
+  }
+
+  .footer-note-intro {
+    margin-bottom: 10px;
+  }
+
+  .footer-note-quote {
+    padding-left: 12px;
+  }
+
+  .footer-note-quote a,
+  .footer-note-quote .exturl {
+    font-size: 17px;
+  }
 }</style>
 
 
@@ -7415,8 +7550,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
   <p class="garden-status" role="status" aria-live="polite" aria-atomic="true">随文章生长的小庭院</p>
 </section>
 
-  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">春日影是一首好歌 </span>
-      <img src="/assets/1e831dbbe626db69ce2e/images/beian.jpg" alt=""><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5tcHMuZ292LmNuLyMvcXVlcnkvd2ViU2VhcmNoP2NvZGU9MTAyNw==">我想我大概…一辈子也忘不了CRYCHIC </span>
+  <div class="beian footer-note">
+      <figure class="footer-note-image">
+        <img src="/assets/1e831dbbe626db69ce2e/images/beian.jpg" alt="" width="658" height="327" loading="lazy" decoding="async">
+      </figure>
+    <div class="footer-note-copy">
+      <div class="footer-note-intro"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">春日影是一首好歌 </span></div>
+      <div class="footer-note-quote"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5tcHMuZ292LmNuLyMvcXVlcnkvd2ViU2VhcmNoP2NvZGU9MTAyNw==">我想我大概…<br>一辈子也忘不了CRYCHIC </span></div>
+    </div>
   </div>
 
 
