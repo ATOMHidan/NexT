@@ -6596,6 +6596,320 @@ body:has(.main-inner.index) .sidebar-blogroll {
   :root[data-home-density='compact'] .index .article-cover {
     height: 104px;
   }
+}
+
+.footer-garden {
+  margin: 0 0 20px;
+  padding: 20px 24px 14px;
+  border: 1px solid var(--md-outline);
+  border-radius: 28px;
+  background: var(--md-container);
+  color: var(--md-text);
+  text-align: left;
+}
+
+.garden-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.footer-garden .garden-caption h2 {
+  margin: 0;
+  color: var(--md-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+}
+
+.garden-caption span {
+  color: var(--md-muted);
+  font-size: 11px;
+}
+
+.garden-scene {
+  position: relative;
+  height: 164px;
+  margin: 4px 0 6px;
+  overflow: hidden;
+}
+
+.garden-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.garden-ground,
+.garden-grass {
+  fill: none;
+  stroke: var(--md-outline);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.garden-arch {
+  fill: var(--md-low);
+}
+
+.garden-halo {
+  fill: none;
+  stroke: var(--md-outline);
+  stroke-width: 1;
+}
+
+.garden-stone {
+  fill: var(--md-tonal);
+}
+
+.footer-garden .garden-object {
+  position: absolute;
+  top: 28px;
+  width: 112px;
+  height: 120px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transform: translateX(-50%);
+}
+
+.garden-object svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.garden-flower {
+  left: 20%;
+}
+
+.garden-wheel {
+  left: 50%;
+}
+
+.garden-papers {
+  left: 80%;
+}
+
+.garden-stem {
+  fill: var(--md-tonal);
+  stroke: var(--md-primary);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.garden-petal {
+  transform-box: view-box;
+  transform-origin: 60px 60px;
+  transform: scale(0.62);
+}
+
+.garden-flower[aria-pressed='true'] .garden-petal {
+  transform: translateY(-13px) scale(1);
+}
+
+.garden-petal-0,
+.garden-petal-2 {
+  fill: var(--md-tonal);
+}
+
+.garden-petal-1,
+.garden-petal-3 {
+  fill: var(--md-primary);
+}
+
+.garden-flower-heart {
+  fill: var(--md-tertiary);
+  stroke: var(--md-tertiary-container);
+  stroke-width: 5;
+}
+
+.garden-orbit {
+  fill: none;
+  stroke: var(--md-outline);
+  stroke-width: 1.5;
+}
+
+.garden-wheel-disc {
+  transform-box: view-box;
+  transform-origin: 60px 64px;
+}
+
+.garden-disc-outer {
+  fill: var(--md-secondary-container);
+  stroke: var(--md-secondary);
+  stroke-width: 2;
+}
+
+.garden-disc-inner {
+  fill: var(--md-container);
+}
+
+.garden-disc-mark {
+  fill: none;
+  stroke: var(--md-secondary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.garden-disc-dot {
+  fill: var(--md-secondary);
+}
+
+.garden-tile {
+  transform-origin: 0 0;
+}
+
+.garden-tile-a {
+  fill: var(--md-tonal);
+}
+
+.garden-tile-b {
+  fill: var(--md-tertiary-container);
+}
+
+.garden-tile-c {
+  fill: var(--md-primary);
+}
+
+.garden-actions {
+  display: flex;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 12px;
+}
+
+.footer-garden .garden-actions a,
+.footer-garden .garden-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--md-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.garden-actions svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.footer-garden .garden-status {
+  min-height: 1.8em;
+  margin: 6px 0 0;
+  color: var(--md-muted);
+  font-size: 11px;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.footer-garden [hidden] {
+  display: none !important;
+}
+
+.footer-garden :focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+.garden-actions [aria-busy='true'] {
+  opacity: 0.6;
+}
+
+@media (hover: hover) {
+  .footer-garden .garden-object:hover {
+    background: var(--md-low);
+  }
+
+  .footer-garden .garden-actions a:hover,
+  .footer-garden .garden-actions button:hover {
+    background: var(--md-low);
+    color: var(--md-primary);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .garden-petal {
+    transition: transform 0.3s var(--md-ease);
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-garden {
+    padding: 16px 12px 12px;
+    border-radius: 24px;
+    margin-bottom: 16px;
+  }
+
+  .garden-caption {
+    padding: 0 4px;
+  }
+
+  .garden-caption span {
+    font-size: 10px;
+  }
+
+  .garden-scene {
+    height: 145px;
+    margin-top: 6px;
+  }
+
+  .footer-garden .garden-object {
+    top: 28px;
+    width: 84px;
+    height: 96px;
+    border-radius: 18px;
+  }
+
+  .garden-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .footer-garden .garden-actions a,
+  .footer-garden .garden-actions button {
+    flex-direction: column;
+    min-width: 0;
+    min-height: 56px;
+    padding: 8px 2px;
+    gap: 4px;
+    font-size: 11px;
+  }
+
+  .garden-actions svg {
+    width: 14px;
+    height: 14px;
+    flex-basis: 14px;
+  }
 }</style>
 
 
@@ -6714,7 +7028,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
   </noscript>
 </head>
 
-<body itemscope="" itemtype="http://schema.org/WebPage">
+<body id="page-top" itemscope="" itemtype="http://schema.org/WebPage">
   <div class="headband"></div>
 
   <main class="main">
@@ -7046,6 +7360,43 @@ body:has(.main-inner.index) .sidebar-blogroll {
   <footer class="footer">
     <div class="footer-inner">
 
+<section class="footer-garden" aria-labelledby="footer-garden-title" data-garden-tile="2" data-garden-layouts="[[[42,42,0],[78,42,0],[42,78,0],[78,78,0]],[[60,28,45],[92,60,45],[28,60,45],[60,92,45]],[[34,71,-18],[51,43,12],[72,75,-12],[86,43,18]]]">
+  <div class="garden-caption"><h2 id="footer-garden-title">小小庭院</h2><span>点点纸片，歇一会儿</span></div>
+  <div class="garden-scene garden-scene-0">
+    <svg class="garden-backdrop" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+      <path class="garden-ground" d="M64 172H736"></path>
+      <path class="garden-arch" d="M471 171V105a83 83 0 0 1 166 0v66h-23v-66a60 60 0 0 0-120 0v66Z"></path>
+      
+      <path class="garden-grass" d="M99 172v-18m-8 18-7-11m24 11 8-13M695 172v-18m-8 18-7-11m24 11 8-13"></path>
+      <circle class="garden-stone" cx="150" cy="186" r="4"></circle><circle class="garden-stone" cx="235" cy="187" r="5"></circle><circle class="garden-stone" cx="346" cy="181" r="4"></circle><circle class="garden-stone" cx="466" cy="180" r="3"></circle><circle class="garden-stone" cx="537" cy="184" r="5"></circle><circle class="garden-stone" cx="649" cy="179" r="5"></circle>
+    </svg>
+    <button class="garden-object garden-flower" type="button" data-garden-flower="" aria-label="展开纸花" aria-pressed="false" title="展开纸花">
+      <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+        <path class="garden-stem" d="M60 60v51m0-9c-18 1-26-8-26-17 16-1 25 8 26 17Z"></path>
+        <g transform="rotate(0 60 60)"><g class="garden-petal"><rect class="garden-petal-0" x="43" y="21" width="34" height="49" rx="17"></rect></g></g><g transform="rotate(90 60 60)"><g class="garden-petal"><rect class="garden-petal-1" x="43" y="21" width="34" height="49" rx="17"></rect></g></g><g transform="rotate(180 60 60)"><g class="garden-petal"><rect class="garden-petal-2" x="43" y="21" width="34" height="49" rx="17"></rect></g></g><g transform="rotate(270 60 60)"><g class="garden-petal"><rect class="garden-petal-3" x="43" y="21" width="34" height="49" rx="17"></rect></g></g>
+        <circle class="garden-flower-heart" cx="60" cy="60" r="12"></circle>
+      </svg>
+    </button>
+    <button class="garden-object garden-wheel" type="button" data-garden-wheel="" aria-label="拨动圆盘" title="拨动圆盘">
+      <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+        <ellipse class="garden-orbit" cx="60" cy="83" rx="49" ry="17"></ellipse>
+        <g class="garden-wheel-disc"><circle class="garden-disc-outer" cx="60" cy="64" r="31"></circle><circle class="garden-disc-inner" cx="60" cy="64" r="21"></circle><circle class="garden-disc-mark" cx="60" cy="64" r="11"></circle><path class="garden-disc-mark" d="M42 61a18 18 0 0 1 21-15"></path><circle class="garden-disc-dot" cx="60" cy="64" r="4"></circle></g>
+      </svg>
+    </button>
+    <button class="garden-object garden-papers" type="button" data-garden-papers="" aria-label="重新排列纸片" title="重新排列纸片">
+      <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+        <g class="garden-tile" style="transform:translate(34px,71px) rotate(-18deg)"><rect class="garden-tile-a" x="-15" y="-15" width="30" height="30" rx="10"></rect></g><g class="garden-tile" style="transform:translate(51px,43px) rotate(12deg)"><rect class="garden-tile-b" x="-15" y="-15" width="30" height="30" rx="10"></rect></g><g class="garden-tile" style="transform:translate(72px,75px) rotate(-12deg)"><rect class="garden-tile-c" x="-15" y="-15" width="30" height="30" rx="10"></rect></g><g class="garden-tile" style="transform:translate(86px,43px) rotate(18deg)"><rect class="garden-tile-a" x="-15" y="-15" width="30" height="30" rx="10"></rect></g>
+      </svg>
+    </button>
+  </div>
+  <nav class="garden-actions" aria-label="庭院导航">
+    <a href="#page-top" data-garden-top=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 13 6-6 6 6M12 7v12"></path></svg>回到顶部</a>
+    <a href="/2026/01/17/Spawn%20failed%20Erroe%20Handle/" data-garden-random="" data-garden-index="/assets/363c3e46c37e1deae82a/footer-garden.json" data-garden-archive="/archives/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 4 4-4 4m4-4h-3c-5 0-5 10-10 10H4M4 7h3c2 0 3 2 4 4m2 2c1 2 2 4 4 4h3m-4-4 4 4-4 4"></path></svg>随机读一篇</a>
+    <button type="button" data-search-open="" data-garden-search="" hidden=""><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 4 4"></path></svg>打开搜索</button>
+  </nav>
+  <p class="garden-status" role="status" aria-live="polite" aria-atomic="true">随文章生长的小庭院</p>
+</section>
+
   <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">春日影是一首好歌 </span>
       <img src="/assets/1e831dbbe626db69ce2e/images/beian.jpg" alt=""><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5tcHMuZ292LmNuLyMvcXVlcnkvd2ViU2VhcmNoP2NvZGU9MTAyNw==">我想我大概…一辈子也忘不了CRYCHIC </span>
   </div>
@@ -7104,7 +7455,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
   </dialog>
 </div>
 
-<script src="/assets/9df3a85d3a9d5518b845/js/blog-easter-eggs.js" defer=""></script>
+<script src="/assets/a86340d0e03d90bbb7e0/js/blog-easter-eggs.js" defer=""></script>
 <script>
     var now = new Date(); 
     function createtime() { 
