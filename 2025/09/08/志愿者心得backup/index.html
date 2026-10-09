@@ -41,6 +41,34 @@
     document.querySelectorAll('button[data-palette]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.palette === palette)));
   }
   apply();
+  let paletteTransition;
+  function revealPalette(button) {
+    paletteTransition?.skipTransition();
+    if (!document.startViewTransition || !root.animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { apply(); return; }
+    const box = button.getBoundingClientRect();
+    const x = box.left + box.width / 2, y = box.top + box.height / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth-x), Math.max(y, innerHeight-y));
+    root.classList.add('palette-reveal');
+    let transition;
+    try { transition = document.startViewTransition(apply); }
+    catch { root.classList.remove('palette-reveal'); apply(); return; }
+    paletteTransition = transition;
+    // Hidden tabs or an interrupted snapshot may never produce a ready frame.
+    const watchdog = setTimeout(() => {
+      if (paletteTransition !== transition) return;
+      transition.skipTransition(); apply();
+      root.classList.remove('palette-reveal'); paletteTransition = null;
+    }, 1000);
+    transition.ready.then(() => {
+      if (paletteTransition !== transition) return;
+      return root.animate({clipPath:[`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`]}, {
+        duration: innerWidth < 600 ? 260 : 380, easing:'cubic-bezier(.2,0,0,1)', pseudoElement:'::view-transition-new(root)'
+      }).finished;
+    }).catch(() => {}).finally(() => {
+      clearTimeout(watchdog);
+      if (paletteTransition === transition) { root.classList.remove('palette-reveal'); paletteTransition = null; }
+    });
+  }
   system.addEventListener('change', apply);
   window.addEventListener('storage', event => {
     if (event.key === key || event.key === null) { preference = valid(event.newValue); apply(); }
@@ -49,9 +77,10 @@
   document.addEventListener('DOMContentLoaded', () => {
     apply();
     document.querySelectorAll('button[data-palette]').forEach(button => button.addEventListener('click', () => {
+      if (palette === validPalette(button.dataset.palette)) return;
       palette = validPalette(button.dataset.palette);
       try { localStorage.setItem(paletteKey, palette); } catch {}
-      apply();
+      revealPalette(button);
     }));
     document.querySelectorAll('[data-theme-select]').forEach(select => {
       select.addEventListener('change', () => {
@@ -6286,6 +6315,226 @@ body:has(.main-inner.index) .sidebar-blogroll {
   color: var(--md-on-tonal);
   font: inherit;
   cursor: pointer;
+}
+
+.welcome-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.welcome-letter {
+  display: inline-block;
+}
+
+.home-welcome-eyebrow {
+  position: relative;
+}
+
+#welcome-play {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  color: var(--md-primary);
+  border: 0;
+  border-radius: 50%;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+#welcome-play[hidden] {
+  display: none;
+}
+
+#welcome-play-status {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+  border-radius: 12px;
+  font-size: 11px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+#welcome-play-status:not(:empty) {
+  padding: 6px 10px;
+}
+
+.music-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.music-state-icon {
+  position: relative;
+  width: 14px;
+  height: 16px;
+  flex: 0 0 14px;
+}
+
+.music-state-icon:before,
+.music-state-icon:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+}
+
+.music-state-icon:before {
+  clip-path: polygon(15% 10%, 50% 30%, 50% 70%, 15% 90%);
+}
+
+.music-state-icon:after {
+  clip-path: polygon(50% 30%, 85% 50%, 85% 50%, 50% 70%);
+}
+
+.is-playing .music-state-icon:before {
+  clip-path: polygon(15% 10%, 35% 10%, 35% 90%, 15% 90%);
+}
+
+.is-playing .music-state-icon:after {
+  clip-path: polygon(65% 10%, 85% 10%, 85% 90%, 65% 90%);
+}
+
+.music-activity {
+  display: flex;
+  gap: 2px;
+  width: 10px;
+  height: 12px;
+  flex: 0 0 10px;
+  align-items: center;
+  color: var(--md-primary);
+}
+
+.music-activity i {
+  display: block;
+  width: 2px;
+  height: 3px;
+  background: currentColor;
+  border-radius: 2px;
+}
+
+.copy-feedback-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.copy-state-icon {
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+
+.copy-state-icon:before,
+.copy-state-icon:after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 11px;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+}
+
+.copy-state-icon:before {
+  left: 2px;
+  top: 2px;
+}
+
+.copy-state-icon:after {
+  left: 6px;
+  top: 6px;
+  background: var(--md-low);
+}
+
+.copy-done .copy-state-icon:before {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.copy-done .copy-state-icon:after {
+  width: 6px;
+  height: 11px;
+  left: 6px;
+  top: 1px;
+  border-top: 0;
+  border-left: 0;
+  border-radius: 0;
+  background: transparent;
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .welcome-letter {
+    transition: transform 0.16s ease-out;
+  }
+
+  .music-state-icon:before,
+  .music-state-icon:after {
+    transition: clip-path 0.18s ease;
+  }
+
+  .copy-state-icon:before,
+  .copy-state-icon:after {
+    transition: transform 0.2s ease, opacity 0.2s ease, border-radius 0.2s ease;
+  }
+
+  .music-active .music-activity i {
+    animation: music-short-line 0.85s ease-in-out infinite alternate;
+  }
+
+  .music-active .music-activity i:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+
+  .music-active .music-activity i:nth-child(3) {
+    animation-delay: -0.6s;
+  }
+
+  .nav-extras[open] .nav-extra-links a {
+    animation: extra-unfold 0.2s ease-out both;
+    transform-origin: top left;
+  }
+
+  .nav-extras[open] .nav-extra-links a:nth-child(2) {
+    animation-delay: 0.025s;
+  }
+
+  .nav-extras[open] .nav-extra-links a:nth-child(3) {
+    animation-delay: 0.05s;
+  }
+
+  .nav-extra-chevron {
+    transition: transform 0.2s ease;
+  }
+}
+
+@keyframes music-short-line {
+  to {
+    height: 11px;
+  }
+}
+
+@keyframes extra-unfold {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }</style>
 
 
@@ -6349,6 +6598,10 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 <link rel="dns-prefetch" href="https://comment-rose.vercel.app/">
   <style id="palette-style">/* Tonal accent families; quiet neutral reading surfaces for optional palettes. */
+html.palette-reveal::view-transition-old(root), html.palette-reveal::view-transition-new(root) { animation:none; mix-blend-mode:normal; }
+html.palette-reveal::view-transition-new(root) { z-index:1; }
+html.palette-reveal::view-transition-old(root) { z-index:0; }
+html.palette-reveal, html.palette-reveal * { transition:none!important; }
 :root[data-palette]:not([data-palette="green"]) {
   --md-surface:#f3f4f6; --md-container:#fff; --md-low:#edeef1; --md-outline:#dbdde2;
   --md-on-primary:#fff;
@@ -6550,7 +6803,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
             <button type="button" class="btn" data-music-url="/assets/708a6ba302c38e6c7d03/music/earthing-vanbur.mp3">播放音乐</button>
             <audio class="local-music-audio" preload="none" hidden="" aria-label="Earthing — Vanbur"></audio>
             <div class="music-controls" hidden="" role="group" aria-label="音乐播放控制">
-              <div class="music-playback-row"><button class="music-toggle" type="button" aria-label="播放音乐">播放</button><span class="music-time">0:00 / --:--</span></div>
+              <div class="music-playback-row"><button class="music-toggle" type="button" aria-label="播放音乐"><span class="music-state-icon" aria-hidden="true"></span><span class="music-toggle-label">播放</span></button><span class="music-time">0:00 / --:--</span><span class="music-activity" aria-hidden="true"><i></i><i></i><i></i></span></div>
               <input class="music-seek" type="range" min="0" max="100" step="0.1" value="0" disabled="" aria-label="播放进度">
               <div class="music-volume-row"><button class="music-mute" type="button" aria-label="静音" aria-pressed="false">音量</button><input class="music-volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="音量"><span class="music-volume-value">100%</span></div>
             </div>
@@ -6731,7 +6984,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
   </dialog>
 </div>
 
-  <script src="/assets/285615383415a9a69349/js/article-share.js" defer=""></script>
+  <script src="/assets/bee616c8ea7ec2498332/js/article-share.js" defer=""></script>
 
 
     <div class="comments" id="waline"></div>
@@ -6920,7 +7173,7 @@ setInterval("createtime()",250);
 })(window, document);
 </script>
 <template id="deferred-live2d"><script src="/assets/a3af49f9d6b351450d19/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/a3af49f9d6b351450d19/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
-<script src="/assets/1f24ecfaaef93c1f1abf/js/deferred-widgets.js" defer=""></script>
+<script src="/assets/e48415be142201ec81b1/js/deferred-widgets.js" defer=""></script>
 <dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/e78fa95bb36914aa437e/search.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close="" aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear="">清空</button></div>
