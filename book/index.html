@@ -6675,6 +6675,93 @@ body:has(.main-inner.index) .sidebar-blogroll {
   fill: var(--md-low);
 }
 
+.garden-land {
+  fill: var(--md-tonal);
+  opacity: 0.48;
+}
+
+.garden-accent {
+  fill: var(--md-secondary-container);
+}
+
+.garden-cutout {
+  fill: var(--md-container);
+}
+
+.garden-line {
+  fill: none;
+  stroke: var(--md-secondary);
+  stroke-width: 1.5;
+  opacity: 0.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.garden-season-art {
+  position: absolute;
+  right: 6px;
+  top: 2px;
+  width: 46px;
+  height: 46px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.garden-season-art g {
+  display: none;
+}
+
+[data-garden-season='spring'] .garden-season-spring,
+[data-garden-season='summer'] .garden-season-summer,
+[data-garden-season='autumn'] .garden-season-autumn,
+[data-garden-season='winter'] .garden-season-winter {
+  display: inline;
+}
+
+.garden-season-fill {
+  fill: var(--md-tertiary-container);
+}
+
+.garden-season-line {
+  fill: none;
+  stroke: var(--md-tertiary);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.garden-sky {
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  width: 24px;
+  height: 24px;
+  fill: var(--md-tertiary);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.garden-night {
+  display: none;
+}
+
+[data-garden-time='night'] .garden-night {
+  display: inline;
+}
+
+[data-garden-time='night'] .garden-day {
+  display: none;
+}
+
+[data-garden-season='autumn'] .garden-land {
+  fill: var(--md-tertiary-container);
+  opacity: 0.65;
+}
+
+[data-garden-season='winter'] .garden-land {
+  fill: var(--md-secondary-container);
+  opacity: 0.8;
+}
+
 .garden-halo {
   fill: none;
   stroke: var(--md-outline);
@@ -6744,6 +6831,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 .garden-petal-1,
 .garden-petal-3 {
+  fill: var(--md-primary);
+}
+
+.garden-petal-tone-0 {
+  fill: var(--md-tonal);
+}
+
+.garden-petal-tone-1 {
   fill: var(--md-primary);
 }
 
@@ -7924,32 +8019,65 @@ body:has(.main-inner.index) .sidebar-blogroll {
   <footer class="footer">
     <div class="footer-inner">
 
-<section class="footer-garden" aria-labelledby="footer-garden-title" data-garden-tile="2" data-garden-layouts='[[[42,42,0],[78,42,0],[42,78,0],[78,78,0]],[[60,28,45],[92,60,45],[28,60,45],[60,92,45]],[[34,71,-18],[51,43,12],[72,75,-12],[86,43,18]]]'>
-  <div class="garden-caption"><h2 id="footer-garden-title">小小庭院</h2><span>点点纸片，歇一会儿</span></div>
-  <div class="garden-scene garden-scene-0">
+<section class="footer-garden" aria-labelledby="footer-garden-title" data-garden-name="纸屏庭" data-garden-season="autumn" data-garden-time="day" data-garden-tile="2" data-garden-layouts='[[[42,42,0],[78,42,0],[42,78,0],[78,78,0]],[[60,28,45],[92,60,45],[28,60,45],[60,92,45]],[[34,71,-18],[51,43,12],[72,75,-12],[86,43,18]]]'>
+  <div class="garden-caption"><h2 id="footer-garden-title">小小庭院</h2><span data-garden-climate>纸屏庭</span></div>
+  <div class="garden-scene garden-scene-4">
     <svg class="garden-backdrop" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
       <path class="garden-ground" d="M64 172H736"/>
-      <path class="garden-arch" d="M471 171V105a83 83 0 0 1 166 0v66h-23v-66a60 60 0 0 0-120 0v66Z"/>
-      
+      <g transform="translate(-20 0)"><g transform="rotate(-12 290 100)"><rect class="garden-land" x="210" y="39" width="108" height="132" rx="26"/></g><rect class="garden-arch" x="310" y="25" width="108" height="147" rx="26"/><g transform="rotate(12 430 100)"><rect class="garden-land" x="410" y="39" width="108" height="132" rx="26"/></g><path class="garden-line" d="M339 45v105m17-105v105m17-105v105"/></g>
       <path class="garden-grass" d="M99 172v-18m-8 18-7-11m24 11 8-13M695 172v-18m-8 18-7-11m24 11 8-13"/>
-      <circle class="garden-stone" cx="150" cy="186" r="4"/><circle class="garden-stone" cx="235" cy="187" r="5"/><circle class="garden-stone" cx="346" cy="181" r="4"/><circle class="garden-stone" cx="466" cy="180" r="3"/><circle class="garden-stone" cx="537" cy="184" r="5"/><circle class="garden-stone" cx="649" cy="179" r="5"/>
+      <circle class="garden-stone" cx="157" cy="183" r="3"/><circle class="garden-stone" cx="241" cy="182" r="5"/><circle class="garden-stone" cx="362" cy="181" r="4"/><circle class="garden-stone" cx="438" cy="187" r="5"/><circle class="garden-stone" cx="553" cy="181" r="5"/><circle class="garden-stone" cx="661" cy="182" r="5"/>
     </svg>
-    <button class="garden-object garden-flower" type="button" data-garden-flower aria-label="展开纸花" aria-pressed="false" title="展开纸花">
+    <svg class="garden-season-art" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <g class="garden-season-spring"><path class="garden-season-line" d="M60 109V53"/><path class="garden-season-fill" d="M60 79C19 84 16 43 23 31c32 0 41 25 37 48Zm0-17c-4-35 18-50 40-47 8 26-5 48-40 47Z"/></g>
+      <g class="garden-season-summer"><path class="garden-season-line" d="M12 87q24-18 48 0t48 0M20 103q20-14 40 0t40 0"/><circle class="garden-season-fill" cx="60" cy="42" r="28"/><path class="garden-season-line" d="M60 5V0M23 42H12m85 0h11M33 15l-7-7m61 7 7-7"/></g>
+      <g class="garden-season-autumn"><path class="garden-season-fill" d="M60 108C9 67 18 32 60 9c42 23 51 58 0 99Z"/><path class="garden-season-line" d="M60 27v82m0-34L38 53m22 37 25-27"/></g>
+      <g class="garden-season-winter"><path class="garden-season-fill" d="m60 6 37 54-37 54-37-54Z"/><path class="garden-season-line" d="M60 22v76M36 60h48m-39-23 30 46m-30 0 30-46"/></g>
+    </svg>
+    <svg class="garden-sky" viewBox="0 0 36 36" aria-hidden="true" focusable="false"><circle class="garden-day" cx="18" cy="18" r="9"/><path class="garden-night" d="M26 25A13 13 0 0 1 12 5a13 13 0 1 0 14 20Z"/></svg>
+    <button class="garden-object garden-flower garden-flower-shape-3" style="left:50%" type="button" data-garden-flower aria-label="展开纸花" aria-pressed="false" title="展开纸花">
       <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
         <path class="garden-stem" d="M60 60v51m0-9c-18 1-26-8-26-17 16-1 25 8 26 17Z"/>
-        <g transform="rotate(0 60 60)"><g class="garden-petal"><rect class="garden-petal-0" x="43" y="21" width="34" height="49" rx="17"/></g></g><g transform="rotate(90 60 60)"><g class="garden-petal"><rect class="garden-petal-1" x="43" y="21" width="34" height="49" rx="17"/></g></g><g transform="rotate(180 60 60)"><g class="garden-petal"><rect class="garden-petal-2" x="43" y="21" width="34" height="49" rx="17"/></g></g><g transform="rotate(270 60 60)"><g class="garden-petal"><rect class="garden-petal-3" x="43" y="21" width="34" height="49" rx="17"/></g></g>
+        <g transform="rotate(0 60 60)"><g class="garden-petal garden-petal-tone-0">
+          <path d="M60 64V18a35 35 0 0 1 31 38Z"/>
+        </g></g><g transform="rotate(60 60 60)"><g class="garden-petal garden-petal-tone-1">
+          <path d="M60 64V18a35 35 0 0 1 31 38Z"/>
+        </g></g><g transform="rotate(120 60 60)"><g class="garden-petal garden-petal-tone-0">
+          <path d="M60 64V18a35 35 0 0 1 31 38Z"/>
+        </g></g><g transform="rotate(180 60 60)"><g class="garden-petal garden-petal-tone-1">
+          <path d="M60 64V18a35 35 0 0 1 31 38Z"/>
+        </g></g><g transform="rotate(240 60 60)"><g class="garden-petal garden-petal-tone-0">
+          <path d="M60 64V18a35 35 0 0 1 31 38Z"/>
+        </g></g><g transform="rotate(300 60 60)"><g class="garden-petal garden-petal-tone-1">
+          <path d="M60 64V18a35 35 0 0 1 31 38Z"/>
+        </g></g>
         <circle class="garden-flower-heart" cx="60" cy="60" r="12"/>
       </svg>
     </button>
-    <button class="garden-object garden-wheel" type="button" data-garden-wheel aria-label="拨动圆盘" title="拨动圆盘">
+    <button class="garden-object garden-wheel" style="left:20%" type="button" data-garden-wheel aria-label="拨动圆盘" title="拨动圆盘">
       <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
         <ellipse class="garden-orbit" cx="60" cy="83" rx="49" ry="17"/>
-        <g class="garden-wheel-disc"><circle class="garden-disc-outer" cx="60" cy="64" r="31"/><circle class="garden-disc-inner" cx="60" cy="64" r="21"/><circle class="garden-disc-mark" cx="60" cy="64" r="11"/><path class="garden-disc-mark" d="M42 61a18 18 0 0 1 21-15"/><circle class="garden-disc-dot" cx="60" cy="64" r="4"/></g>
+        <g class="garden-wheel-disc">
+          <path class="garden-disc-outer" d="M60 30c45 0 47 66 0 68-47-2-45-68 0-68Z"/>
+          <circle class="garden-disc-inner" cx="60" cy="64" r="20"/><circle class="garden-disc-mark" cx="60" cy="64" r="11"/><path class="garden-disc-mark" d="M42 61a18 18 0 0 1 21-15"/><circle class="garden-disc-dot" cx="60" cy="64" r="4"/>
+        </g>
       </svg>
     </button>
-    <button class="garden-object garden-papers" type="button" data-garden-papers aria-label="重新排列纸片" title="重新排列纸片">
+    <button class="garden-object garden-papers" style="left:80%" type="button" data-garden-papers aria-label="重新排列纸片" title="重新排列纸片">
       <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-        <g class="garden-tile" style="transform:translate(34px,71px) rotate(-18deg)"><rect class="garden-tile-a" x="-15" y="-15" width="30" height="30" rx="10"/></g><g class="garden-tile" style="transform:translate(51px,43px) rotate(12deg)"><rect class="garden-tile-b" x="-15" y="-15" width="30" height="30" rx="10"/></g><g class="garden-tile" style="transform:translate(72px,75px) rotate(-12deg)"><rect class="garden-tile-c" x="-15" y="-15" width="30" height="30" rx="10"/></g><g class="garden-tile" style="transform:translate(86px,43px) rotate(18deg)"><rect class="garden-tile-a" x="-15" y="-15" width="30" height="30" rx="10"/></g>
+        <g class="garden-tile garden-tile-a" style="transform:translate(34px,71px) rotate(-18deg)">
+          <path d="m0-21 21 21L0 21-21 0Z"/>
+          
+        </g><g class="garden-tile garden-tile-b" style="transform:translate(51px,43px) rotate(12deg)">
+          <path d="m0-21 21 21L0 21-21 0Z"/>
+          
+        </g><g class="garden-tile garden-tile-c" style="transform:translate(72px,75px) rotate(-12deg)">
+          <path d="m0-21 21 21L0 21-21 0Z"/>
+          
+        </g><g class="garden-tile garden-tile-a" style="transform:translate(86px,43px) rotate(18deg)">
+          <path d="m0-21 21 21L0 21-21 0Z"/>
+          
+        </g>
       </svg>
     </button>
   </div>
@@ -7958,7 +8086,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
     <a href="/2026/01/17/Spawn%20failed%20Erroe%20Handle/" data-garden-random data-garden-index="/assets/363c3e46c37e1deae82a/footer-garden.json" data-garden-archive="/archives/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 4 4-4 4m4-4h-3c-5 0-5 10-10 10H4M4 7h3c2 0 3 2 4 4m2 2c1 2 2 4 4 4h3m-4-4 4 4-4 4"/></svg>随机读一篇</a>
     <button type="button" data-search-open data-garden-search hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>打开搜索</button>
   </nav>
-  <p class="garden-status" role="status" aria-live="polite" aria-atomic="true">随文章生长的小庭院</p>
+  <p class="garden-status" role="status" aria-live="polite" aria-atomic="true">点点纸片，歇一会儿。不同文章，自有一处风景。</p>
 </section>
 
   <div class="beian footer-note">
@@ -8028,7 +8156,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
   </dialog>
 </div>
 
-<script src="/assets/a86340d0e03d90bbb7e0/js/blog-easter-eggs.js" defer></script>
+<script src="/assets/611815ed0d18aa43b20d/js/blog-easter-eggs.js" defer></script>
 <script>
     var now = new Date(); 
     function createtime() { 
