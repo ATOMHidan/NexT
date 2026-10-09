@@ -43,34 +43,6 @@
     document.querySelectorAll('button[data-palette]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.palette === palette)));
   }
   apply();
-  let paletteTransition;
-  function revealPalette(button) {
-    paletteTransition?.skipTransition();
-    if (!document.startViewTransition || !root.animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { apply(); return; }
-    const box = button.getBoundingClientRect();
-    const x = box.left + box.width / 2, y = box.top + box.height / 2;
-    const radius = Math.hypot(Math.max(x, innerWidth-x), Math.max(y, innerHeight-y));
-    root.classList.add('palette-reveal');
-    let transition;
-    try { transition = document.startViewTransition(apply); }
-    catch { root.classList.remove('palette-reveal'); apply(); return; }
-    paletteTransition = transition;
-    // Hidden tabs or an interrupted snapshot may never produce a ready frame.
-    const watchdog = setTimeout(() => {
-      if (paletteTransition !== transition) return;
-      transition.skipTransition(); apply();
-      root.classList.remove('palette-reveal'); paletteTransition = null;
-    }, 1000);
-    transition.ready.then(() => {
-      if (paletteTransition !== transition) return;
-      return root.animate({clipPath:[`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`]}, {
-        duration: innerWidth < 600 ? 260 : 380, easing:'cubic-bezier(.2,0,0,1)', pseudoElement:'::view-transition-new(root)'
-      }).finished;
-    }).catch(() => {}).finally(() => {
-      clearTimeout(watchdog);
-      if (paletteTransition === transition) { root.classList.remove('palette-reveal'); paletteTransition = null; }
-    });
-  }
   system.addEventListener('change', apply);
   window.addEventListener('storage', event => {
     if (event.key === key || event.key === null) { preference = valid(event.newValue); apply(); }
@@ -82,7 +54,7 @@
       if (palette === validPalette(button.dataset.palette)) return;
       palette = validPalette(button.dataset.palette);
       try { localStorage.setItem(paletteKey, palette); } catch {}
-      revealPalette(button);
+      apply();
     }));
     document.querySelectorAll('[data-theme-select]').forEach(select => {
       select.addEventListener('change', () => {
@@ -6598,10 +6570,6 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 <link rel="dns-prefetch" href="https://comment-rose.vercel.app/">
   <style id="palette-style">/* Tonal accent families; quiet neutral reading surfaces for optional palettes. */
-html.palette-reveal::view-transition-old(root), html.palette-reveal::view-transition-new(root) { animation:none; mix-blend-mode:normal; }
-html.palette-reveal::view-transition-new(root) { z-index:1; }
-html.palette-reveal::view-transition-old(root) { z-index:0; }
-html.palette-reveal, html.palette-reveal * { transition:none!important; }
 :root[data-palette]:not([data-palette="green"]) {
   --md-surface:#f3f4f6; --md-container:#fff; --md-low:#edeef1; --md-outline:#dbdde2;
   --md-on-primary:#fff;
