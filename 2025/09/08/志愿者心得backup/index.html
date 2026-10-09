@@ -6566,6 +6566,21 @@ body:has(.main-inner.index) .sidebar-blogroll {
   stroke-linecap: round;
 }
 
+.article-cover .cover-band,
+.article-cover .cover-band-tone {
+  fill: none;
+  stroke: var(--cover-ink);
+  stroke-width: 24;
+  stroke-linecap: round;
+  opacity: 0.72;
+}
+
+.article-cover .cover-band-tone {
+  stroke: var(--cover-tone);
+  stroke-width: 32;
+  opacity: 1;
+}
+
 :root[data-home-density='compact'] .index .article-cover {
   height: 112px;
   margin-bottom: 20px;
