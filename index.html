@@ -6618,6 +6618,236 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }
 
+.index .article-card {
+  position: relative;
+  height: 192px;
+  margin-bottom: 28px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--md-low);
+  --card-ink: var(--md-primary);
+}
+
+.index .article-card.cover-ink-1 {
+  --card-ink: var(--md-secondary);
+}
+
+.index .article-card.cover-ink-2 {
+  --card-ink: var(--md-tertiary);
+}
+
+.article-card-front,
+.article-card-back {
+  position: absolute;
+  inset: 0;
+}
+
+.index .article-card .article-cover {
+  height: 100%;
+  margin: 0;
+  border-radius: inherit;
+}
+
+.article-card [hidden] {
+  display: none !important;
+}
+
+.article-card button,
+.article-card-actions a {
+  box-sizing: border-box;
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.article-card-toggle {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  background: var(--md-container);
+  color: var(--card-ink);
+  box-shadow: 0 1px 4px var(--md-outline);
+}
+
+.article-card-back {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 18px 8px;
+  background: var(--md-low);
+  color: var(--md-text);
+  text-align: left;
+}
+
+.article-card-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.article-card .article-card-heading h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--card-ink);
+}
+
+.article-card-heading > span {
+  font-size: 10px;
+  color: var(--md-muted);
+  white-space: nowrap;
+}
+
+.article-card .article-card-chapters {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 4px;
+}
+
+.article-card-chapters li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 21px;
+  min-width: 0;
+}
+
+.article-card-chapters li > span:first-child {
+  color: var(--card-ink);
+  opacity: 0.65;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.article-card-chapters li > span:last-child {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.article-card .article-card-summary {
+  margin: 8px 0 4px;
+  font-size: 13px;
+  line-height: 1.65;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.article-card-bottom {
+  margin-top: auto;
+}
+
+.article-card-facts {
+  display: flex;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  justify-content: flex-start;
+  gap: 4px 12px;
+  color: var(--md-muted);
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.article-card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--md-outline);
+  margin-top: 4px;
+}
+
+.article-card .article-card-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--card-ink);
+  border: 0;
+  padding-left: 0;
+}
+
+.article-card-actions button {
+  background: transparent;
+  color: var(--md-muted);
+}
+
+.article-card :focus-visible {
+  outline: 2px solid var(--card-ink);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  .article-card button:hover {
+    background: var(--md-secondary-container);
+    color: var(--md-on-secondary-container);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .article-card.is-open .article-card-back {
+    animation: card-reveal 0.2s var(--md-ease);
+  }
+
+@keyframes card-reveal {
+    from {
+      opacity: 0.5;
+      transform: translateY(5px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+}
+}
+
+:root[data-home-density='compact'] .index .article-card {
+  height: 184px;
+  margin-bottom: 20px;
+}
+
+:root[data-home-density='compact'] .index .article-card .article-cover {
+  height: 100%;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .index .article-card {
+    height: 192px;
+    border-radius: 16px;
+    margin-bottom: 22px;
+  }
+
+  .article-card-back {
+    padding: 10px 12px 6px;
+  }
+
+  .article-card-toggle {
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .article-card-chapters li {
+    font-size: 12px;
+    line-height: 20px;
+  }
+
+  .article-card .article-card-chapters {
+    margin-top: 4px;
+  }
+}
+
 .footer-garden {
   margin: 0 0 20px;
   padding: 20px 24px 14px;
@@ -7469,7 +7699,23 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(351 135) scale(0.83)"><g transform="rotate(-10)"><path class="cover-tone" d="M-145 44C-176-5-101-106-45-93S33-6-15 36-117 86-145 44Z"/><path class="cover-accent" d="M-7 64C-26 11 39-75 89-56s85 103 39 132S14 116-7 64Z"/><circle class="cover-warm" cx="77" cy="-94" r="25"/></g></g><path class="cover-line" d="M569 100h46m-23-23v46"/></svg></div>
+  
+    
+    <div class="article-card cover-ink-1" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(351 135) scale(0.83)"><g transform="rotate(-10)"><path class="cover-tone" d="M-145 44C-176-5-101-106-45-93S33-6-15 36-117 86-145 44Z"/><path class="cover-accent" d="M-7 64C-26 11 39-75 89-56s85 103 39 132S14 116-7 64Z"/><circle class="cover-warm" cx="77" cy="-94" r="25"/></g></g><path class="cover-line" d="M569 100h46m-23-23v46"/></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-eb1e3b484c0c1e1b" aria-label="看看《Course Summary--25 FALL & WINTER》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-eb1e3b484c0c1e1b" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>公开介绍</h3></div>
+        <p class="article-card-summary">Temporary Closure......If you want to see this post ,please contact me through my email ilahyvz@gmail.com</p>
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>需密码解锁</span></div>
+          <div class="article-card-actions"><a href="/2026/01/26/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -7577,7 +7823,23 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(441 123) scale(0.95)"><rect class="cover-tone" x="-150" y="68" width="155" height="100" rx="22"/><rect class="cover-tone" x="-95" y="25" width="145" height="130" rx="22"/><rect class="cover-tone" x="-40" y="-18" width="135" height="160" rx="22"/><rect class="cover-accent" x="15" y="-61" width="125" height="190" rx="22"/><circle class="cover-warm" cx="-80" cy="-64" r="35"/><path class="cover-line" d="M-160 105h315"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></g></svg></div>
+  
+    
+    <div class="article-card cover-ink-2" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(441 123) scale(0.95)"><rect class="cover-tone" x="-150" y="68" width="155" height="100" rx="22"/><rect class="cover-tone" x="-95" y="25" width="145" height="130" rx="22"/><rect class="cover-tone" x="-40" y="-18" width="135" height="160" rx="22"/><rect class="cover-accent" x="15" y="-61" width="125" height="190" rx="22"/><circle class="cover-warm" cx="-80" cy="-64" r="35"/><path class="cover-line" d="M-160 105h315"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></g></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-f2dfb3ff057fab2c" aria-label="看看《迷惑的 Error: Spawn failed 报错》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-f2dfb3ff057fab2c" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>关于这篇文章</h3></div>
+        <p class="article-card-summary">部署时莫名其妙报错：Error: Spawn failed at ChildProcess… at ChildProcess.emit… at cp.emit… at ChildProcess._handle.onexi…</p>
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>约 1 分钟</span></div>
+          <div class="article-card-actions"><a href="/2026/01/17/Spawn%20failed%20Erroe%20Handle/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -7680,7 +7942,25 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(458 117) scale(0.95)"><circle class="cover-tone" cx="-10" cy="-12" r="107"/><path class="cover-accent" d="M-95 10a85 85 0 0 1 170 0Z"/><rect class="cover-base" x="-150" y="14" width="300" height="130" rx="0"/><path class="cover-line" d="M-145 32h280"/><path class="cover-line" d="M-132 49h254"/><path class="cover-line" d="M-119 66h228"/><path class="cover-line" d="M-106 83h202"/><path class="cover-line" d="M-93 100h176"/><circle class="cover-warm" cx="106" cy="-65" r="25"/></g><circle class="cover-warm" cx="166" cy="131" r="23"/></svg></div>
+  
+    
+    <div class="article-card cover-ink-1" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(458 117) scale(0.95)"><circle class="cover-tone" cx="-10" cy="-12" r="107"/><path class="cover-accent" d="M-95 10a85 85 0 0 1 170 0Z"/><rect class="cover-base" x="-150" y="14" width="300" height="130" rx="0"/><path class="cover-line" d="M-145 32h280"/><path class="cover-line" d="M-132 49h254"/><path class="cover-line" d="M-119 66h228"/><path class="cover-line" d="M-106 83h202"/><path class="cover-line" d="M-93 100h176"/><circle class="cover-warm" cx="106" cy="-65" r="25"/></g><circle class="cover-warm" cx="166" cy="131" r="23"/></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-f787f155df4a70d2" aria-label="看看《志愿者心得 backup》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-f787f155df4a70d2" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>这篇文章里有什么</h3></div>
+        
+          <ol class="article-card-chapters"><li><span aria-hidden="true">01</span><span title="在离生命最近的地方，感悟成长">在离生命最近的地方，感悟成长</span></li></ol>
+        
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>约 1 分钟</span><span>1 个章节</span></div>
+          <div class="article-card-actions"><a href="/2025/09/08/%E5%BF%97%E6%84%BF%E8%80%85%E5%BF%83%E5%BE%97backup/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -7789,7 +8069,25 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(471 131) scale(0.82)"><g transform="rotate(-10)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(80)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(170)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(260)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><circle class="cover-warm" cx="0" cy="0" r="23"/></g><g transform="translate(230 159) scale(.28)"><g transform="rotate(-10)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(80)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(170)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(260)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><circle class="cover-warm" cx="0" cy="0" r="23"/></g></g></svg></div>
+  
+    
+    <div class="article-card cover-ink-2" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(471 131) scale(0.82)"><g transform="rotate(-10)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(80)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(170)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(260)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><circle class="cover-warm" cx="0" cy="0" r="23"/></g><g transform="translate(230 159) scale(.28)"><g transform="rotate(-10)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(80)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(170)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(260)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><circle class="cover-warm" cx="0" cy="0" r="23"/></g></g></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-667910c295ff24a9" aria-label="看看《CS61C-Proj1 微记录》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-667910c295ff24a9" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>这篇文章里有什么</h3></div>
+        
+          <ol class="article-card-chapters"><li><span aria-hidden="true">01</span><span title="CS61C-Proj1 微记录">CS61C-Proj1 微记录</span></li></ol>
+        
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>约 1 分钟</span><span>1 个章节</span><span>7 段代码</span></div>
+          <div class="article-card-actions"><a href="/2025/08/22/CS61C-Proj1%E5%BE%AE%E8%AE%B0%E5%BD%95/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -7896,7 +8194,25 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(445 127) scale(0.95)"><g transform="rotate(12) translate(-100 85)"><path class="cover-tone" d="M0 0V-215A215 215 0 0 1 215 0Z"/><path class="cover-base" d="M0 0V-179A179 179 0 0 1 179 0Z"/><path class="cover-accent" d="M0 0V-143A143 143 0 0 1 143 0Z"/><path class="cover-base" d="M0 0V-107A107 107 0 0 1 107 0Z"/><path class="cover-accent" d="M0 0V-71A71 71 0 0 1 71 0Z"/><path class="cover-base" d="M0 0V-35A35 35 0 0 1 35 0Z"/></g><circle class="cover-warm" cx="-111" cy="-90" r="20"/></g><circle class="cover-line" cx="166" cy="97" r="30"/><circle class="cover-tone" cx="166" cy="97" r="14"/></svg></div>
+  
+    
+    <div class="article-card cover-ink-0" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(445 127) scale(0.95)"><g transform="rotate(12) translate(-100 85)"><path class="cover-tone" d="M0 0V-215A215 215 0 0 1 215 0Z"/><path class="cover-base" d="M0 0V-179A179 179 0 0 1 179 0Z"/><path class="cover-accent" d="M0 0V-143A143 143 0 0 1 143 0Z"/><path class="cover-base" d="M0 0V-107A107 107 0 0 1 107 0Z"/><path class="cover-accent" d="M0 0V-71A71 71 0 0 1 71 0Z"/><path class="cover-base" d="M0 0V-35A35 35 0 0 1 35 0Z"/></g><circle class="cover-warm" cx="-111" cy="-90" r="20"/></g><circle class="cover-line" cx="166" cy="97" r="30"/><circle class="cover-tone" cx="166" cy="97" r="14"/></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-1957a4f190986245" aria-label="看看《Ubuntu 安装移动到 D 盘》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-1957a4f190986245" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>这篇文章里有什么</h3></div>
+        
+          <ol class="article-card-chapters"><li><span aria-hidden="true">01</span><span title="问题：">问题：</span></li><li><span aria-hidden="true">02</span><span title="解决：">解决：</span></li></ol>
+        
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>约 1 分钟</span><span>2 个章节</span></div>
+          <div class="article-card-actions"><a href="/2025/08/21/Ubuntu%E5%AE%89%E8%A3%85%E7%A7%BB%E5%8A%A8/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -7998,7 +8314,23 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(329 128) scale(0.9)"><g transform="rotate(24)"><circle class="cover-tone" cx="0" cy="0" r="125"/><circle class="cover-base" cx="0" cy="0" r="101"/><circle class="cover-accent" cx="0" cy="0" r="77"/><circle class="cover-base" cx="0" cy="0" r="53"/><circle class="cover-warm" cx="111" cy="-65" r="29"/></g><path class="cover-line" d="M-162 80h84"/></g><g transform="translate(570 82) scale(.28)"><g transform="rotate(24)"><circle class="cover-tone" cx="0" cy="0" r="125"/><circle class="cover-base" cx="0" cy="0" r="101"/><circle class="cover-accent" cx="0" cy="0" r="77"/><circle class="cover-base" cx="0" cy="0" r="53"/><circle class="cover-warm" cx="111" cy="-65" r="29"/></g><path class="cover-line" d="M-162 80h84"/></g></g></svg></div>
+  
+    
+    <div class="article-card cover-ink-2" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(329 128) scale(0.9)"><g transform="rotate(24)"><circle class="cover-tone" cx="0" cy="0" r="125"/><circle class="cover-base" cx="0" cy="0" r="101"/><circle class="cover-accent" cx="0" cy="0" r="77"/><circle class="cover-base" cx="0" cy="0" r="53"/><circle class="cover-warm" cx="111" cy="-65" r="29"/></g><path class="cover-line" d="M-162 80h84"/></g><g transform="translate(570 82) scale(.28)"><g transform="rotate(24)"><circle class="cover-tone" cx="0" cy="0" r="125"/><circle class="cover-base" cx="0" cy="0" r="101"/><circle class="cover-accent" cx="0" cy="0" r="77"/><circle class="cover-base" cx="0" cy="0" r="53"/><circle class="cover-warm" cx="111" cy="-65" r="29"/></g><path class="cover-line" d="M-162 80h84"/></g></g></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-ae22be257d3590a9" aria-label="看看《Course Summary--25 SPRING&SUMMER》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-ae22be257d3590a9" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>公开介绍</h3></div>
+        <p class="article-card-summary">Temporary Closure......</p>
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>需密码解锁</span></div>
+          <div class="article-card-actions"><a href="/2025/08/20/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -8106,7 +8438,25 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle class="cover-tone" cx="401" cy="112" r="125"/><circle class="cover-base" cx="401" cy="112" r="119"/><g transform="translate(401 112) scale(0.72)"><g transform="rotate(12)"><path class="cover-tone" d="M0 80C-135 85-153-21-130-101-31-90 7-15 0 80Z"/><path class="cover-accent" d="M5 82C8-60 81-94 156-73 144 37 93 83 5 82Z"/><path class="cover-line" d="M-107-70 0 100 125-42"/></g><circle class="cover-warm" cx="46" cy="-93" r="20"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></svg></div>
+  
+    
+    <div class="article-card cover-ink-2" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle class="cover-tone" cx="401" cy="112" r="125"/><circle class="cover-base" cx="401" cy="112" r="119"/><g transform="translate(401 112) scale(0.72)"><g transform="rotate(12)"><path class="cover-tone" d="M0 80C-135 85-153-21-130-101-31-90 7-15 0 80Z"/><path class="cover-accent" d="M5 82C8-60 81-94 156-73 144 37 93 83 5 82Z"/><path class="cover-line" d="M-107-70 0 100 125-42"/></g><circle class="cover-warm" cx="46" cy="-93" r="20"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-33f48dc6bc3e031f" aria-label="看看《原神介绍（Powerer By Wiki）》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-33f48dc6bc3e031f" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>这篇文章里有什么</h3><span>另有 6 个章节</span></div>
+        
+          <ol class="article-card-chapters"><li><span aria-hidden="true">01</span><span title="玩法">玩法</span></li><li><span aria-hidden="true">02</span><span title="情节与角色">情节与角色</span></li><li><span aria-hidden="true">03</span><span title="开发与发行">开发与发行</span></li></ol>
+        
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>约 24 分钟</span><span>9 个章节</span></div>
+          <div class="article-card-actions"><a href="/2025/08/20/%E5%8E%9F%E7%A5%9E/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -8214,7 +8564,25 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(450 79) scale(1.04)"><g transform="rotate(24)"><rect class="cover-tone" x="-122" y="-180" width="130" height="360" rx="65"/><rect class="cover-accent" x="20" y="-150" width="88" height="300" rx="44"/><path class="cover-line" d="M-144-160v320m-12-320v320"/></g></g><circle class="cover-warm" cx="166" cy="78" r="18"/></g></svg></div>
+  
+    
+    <div class="article-card cover-ink-0" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(450 79) scale(1.04)"><g transform="rotate(24)"><rect class="cover-tone" x="-122" y="-180" width="130" height="360" rx="65"/><rect class="cover-accent" x="20" y="-150" width="88" height="300" rx="44"/><path class="cover-line" d="M-144-160v320m-12-320v320"/></g></g><circle class="cover-warm" cx="166" cy="78" r="18"/></g></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-aa752ba9d8810a33" aria-label="看看《ZJUers 轻首页》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-aa752ba9d8810a33" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>这篇文章里有什么</h3><span>另有 6 个章节</span></div>
+        
+          <ol class="article-card-chapters"><li><span aria-hidden="true">01</span><span title="浙大・教学">浙大・教学</span></li><li><span aria-hidden="true">02</span><span title="浙大・信息化服务">浙大・信息化服务</span></li><li><span aria-hidden="true">03</span><span title="浙大・其它">浙大・其它</span></li></ol>
+        
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>约 1 分钟</span><span>9 个章节</span></div>
+          <div class="article-card-actions"><a href="/2025/08/19/ZJUers%E8%BD%BB%E9%A6%96%E9%A1%B5/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -8333,7 +8701,25 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(467 130) scale(0.82)"><g transform="rotate(24)"><rect class="cover-tone" x="-145" y="-92" width="177" height="180" rx="64"/><rect class="cover-base" x="-117" y="-65" width="121" height="125" rx="42"/><rect class="cover-accent" x="-8" y="-45" width="150" height="150" rx="48"/><rect class="cover-base" x="19" y="-18" width="96" height="96" rx="26"/></g><circle class="cover-warm" cx="102" cy="-89" r="23"/></g><g transform="translate(230 159) scale(.28)"><g transform="rotate(24)"><rect class="cover-tone" x="-145" y="-92" width="177" height="180" rx="64"/><rect class="cover-base" x="-117" y="-65" width="121" height="125" rx="42"/><rect class="cover-accent" x="-8" y="-45" width="150" height="150" rx="48"/><rect class="cover-base" x="19" y="-18" width="96" height="96" rx="26"/></g><circle class="cover-warm" cx="102" cy="-89" r="23"/></g></svg></div>
+  
+    
+    <div class="article-card cover-ink-0" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(467 130) scale(0.82)"><g transform="rotate(24)"><rect class="cover-tone" x="-145" y="-92" width="177" height="180" rx="64"/><rect class="cover-base" x="-117" y="-65" width="121" height="125" rx="42"/><rect class="cover-accent" x="-8" y="-45" width="150" height="150" rx="48"/><rect class="cover-base" x="19" y="-18" width="96" height="96" rx="26"/></g><circle class="cover-warm" cx="102" cy="-89" r="23"/></g><g transform="translate(230 159) scale(.28)"><g transform="rotate(24)"><rect class="cover-tone" x="-145" y="-92" width="177" height="180" rx="64"/><rect class="cover-base" x="-117" y="-65" width="121" height="125" rx="42"/><rect class="cover-accent" x="-8" y="-45" width="150" height="150" rx="48"/><rect class="cover-base" x="19" y="-18" width="96" height="96" rx="26"/></g><circle class="cover-warm" cx="102" cy="-89" r="23"/></g></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-56d173e172f427d6" aria-label="看看《《葬送的芙莉莲》》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-56d173e172f427d6" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>这篇文章里有什么</h3></div>
+        
+          <ol class="article-card-chapters"><li><span aria-hidden="true">01</span><span title="《葬送的芙莉莲》">《葬送的芙莉莲》</span></li></ol>
+        
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>约 1 分钟</span><span>1 个章节</span></div>
+          <div class="article-card-actions"><a href="/2025/06/21/post2/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -8441,7 +8827,25 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 <div class="post-block">
-  <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(458 119) scale(0.95)"><g transform="rotate(-10)"><g transform="translate(-30 8) rotate(-15)"><rect class="cover-tone" x="-110" y="-77" width="220" height="154" rx="30"/></g><g transform="translate(12 -3) rotate(9)"><rect class="cover-warm" x="-100" y="-75" width="200" height="150" rx="28"/></g><g transform="translate(37 0) rotate(22)"><rect class="cover-accent" x="-72" y="-72" width="144" height="144" rx="26"/></g></g></g><circle class="cover-warm" cx="166" cy="73" r="20"/></g></svg></div>
+  
+    
+    <div class="article-card cover-ink-0" data-article-card>
+      <div class="article-card-front" data-card-front>
+        <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(458 119) scale(0.95)"><g transform="rotate(-10)"><g transform="translate(-30 8) rotate(-15)"><rect class="cover-tone" x="-110" y="-77" width="220" height="154" rx="30"/></g><g transform="translate(12 -3) rotate(9)"><rect class="cover-warm" x="-100" y="-75" width="200" height="150" rx="28"/></g><g transform="translate(37 0) rotate(22)"><rect class="cover-accent" x="-72" y="-72" width="144" height="144" rx="26"/></g></g></g><circle class="cover-warm" cx="166" cy="73" r="20"/></g></svg></div>
+        <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-d81f632af66b7df4" aria-label="看看《Welcome!》的背面" hidden>看看背面 <span aria-hidden="true">↗</span></button>
+      </div>
+      <section class="article-card-back" id="article-back-d81f632af66b7df4" data-card-back aria-label="文章资料卡" hidden>
+        <div class="article-card-heading"><h3>这篇文章里有什么</h3></div>
+        
+          <ol class="article-card-chapters"><li><span aria-hidden="true">01</span><span title="Sit Down and Relax.">Sit Down and Relax.</span></li></ol>
+        
+        <div class="article-card-bottom">
+          <div class="article-card-facts"><span>约 1 分钟</span><span>1 个章节</span></div>
+          <div class="article-card-actions"><a href="/2025/06/21/post1/">打开文章 <span aria-hidden="true">→</span></a><button type="button" data-card-close>返回封面</button></div>
+        </div>
+      </section>
+    </div>
+  
   
   
 
@@ -8793,7 +9197,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
   </dialog>
 </div>
 
-<script src="/assets/611815ed0d18aa43b20d/js/blog-easter-eggs.js" defer></script>
+<script src="/assets/df5b82f96a67be0bd13e/js/blog-easter-eggs.js" defer></script>
 <script>
     var now = new Date(); 
     function createtime() { 

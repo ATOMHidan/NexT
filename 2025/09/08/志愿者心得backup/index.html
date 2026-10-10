@@ -6616,6 +6616,236 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }
 
+.index .article-card {
+  position: relative;
+  height: 192px;
+  margin-bottom: 28px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--md-low);
+  --card-ink: var(--md-primary);
+}
+
+.index .article-card.cover-ink-1 {
+  --card-ink: var(--md-secondary);
+}
+
+.index .article-card.cover-ink-2 {
+  --card-ink: var(--md-tertiary);
+}
+
+.article-card-front,
+.article-card-back {
+  position: absolute;
+  inset: 0;
+}
+
+.index .article-card .article-cover {
+  height: 100%;
+  margin: 0;
+  border-radius: inherit;
+}
+
+.article-card [hidden] {
+  display: none !important;
+}
+
+.article-card button,
+.article-card-actions a {
+  box-sizing: border-box;
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.article-card-toggle {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  background: var(--md-container);
+  color: var(--card-ink);
+  box-shadow: 0 1px 4px var(--md-outline);
+}
+
+.article-card-back {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 18px 8px;
+  background: var(--md-low);
+  color: var(--md-text);
+  text-align: left;
+}
+
+.article-card-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.article-card .article-card-heading h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--card-ink);
+}
+
+.article-card-heading > span {
+  font-size: 10px;
+  color: var(--md-muted);
+  white-space: nowrap;
+}
+
+.article-card .article-card-chapters {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 4px;
+}
+
+.article-card-chapters li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 21px;
+  min-width: 0;
+}
+
+.article-card-chapters li > span:first-child {
+  color: var(--card-ink);
+  opacity: 0.65;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.article-card-chapters li > span:last-child {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.article-card .article-card-summary {
+  margin: 8px 0 4px;
+  font-size: 13px;
+  line-height: 1.65;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.article-card-bottom {
+  margin-top: auto;
+}
+
+.article-card-facts {
+  display: flex;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  justify-content: flex-start;
+  gap: 4px 12px;
+  color: var(--md-muted);
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.article-card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--md-outline);
+  margin-top: 4px;
+}
+
+.article-card .article-card-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--card-ink);
+  border: 0;
+  padding-left: 0;
+}
+
+.article-card-actions button {
+  background: transparent;
+  color: var(--md-muted);
+}
+
+.article-card :focus-visible {
+  outline: 2px solid var(--card-ink);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) {
+  .article-card button:hover {
+    background: var(--md-secondary-container);
+    color: var(--md-on-secondary-container);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .article-card.is-open .article-card-back {
+    animation: card-reveal 0.2s var(--md-ease);
+  }
+
+@keyframes card-reveal {
+    from {
+      opacity: 0.5;
+      transform: translateY(5px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+}
+}
+
+:root[data-home-density='compact'] .index .article-card {
+  height: 184px;
+  margin-bottom: 20px;
+}
+
+:root[data-home-density='compact'] .index .article-card .article-cover {
+  height: 100%;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .index .article-card {
+    height: 192px;
+    border-radius: 16px;
+    margin-bottom: 22px;
+  }
+
+  .article-card-back {
+    padding: 10px 12px 6px;
+  }
+
+  .article-card-toggle {
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .article-card-chapters li {
+    font-size: 12px;
+    line-height: 20px;
+  }
+
+  .article-card .article-card-chapters {
+    margin-top: 4px;
+  }
+}
+
 .footer-garden {
   margin: 0 0 20px;
   padding: 20px 24px 14px;
@@ -7751,7 +7981,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
   </dialog>
 </div>
 
-<script src="/assets/611815ed0d18aa43b20d/js/blog-easter-eggs.js" defer=""></script>
+<script src="/assets/df5b82f96a67be0bd13e/js/blog-easter-eggs.js" defer=""></script>
 <script>
     var now = new Date(); 
     function createtime() { 
