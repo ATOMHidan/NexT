@@ -5398,6 +5398,149 @@ button[data-music-url]:active {
   }
 }
 
+.site-account {
+  margin: 8px 12px 0;
+  min-width: 0;
+  font-size: 14px;
+}
+
+.site-account [hidden] {
+  display: none !important;
+}
+
+.account-login,
+.account-menu summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  min-height: 44px;
+  min-width: 0;
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--md-muted);
+  font: inherit;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.account-login svg,
+.account-chevron {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+
+.account-menu summary {
+  list-style: none;
+  background: var(--md-low);
+  color: var(--md-text);
+  padding: 8px 14px;
+}
+
+.account-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.account-initial {
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+[data-account-name] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.account-chevron {
+  margin-left: auto;
+  flex-basis: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.account-menu[open] .account-chevron {
+  transform: rotate(180deg);
+}
+
+.account-actions {
+  display: grid;
+  gap: 4px;
+  padding: 6px 0;
+}
+
+.account-actions button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 20px;
+  text-align: left;
+  background: transparent;
+  color: var(--md-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.account-status {
+  margin: 8px 12px;
+  color: var(--md-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.site-account :focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .account-login:hover,
+  .account-actions button:hover {
+    background: var(--md-low);
+    color: var(--md-primary);
+  }
+
+  .account-menu summary:hover {
+    background: var(--md-tonal);
+  }
+}
+
+@media (max-width: 991px) {
+  .site-account {
+    margin: 0 20px 4px;
+  }
+
+  .account-login {
+    padding: 10px 16px;
+  }
+
+  .account-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .account-actions button {
+    text-align: center;
+    background: var(--md-low);
+  }
+}
+
 .home-welcome {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 184px;
@@ -7451,7 +7594,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 
 
-<link rel="dns-prefetch" href="https://comment-rose.vercel.app/">
+<link rel="dns-prefetch" href="https://sign.262860.xyz/">
   <style id="palette-style">/* Tonal accent families; quiet neutral reading surfaces for optional palettes. */
 :root[data-palette]:not([data-palette="green"]) {
   --md-surface:#f3f4f6; --md-container:#fff; --md-low:#edeef1; --md-outline:#dbdde2;
@@ -7544,6 +7687,16 @@ body:has(.main-inner.index) .sidebar-blogroll {
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th-large fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-工具箱"><a href="/tools/2fa/" rel="section"><i class="fa fa-key fa-fw"></i>工具箱</a></li>
   </ul>
   <button type="button" class="site-search-open" data-search-open=""><i class="fa fa-search" aria-hidden="true"></i> 搜索</button>
+  <div class="site-account" data-waline-account="" data-server="https://sign.262860.xyz/">
+    <a class="account-login" data-account-login="" target="_blank" rel="noopener" href="https://sign.262860.xyz/ui/login?lng=zh-CN">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 21v-2a7 7 0 0 1 14 0v2"></path></svg><span>登录</span>
+    </a>
+    <details class="account-menu" data-account-menu="" hidden="">
+      <summary><span class="account-initial" data-account-initial="" aria-hidden="true"></span><span data-account-name="">我的账户</span><svg class="account-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"></path></svg></summary>
+      <div class="account-actions"><button type="button" data-account-profile="">账户资料</button><button type="button" data-account-logout="">退出登录</button></div>
+    </details>
+    <p class="account-status" data-account-status="" role="status" aria-live="polite" hidden=""></p>
+  </div>
   <label class="theme-control">外观
   <select data-theme-select="" aria-label="外观主题">
     <option value="system">跟随系统</option>
@@ -8104,6 +8257,7 @@ setInterval("createtime()",250);
 </script>
 <template id="deferred-live2d"><script src="/assets/73db01a99fc5e7b53765/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/73db01a99fc5e7b53765/live2dw/assets/22.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
 <script src="/assets/b11922922f5f8466110f/js/deferred-widgets.js" defer=""></script>
+<script src="/assets/3cc0e2b3bd6f3ec91051/js/site-account.js" defer=""></script>
 <dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/e78fa95bb36914aa437e/search.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close="" aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear="">清空</button></div>
@@ -8114,7 +8268,7 @@ setInterval("createtime()",250);
 </dialog>
 
 <script src="/assets/4dda5a1936ea9b28f2cd/js/site-search.js" defer=""></script>
-<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://comment-rose.vercel.app/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"path":"/2026/01/17/Spawn%20failed%20Erroe%20Handle/"}</script>
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://sign.262860.xyz/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"path":"/2026/01/17/Spawn%20failed%20Erroe%20Handle/"}</script>
 
 
 
