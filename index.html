@@ -7465,27 +7465,33 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }
 
-.index .article-cover {
+.index .article-cover,
+.post .article-cover {
   --cover-bg: var(--md-low);
   --cover-tone: var(--md-tonal);
   --cover-ink: var(--md-primary);
   --cover-warm: var(--md-tertiary-container);
   position: relative;
-  height: clamp(132px, 19vw, 192px);
-  margin: 0 0 28px;
   overflow: hidden;
   border-radius: 20px;
   background: var(--cover-bg);
   isolation: isolate;
 }
 
-.index .article-cover.cover-ink-1 {
+.index .article-cover {
+  height: clamp(132px, 19vw, 192px);
+  margin: 0 0 28px;
+}
+
+.index .article-cover.cover-ink-1,
+.post .article-cover.cover-ink-1 {
   --cover-tone: var(--md-secondary-container);
   --cover-ink: var(--md-secondary);
   --cover-warm: var(--md-tonal);
 }
 
-.index .article-cover.cover-ink-2 {
+.index .article-cover.cover-ink-2,
+.post .article-cover.cover-ink-2 {
   --cover-tone: var(--md-tertiary-container);
   --cover-ink: var(--md-tertiary);
   --cover-warm: var(--md-secondary-container);
@@ -7535,6 +7541,38 @@ body:has(.main-inner.index) .sidebar-blogroll {
   stroke: var(--cover-tone);
   stroke-width: 32;
   opacity: 1;
+}
+
+.article-cover-link {
+  display: block;
+  height: 100%;
+  border: 0;
+  border-radius: inherit;
+}
+
+.article-cover-link:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: -3px;
+}
+
+.article-entry-cover {
+  margin: 0 0 24px;
+}
+
+.article-entry-cover .article-cover {
+  height: 136px;
+  border-radius: 18px;
+}
+
+@media (max-width: 767px) {
+  .article-entry-cover {
+    margin-bottom: 20px;
+  }
+
+  .article-entry-cover .article-cover {
+    height: 88px;
+    border-radius: 16px;
+  }
 }
 
 :root[data-home-density='compact'] .index .article-cover {
@@ -7781,6 +7819,70 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
   .article-card .article-card-chapters {
     margin-top: 4px;
+  }
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-group(*) {
+  animation-duration: 260ms;
+  animation-timing-function: var(--md-ease);
+}
+
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  animation: article-page-out 100ms ease-out both;
+}
+
+::view-transition-new(root) {
+  animation: article-page-in 180ms ease-out both;
+}
+
+::view-transition-group(article-cover) {
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+::view-transition-old(article-cover),
+::view-transition-new(article-cover) {
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: normal;
+  animation-duration: 180ms;
+}
+
+::view-transition-old(article-title),
+::view-transition-new(article-title) {
+  mix-blend-mode: normal;
+  animation-duration: 180ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+  }
+}
+
+@keyframes article-page-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes article-page-in {
+  from {
+    opacity: 0;
   }
 }
 
@@ -8328,6 +8430,103 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }</style>
 
+<script id="article-transition-init">/* Native, same-origin page transitions. No interception or scroll management. */
+(() => {
+  'use strict';
+  if (!('onpageswap' in window) || !('onpagereveal' in window) || !window.navigation) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const key = 'soyo-article-transition';
+  let named = [];
+  const reset = () => {
+    for (const element of named) {
+      element.style.viewTransitionName = '';
+      if (!element.style.cssText) element.removeAttribute('style');
+    }
+    named = [];
+  };
+  const url = value => {
+    try {
+      const result = new URL(value, location.href);
+      return result.origin === location.origin && !result.hash ? result : null;
+    } catch { return null; }
+  };
+  const visible = element => {
+    if (!element || element.closest('[hidden]') || !element.getClientRects().length) return false;
+    const rect = element.getBoundingClientRect();
+    // Require a substantial visible portion, avoiding snapshots from offscreen.
+    return rect.width > 0 && rect.height > 0 && rect.right > 0 && rect.left < innerWidth &&
+      Math.min(rect.bottom, innerHeight) - Math.max(rect.top, 0) >= Math.min(40, rect.height / 2);
+  };
+  const homeCard = target => [...document.querySelectorAll('.index [data-article-url]')]
+    .find(element => url(element.dataset.articleUrl)?.pathname === target.pathname);
+  const parts = card => ({cover: card?.querySelector('.article-cover'), title: card?.querySelector('.post-title')});
+  const mark = (elements, receipt) => {
+    for (const [part, name] of [['cover', 'article-cover'], ['title', 'article-title']]) {
+      if (receipt[part]) {
+        elements[part].style.viewTransitionName = name;
+        named.push(elements[part]);
+      }
+    }
+  };
+  const removeReceipt = () => { try { sessionStorage.removeItem(key); } catch {} };
+  window.addEventListener('pageswap', event => {
+    reset();
+    removeReceipt();
+    const transition = event.viewTransition, activation = event.activation;
+    if (!transition) return;
+    const from = url(location.href), to = url(activation?.entry?.url);
+    if (reduced.matches || !from || !to || !activation || activation.navigationType === 'reload') {
+      transition.skipTransition(); return;
+    }
+    let card, kind;
+    if (document.querySelector('.main-inner.index')) {
+      card = homeCard(to); kind = 'open';
+    } else if (activation.navigationType === 'traverse') {
+      card = document.querySelector('.main-inner.post [data-article-url]'); kind = 'close';
+    }
+    if (!card) { transition.skipTransition(); return; }
+    const article = url(card.dataset.articleUrl), elements = parts(card);
+    if (!article) { transition.skipTransition(); return; }
+    const receipt = {from: from.href, to: to.href, fromKey: activation.from?.key,
+      article: article.href, kind, cover: visible(elements.cover), title: visible(elements.title)};
+    if (!receipt.cover && !receipt.title) { transition.skipTransition(); return; }
+    // Share the precise source selection with the incoming document. If storage
+    // is unavailable, use ordinary navigation rather than a mismatched snapshot.
+    try { sessionStorage.setItem(key, JSON.stringify(receipt)); }
+    catch { transition.skipTransition(); return; }
+    mark(elements, receipt);
+    transition.finished.then(reset, reset);
+  });
+  window.addEventListener('pagereveal', event => {
+    reset();
+    let receipt;
+    try { receipt = JSON.parse(sessionStorage.getItem(key)); } catch {}
+    removeReceipt();
+    const transition = event.viewTransition, activation = navigation.activation;
+    if (!transition) return;
+    const from = url(activation?.from?.url), to = url(location.href), article = url(receipt?.article);
+    if (reduced.matches || !receipt || !from || !to || !article ||
+        receipt.from !== from.href || receipt.to !== to.href ||
+        (receipt.fromKey && receipt.fromKey !== activation.from.key) || activation.navigationType === 'reload') {
+      transition.skipTransition(); return;
+    }
+    let card;
+    if (receipt.kind === 'open' && document.querySelector('.main-inner.post') && article.pathname === to.pathname) {
+      card = document.querySelector('.main-inner.post [data-article-url]');
+    } else if (receipt.kind === 'close' && activation.navigationType === 'traverse') {
+      card = homeCard(article);
+    }
+    const elements = parts(card);
+    if (!card || (receipt.cover && !visible(elements.cover)) || (receipt.title && !visible(elements.title))) {
+      transition.skipTransition(); return;
+    }
+    mark(elements, receipt);
+    // Incoming snapshots are complete at ready; never leave names in bfcache.
+    transition.ready.then(reset, reset);
+  });
+})();
+</script>
+
 
 
 <link rel="stylesheet" href="/assets/ef4fd0d00eeb1c096dfc/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-70/Q0A7rHAlt/Gh30htuHIh/2luU4nbqnDkLI/4CqUY=" crossorigin="anonymous">
@@ -8656,12 +8855,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2026/01/26/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/">
   
     
     <div class="article-card cover-ink-1" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(351 135) scale(0.83)"><g transform="rotate(-10)"><path class="cover-tone" d="M-145 44C-176-5-101-106-45-93S33-6-15 36-117 86-145 44Z"/><path class="cover-accent" d="M-7 64C-26 11 39-75 89-56s85 103 39 132S14 116-7 64Z"/><circle class="cover-warm" cx="77" cy="-94" r="25"/></g></g><path class="cover-line" d="M569 100h46m-23-23v46"/></svg></div>
+        <a class="article-cover-link" href="/2026/01/26/%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" aria-label="Course Summary--25 FALL & WINTER">
+          <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(351 135) scale(0.83)"><g transform="rotate(-10)"><path class="cover-tone" d="M-145 44C-176-5-101-106-45-93S33-6-15 36-117 86-145 44Z"/><path class="cover-accent" d="M-7 64C-26 11 39-75 89-56s85 103 39 132S14 116-7 64Z"/><circle class="cover-warm" cx="77" cy="-94" r="25"/></g></g><path class="cover-line" d="M569 100h46m-23-23v46"/></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-eb1e3b484c0c1e1b" aria-label="《Course Summary--25 FALL & WINTER》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-eb1e3b484c0c1e1b" data-card-back aria-label="文章资料卡" hidden>
@@ -8780,12 +8981,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2026/01/17/Spawn%20failed%20Erroe%20Handle/">
   
     
     <div class="article-card cover-ink-2" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(441 123) scale(0.95)"><rect class="cover-tone" x="-150" y="68" width="155" height="100" rx="22"/><rect class="cover-tone" x="-95" y="25" width="145" height="130" rx="22"/><rect class="cover-tone" x="-40" y="-18" width="135" height="160" rx="22"/><rect class="cover-accent" x="15" y="-61" width="125" height="190" rx="22"/><circle class="cover-warm" cx="-80" cy="-64" r="35"/><path class="cover-line" d="M-160 105h315"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></g></svg></div>
+        <a class="article-cover-link" href="/2026/01/17/Spawn%20failed%20Erroe%20Handle/" aria-label="迷惑的 Error: Spawn failed 报错">
+          <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(441 123) scale(0.95)"><rect class="cover-tone" x="-150" y="68" width="155" height="100" rx="22"/><rect class="cover-tone" x="-95" y="25" width="145" height="130" rx="22"/><rect class="cover-tone" x="-40" y="-18" width="135" height="160" rx="22"/><rect class="cover-accent" x="15" y="-61" width="125" height="190" rx="22"/><circle class="cover-warm" cx="-80" cy="-64" r="35"/><path class="cover-line" d="M-160 105h315"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></g></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-f2dfb3ff057fab2c" aria-label="《迷惑的 Error: Spawn failed 报错》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-f2dfb3ff057fab2c" data-card-back aria-label="文章资料卡" hidden>
@@ -8899,12 +9102,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2025/09/08/%E5%BF%97%E6%84%BF%E8%80%85%E5%BF%83%E5%BE%97backup/">
   
     
     <div class="article-card cover-ink-1" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(458 117) scale(0.95)"><circle class="cover-tone" cx="-10" cy="-12" r="107"/><path class="cover-accent" d="M-95 10a85 85 0 0 1 170 0Z"/><rect class="cover-base" x="-150" y="14" width="300" height="130" rx="0"/><path class="cover-line" d="M-145 32h280"/><path class="cover-line" d="M-132 49h254"/><path class="cover-line" d="M-119 66h228"/><path class="cover-line" d="M-106 83h202"/><path class="cover-line" d="M-93 100h176"/><circle class="cover-warm" cx="106" cy="-65" r="25"/></g><circle class="cover-warm" cx="166" cy="131" r="23"/></svg></div>
+        <a class="article-cover-link" href="/2025/09/08/%E5%BF%97%E6%84%BF%E8%80%85%E5%BF%83%E5%BE%97backup/" aria-label="志愿者心得 backup">
+          <div class="article-cover cover-ink-1" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(458 117) scale(0.95)"><circle class="cover-tone" cx="-10" cy="-12" r="107"/><path class="cover-accent" d="M-95 10a85 85 0 0 1 170 0Z"/><rect class="cover-base" x="-150" y="14" width="300" height="130" rx="0"/><path class="cover-line" d="M-145 32h280"/><path class="cover-line" d="M-132 49h254"/><path class="cover-line" d="M-119 66h228"/><path class="cover-line" d="M-106 83h202"/><path class="cover-line" d="M-93 100h176"/><circle class="cover-warm" cx="106" cy="-65" r="25"/></g><circle class="cover-warm" cx="166" cy="131" r="23"/></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-f787f155df4a70d2" aria-label="《志愿者心得 backup》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-f787f155df4a70d2" data-card-back aria-label="文章资料卡" hidden>
@@ -9026,12 +9231,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2025/08/22/CS61C-Proj1%E5%BE%AE%E8%AE%B0%E5%BD%95/">
   
     
     <div class="article-card cover-ink-2" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(471 131) scale(0.82)"><g transform="rotate(-10)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(80)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(170)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(260)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><circle class="cover-warm" cx="0" cy="0" r="23"/></g><g transform="translate(230 159) scale(.28)"><g transform="rotate(-10)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(80)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(170)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(260)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><circle class="cover-warm" cx="0" cy="0" r="23"/></g></g></svg></div>
+        <a class="article-cover-link" href="/2025/08/22/CS61C-Proj1%E5%BE%AE%E8%AE%B0%E5%BD%95/" aria-label="CS61C-Proj1 微记录">
+          <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(471 131) scale(0.82)"><g transform="rotate(-10)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(80)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(170)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(260)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><circle class="cover-warm" cx="0" cy="0" r="23"/></g><g transform="translate(230 159) scale(.28)"><g transform="rotate(-10)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(80)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(170)"><rect class="cover-tone" x="-40" y="-112" width="80" height="100" rx="40"/></g><g transform="rotate(260)"><rect class="cover-accent" x="-40" y="-112" width="80" height="100" rx="40"/></g><circle class="cover-warm" cx="0" cy="0" r="23"/></g></g></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-667910c295ff24a9" aria-label="《CS61C-Proj1 微记录》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-667910c295ff24a9" data-card-back aria-label="文章资料卡" hidden>
@@ -9151,12 +9358,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2025/08/21/Ubuntu%E5%AE%89%E8%A3%85%E7%A7%BB%E5%8A%A8/">
   
     
     <div class="article-card cover-ink-0" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(445 127) scale(0.95)"><g transform="rotate(12) translate(-100 85)"><path class="cover-tone" d="M0 0V-215A215 215 0 0 1 215 0Z"/><path class="cover-base" d="M0 0V-179A179 179 0 0 1 179 0Z"/><path class="cover-accent" d="M0 0V-143A143 143 0 0 1 143 0Z"/><path class="cover-base" d="M0 0V-107A107 107 0 0 1 107 0Z"/><path class="cover-accent" d="M0 0V-71A71 71 0 0 1 71 0Z"/><path class="cover-base" d="M0 0V-35A35 35 0 0 1 35 0Z"/></g><circle class="cover-warm" cx="-111" cy="-90" r="20"/></g><circle class="cover-line" cx="166" cy="97" r="30"/><circle class="cover-tone" cx="166" cy="97" r="14"/></svg></div>
+        <a class="article-cover-link" href="/2025/08/21/Ubuntu%E5%AE%89%E8%A3%85%E7%A7%BB%E5%8A%A8/" aria-label="Ubuntu 安装移动到 D 盘">
+          <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(445 127) scale(0.95)"><g transform="rotate(12) translate(-100 85)"><path class="cover-tone" d="M0 0V-215A215 215 0 0 1 215 0Z"/><path class="cover-base" d="M0 0V-179A179 179 0 0 1 179 0Z"/><path class="cover-accent" d="M0 0V-143A143 143 0 0 1 143 0Z"/><path class="cover-base" d="M0 0V-107A107 107 0 0 1 107 0Z"/><path class="cover-accent" d="M0 0V-71A71 71 0 0 1 71 0Z"/><path class="cover-base" d="M0 0V-35A35 35 0 0 1 35 0Z"/></g><circle class="cover-warm" cx="-111" cy="-90" r="20"/></g><circle class="cover-line" cx="166" cy="97" r="30"/><circle class="cover-tone" cx="166" cy="97" r="14"/></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-1957a4f190986245" aria-label="《Ubuntu 安装移动到 D 盘》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-1957a4f190986245" data-card-back aria-label="文章资料卡" hidden>
@@ -9271,12 +9480,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2025/08/20/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/">
   
     
     <div class="article-card cover-ink-2" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(329 128) scale(0.9)"><g transform="rotate(24)"><circle class="cover-tone" cx="0" cy="0" r="125"/><circle class="cover-base" cx="0" cy="0" r="101"/><circle class="cover-accent" cx="0" cy="0" r="77"/><circle class="cover-base" cx="0" cy="0" r="53"/><circle class="cover-warm" cx="111" cy="-65" r="29"/></g><path class="cover-line" d="M-162 80h84"/></g><g transform="translate(570 82) scale(.28)"><g transform="rotate(24)"><circle class="cover-tone" cx="0" cy="0" r="125"/><circle class="cover-base" cx="0" cy="0" r="101"/><circle class="cover-accent" cx="0" cy="0" r="77"/><circle class="cover-base" cx="0" cy="0" r="53"/><circle class="cover-warm" cx="111" cy="-65" r="29"/></g><path class="cover-line" d="M-162 80h84"/></g></g></svg></div>
+        <a class="article-cover-link" href="/2025/08/20/%E5%A4%A7%E4%BA%8C%E4%B8%8B%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/" aria-label="Course Summary--25 SPRING&SUMMER">
+          <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(329 128) scale(0.9)"><g transform="rotate(24)"><circle class="cover-tone" cx="0" cy="0" r="125"/><circle class="cover-base" cx="0" cy="0" r="101"/><circle class="cover-accent" cx="0" cy="0" r="77"/><circle class="cover-base" cx="0" cy="0" r="53"/><circle class="cover-warm" cx="111" cy="-65" r="29"/></g><path class="cover-line" d="M-162 80h84"/></g><g transform="translate(570 82) scale(.28)"><g transform="rotate(24)"><circle class="cover-tone" cx="0" cy="0" r="125"/><circle class="cover-base" cx="0" cy="0" r="101"/><circle class="cover-accent" cx="0" cy="0" r="77"/><circle class="cover-base" cx="0" cy="0" r="53"/><circle class="cover-warm" cx="111" cy="-65" r="29"/></g><path class="cover-line" d="M-162 80h84"/></g></g></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-ae22be257d3590a9" aria-label="《Course Summary--25 SPRING&SUMMER》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-ae22be257d3590a9" data-card-back aria-label="文章资料卡" hidden>
@@ -9395,12 +9606,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2025/08/20/%E5%8E%9F%E7%A5%9E/">
   
     
     <div class="article-card cover-ink-2" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle class="cover-tone" cx="401" cy="112" r="125"/><circle class="cover-base" cx="401" cy="112" r="119"/><g transform="translate(401 112) scale(0.72)"><g transform="rotate(12)"><path class="cover-tone" d="M0 80C-135 85-153-21-130-101-31-90 7-15 0 80Z"/><path class="cover-accent" d="M5 82C8-60 81-94 156-73 144 37 93 83 5 82Z"/><path class="cover-line" d="M-107-70 0 100 125-42"/></g><circle class="cover-warm" cx="46" cy="-93" r="20"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></svg></div>
+        <a class="article-cover-link" href="/2025/08/20/%E5%8E%9F%E7%A5%9E/" aria-label="原神介绍（Powerer By Wiki）">
+          <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle class="cover-tone" cx="401" cy="112" r="125"/><circle class="cover-base" cx="401" cy="112" r="119"/><g transform="translate(401 112) scale(0.72)"><g transform="rotate(12)"><path class="cover-tone" d="M0 80C-135 85-153-21-130-101-31-90 7-15 0 80Z"/><path class="cover-accent" d="M5 82C8-60 81-94 156-73 144 37 93 83 5 82Z"/><path class="cover-line" d="M-107-70 0 100 125-42"/></g><circle class="cover-warm" cx="46" cy="-93" r="20"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-33f48dc6bc3e031f" aria-label="《原神介绍（Powerer By Wiki）》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-33f48dc6bc3e031f" data-card-back aria-label="文章资料卡" hidden>
@@ -9521,12 +9734,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2025/08/19/ZJUers%E8%BD%BB%E9%A6%96%E9%A1%B5/">
   
     
     <div class="article-card cover-ink-0" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(450 79) scale(1.04)"><g transform="rotate(24)"><rect class="cover-tone" x="-122" y="-180" width="130" height="360" rx="65"/><rect class="cover-accent" x="20" y="-150" width="88" height="300" rx="44"/><path class="cover-line" d="M-144-160v320m-12-320v320"/></g></g><circle class="cover-warm" cx="166" cy="78" r="18"/></g></svg></div>
+        <a class="article-cover-link" href="/2025/08/19/ZJUers%E8%BD%BB%E9%A6%96%E9%A1%B5/" aria-label="ZJUers 轻首页">
+          <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(450 79) scale(1.04)"><g transform="rotate(24)"><rect class="cover-tone" x="-122" y="-180" width="130" height="360" rx="65"/><rect class="cover-accent" x="20" y="-150" width="88" height="300" rx="44"/><path class="cover-line" d="M-144-160v320m-12-320v320"/></g></g><circle class="cover-warm" cx="166" cy="78" r="18"/></g></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-aa752ba9d8810a33" aria-label="《ZJUers 轻首页》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-aa752ba9d8810a33" data-card-back aria-label="文章资料卡" hidden>
@@ -9658,12 +9873,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2025/06/21/post2/">
   
     
     <div class="article-card cover-ink-0" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(467 130) scale(0.82)"><g transform="rotate(24)"><rect class="cover-tone" x="-145" y="-92" width="177" height="180" rx="64"/><rect class="cover-base" x="-117" y="-65" width="121" height="125" rx="42"/><rect class="cover-accent" x="-8" y="-45" width="150" height="150" rx="48"/><rect class="cover-base" x="19" y="-18" width="96" height="96" rx="26"/></g><circle class="cover-warm" cx="102" cy="-89" r="23"/></g><g transform="translate(230 159) scale(.28)"><g transform="rotate(24)"><rect class="cover-tone" x="-145" y="-92" width="177" height="180" rx="64"/><rect class="cover-base" x="-117" y="-65" width="121" height="125" rx="42"/><rect class="cover-accent" x="-8" y="-45" width="150" height="150" rx="48"/><rect class="cover-base" x="19" y="-18" width="96" height="96" rx="26"/></g><circle class="cover-warm" cx="102" cy="-89" r="23"/></g></svg></div>
+        <a class="article-cover-link" href="/2025/06/21/post2/" aria-label="《葬送的芙莉莲》">
+          <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(467 130) scale(0.82)"><g transform="rotate(24)"><rect class="cover-tone" x="-145" y="-92" width="177" height="180" rx="64"/><rect class="cover-base" x="-117" y="-65" width="121" height="125" rx="42"/><rect class="cover-accent" x="-8" y="-45" width="150" height="150" rx="48"/><rect class="cover-base" x="19" y="-18" width="96" height="96" rx="26"/></g><circle class="cover-warm" cx="102" cy="-89" r="23"/></g><g transform="translate(230 159) scale(.28)"><g transform="rotate(24)"><rect class="cover-tone" x="-145" y="-92" width="177" height="180" rx="64"/><rect class="cover-base" x="-117" y="-65" width="121" height="125" rx="42"/><rect class="cover-accent" x="-8" y="-45" width="150" height="150" rx="48"/><rect class="cover-base" x="19" y="-18" width="96" height="96" rx="26"/></g><circle class="cover-warm" cx="102" cy="-89" r="23"/></g></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-56d173e172f427d6" aria-label="《《葬送的芙莉莲》》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-56d173e172f427d6" data-card-back aria-label="文章资料卡" hidden>
@@ -9784,12 +10001,14 @@ body:has(.main-inner.index) .sidebar-blogroll {
     
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2025/06/21/post1/">
   
     
     <div class="article-card cover-ink-0" data-article-card>
       <div class="article-card-front" data-card-front>
-        <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(458 119) scale(0.95)"><g transform="rotate(-10)"><g transform="translate(-30 8) rotate(-15)"><rect class="cover-tone" x="-110" y="-77" width="220" height="154" rx="30"/></g><g transform="translate(12 -3) rotate(9)"><rect class="cover-warm" x="-100" y="-75" width="200" height="150" rx="28"/></g><g transform="translate(37 0) rotate(22)"><rect class="cover-accent" x="-72" y="-72" width="144" height="144" rx="26"/></g></g></g><circle class="cover-warm" cx="166" cy="73" r="20"/></g></svg></div>
+        <a class="article-cover-link" href="/2025/06/21/post1/" aria-label="Welcome!">
+          <div class="article-cover cover-ink-0" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(458 119) scale(0.95)"><g transform="rotate(-10)"><g transform="translate(-30 8) rotate(-15)"><rect class="cover-tone" x="-110" y="-77" width="220" height="154" rx="30"/></g><g transform="translate(12 -3) rotate(9)"><rect class="cover-warm" x="-100" y="-75" width="200" height="150" rx="28"/></g><g transform="translate(37 0) rotate(22)"><rect class="cover-accent" x="-72" y="-72" width="144" height="144" rx="26"/></g></g></g><circle class="cover-warm" cx="166" cy="73" r="20"/></g></svg></div>
+        </a>
         <button class="article-card-toggle" type="button" data-card-open aria-expanded="false" aria-controls="article-back-d81f632af66b7df4" aria-label="《Welcome!》的背面" hidden>背面 <span aria-hidden="true">↗</span></button>
       </div>
       <section class="article-card-back" id="article-back-d81f632af66b7df4" data-card-back aria-label="文章资料卡" hidden>

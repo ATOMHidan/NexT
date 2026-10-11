@@ -7463,27 +7463,33 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }
 
-.index .article-cover {
+.index .article-cover,
+.post .article-cover {
   --cover-bg: var(--md-low);
   --cover-tone: var(--md-tonal);
   --cover-ink: var(--md-primary);
   --cover-warm: var(--md-tertiary-container);
   position: relative;
-  height: clamp(132px, 19vw, 192px);
-  margin: 0 0 28px;
   overflow: hidden;
   border-radius: 20px;
   background: var(--cover-bg);
   isolation: isolate;
 }
 
-.index .article-cover.cover-ink-1 {
+.index .article-cover {
+  height: clamp(132px, 19vw, 192px);
+  margin: 0 0 28px;
+}
+
+.index .article-cover.cover-ink-1,
+.post .article-cover.cover-ink-1 {
   --cover-tone: var(--md-secondary-container);
   --cover-ink: var(--md-secondary);
   --cover-warm: var(--md-tonal);
 }
 
-.index .article-cover.cover-ink-2 {
+.index .article-cover.cover-ink-2,
+.post .article-cover.cover-ink-2 {
   --cover-tone: var(--md-tertiary-container);
   --cover-ink: var(--md-tertiary);
   --cover-warm: var(--md-secondary-container);
@@ -7533,6 +7539,38 @@ body:has(.main-inner.index) .sidebar-blogroll {
   stroke: var(--cover-tone);
   stroke-width: 32;
   opacity: 1;
+}
+
+.article-cover-link {
+  display: block;
+  height: 100%;
+  border: 0;
+  border-radius: inherit;
+}
+
+.article-cover-link:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: -3px;
+}
+
+.article-entry-cover {
+  margin: 0 0 24px;
+}
+
+.article-entry-cover .article-cover {
+  height: 136px;
+  border-radius: 18px;
+}
+
+@media (max-width: 767px) {
+  .article-entry-cover {
+    margin-bottom: 20px;
+  }
+
+  .article-entry-cover .article-cover {
+    height: 88px;
+    border-radius: 16px;
+  }
 }
 
 :root[data-home-density='compact'] .index .article-cover {
@@ -7779,6 +7817,70 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
   .article-card .article-card-chapters {
     margin-top: 4px;
+  }
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-group(*) {
+  animation-duration: 260ms;
+  animation-timing-function: var(--md-ease);
+}
+
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  animation: article-page-out 100ms ease-out both;
+}
+
+::view-transition-new(root) {
+  animation: article-page-in 180ms ease-out both;
+}
+
+::view-transition-group(article-cover) {
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+::view-transition-old(article-cover),
+::view-transition-new(article-cover) {
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: normal;
+  animation-duration: 180ms;
+}
+
+::view-transition-old(article-title),
+::view-transition-new(article-title) {
+  mix-blend-mode: normal;
+  animation-duration: 180ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+  }
+}
+
+@keyframes article-page-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes article-page-in {
+  from {
+    opacity: 0;
   }
 }
 
@@ -8326,6 +8428,103 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }</style>
 
+<script id="article-transition-init">/* Native, same-origin page transitions. No interception or scroll management. */
+(() => {
+  'use strict';
+  if (!('onpageswap' in window) || !('onpagereveal' in window) || !window.navigation) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const key = 'soyo-article-transition';
+  let named = [];
+  const reset = () => {
+    for (const element of named) {
+      element.style.viewTransitionName = '';
+      if (!element.style.cssText) element.removeAttribute('style');
+    }
+    named = [];
+  };
+  const url = value => {
+    try {
+      const result = new URL(value, location.href);
+      return result.origin === location.origin && !result.hash ? result : null;
+    } catch { return null; }
+  };
+  const visible = element => {
+    if (!element || element.closest('[hidden]') || !element.getClientRects().length) return false;
+    const rect = element.getBoundingClientRect();
+    // Require a substantial visible portion, avoiding snapshots from offscreen.
+    return rect.width > 0 && rect.height > 0 && rect.right > 0 && rect.left < innerWidth &&
+      Math.min(rect.bottom, innerHeight) - Math.max(rect.top, 0) >= Math.min(40, rect.height / 2);
+  };
+  const homeCard = target => [...document.querySelectorAll('.index [data-article-url]')]
+    .find(element => url(element.dataset.articleUrl)?.pathname === target.pathname);
+  const parts = card => ({cover: card?.querySelector('.article-cover'), title: card?.querySelector('.post-title')});
+  const mark = (elements, receipt) => {
+    for (const [part, name] of [['cover', 'article-cover'], ['title', 'article-title']]) {
+      if (receipt[part]) {
+        elements[part].style.viewTransitionName = name;
+        named.push(elements[part]);
+      }
+    }
+  };
+  const removeReceipt = () => { try { sessionStorage.removeItem(key); } catch {} };
+  window.addEventListener('pageswap', event => {
+    reset();
+    removeReceipt();
+    const transition = event.viewTransition, activation = event.activation;
+    if (!transition) return;
+    const from = url(location.href), to = url(activation?.entry?.url);
+    if (reduced.matches || !from || !to || !activation || activation.navigationType === 'reload') {
+      transition.skipTransition(); return;
+    }
+    let card, kind;
+    if (document.querySelector('.main-inner.index')) {
+      card = homeCard(to); kind = 'open';
+    } else if (activation.navigationType === 'traverse') {
+      card = document.querySelector('.main-inner.post [data-article-url]'); kind = 'close';
+    }
+    if (!card) { transition.skipTransition(); return; }
+    const article = url(card.dataset.articleUrl), elements = parts(card);
+    if (!article) { transition.skipTransition(); return; }
+    const receipt = {from: from.href, to: to.href, fromKey: activation.from?.key,
+      article: article.href, kind, cover: visible(elements.cover), title: visible(elements.title)};
+    if (!receipt.cover && !receipt.title) { transition.skipTransition(); return; }
+    // Share the precise source selection with the incoming document. If storage
+    // is unavailable, use ordinary navigation rather than a mismatched snapshot.
+    try { sessionStorage.setItem(key, JSON.stringify(receipt)); }
+    catch { transition.skipTransition(); return; }
+    mark(elements, receipt);
+    transition.finished.then(reset, reset);
+  });
+  window.addEventListener('pagereveal', event => {
+    reset();
+    let receipt;
+    try { receipt = JSON.parse(sessionStorage.getItem(key)); } catch {}
+    removeReceipt();
+    const transition = event.viewTransition, activation = navigation.activation;
+    if (!transition) return;
+    const from = url(activation?.from?.url), to = url(location.href), article = url(receipt?.article);
+    if (reduced.matches || !receipt || !from || !to || !article ||
+        receipt.from !== from.href || receipt.to !== to.href ||
+        (receipt.fromKey && receipt.fromKey !== activation.from.key) || activation.navigationType === 'reload') {
+      transition.skipTransition(); return;
+    }
+    let card;
+    if (receipt.kind === 'open' && document.querySelector('.main-inner.post') && article.pathname === to.pathname) {
+      card = document.querySelector('.main-inner.post [data-article-url]');
+    } else if (receipt.kind === 'close' && activation.navigationType === 'traverse') {
+      card = homeCard(article);
+    }
+    const elements = parts(card);
+    if (!card || (receipt.cover && !visible(elements.cover)) || (receipt.title && !visible(elements.title))) {
+      transition.skipTransition(); return;
+    }
+    mark(elements, receipt);
+    // Incoming snapshots are complete at ready; never leave names in bfcache.
+    transition.ready.then(reset, reset);
+  });
+})();
+</script>
+
 
 
 <link rel="stylesheet" href="/assets/ef4fd0d00eeb1c096dfc/lib/@fortawesome/fontawesome-free/css/all.min.css" integrity="sha256-70/Q0A7rHAlt/Gh30htuHIh/2luU4nbqnDkLI/4CqUY=" crossorigin="anonymous">
@@ -8634,8 +8833,9 @@ body:has(.main-inner.index) .sidebar-blogroll {
   
 
 
-<div class="post-block">
+<div class="post-block" data-article-url="/2025/08/20/%E5%8E%9F%E7%A5%9E/">
   
+    <div class="article-entry-cover"><div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle class="cover-tone" cx="401" cy="112" r="125"></circle><circle class="cover-base" cx="401" cy="112" r="119"></circle><g transform="translate(401 112) scale(0.72)"><g transform="rotate(12)"><path class="cover-tone" d="M0 80C-135 85-153-21-130-101-31-90 7-15 0 80Z"></path><path class="cover-accent" d="M5 82C8-60 81-94 156-73 144 37 93 83 5 82Z"></path><path class="cover-line" d="M-107-70 0 100 125-42"></path></g><circle class="cover-warm" cx="46" cy="-93" r="20"></circle></g><path class="cover-line" d="M141 168h64m-64 12h38"></path></svg></div></div>
   
   
 
