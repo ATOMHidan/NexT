@@ -7300,11 +7300,6 @@ body:has(.main-inner.index) .sidebar-blogroll {
   height: 28px;
 }
 
-.music-player-info > button[data-music-url] {
-  width: 100%;
-  min-height: 44px;
-}
-
 .music-status:empty {
   display: none;
 }
@@ -7319,9 +7314,38 @@ body:has(.main-inner.index) .sidebar-blogroll {
   outline-offset: 3px;
 }
 
+.sidebar:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 4px;
+}
+
 @media (min-width: 992px) {
   .sidebar:has(.sidebar-music-player) {
-    top: var(--music-sidebar-top, auto);
+    top: 16px;
+    margin-top: 20px;
+    max-height: calc(100vh - 96px);
+    max-height: calc(100dvh - 96px);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--md-outline) transparent;
+    border-radius: 28px;
+  }
+
+  .sidebar:has(.sidebar-music-player) .sidebar-inner {
+    margin-top: 0;
+    margin-bottom: 20px;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .sidebar:has(.sidebar-music-player) .sidebar-inner:last-child {
+    margin-bottom: 0;
+  }
+
+  .sidebar:has(.sidebar-music-player) .sidebar-toc-active .sidebar-panel-container {
+    max-height: calc(100vh - 192px);
+    max-height: calc(100dvh - 192px);
   }
 }
 
@@ -8377,7 +8401,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 </header>
         
   
-  <aside class="sidebar">
+  <aside class="sidebar" tabindex="0" aria-label="侧栏">
 
     <div class="sidebar-inner sidebar-profile sidebar-overview-active">
       <ul class="sidebar-nav">
@@ -8487,10 +8511,9 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
             <div class="music-player-info">
             <div class="music-track-title">Earthing <span>Vanbur</span></div>
-            <button type="button" class="btn" data-music-url="/assets/708a6ba302c38e6c7d03/music/earthing-vanbur.mp3">播放音乐</button>
             <audio class="local-music-audio" preload="none" hidden aria-label="Earthing — Vanbur"></audio>
-            <div class="music-controls" hidden role="group" aria-label="音乐播放控制">
-              <div class="music-playback-row"><button class="music-toggle" type="button" aria-label="播放音乐"><span class="music-state-icon" aria-hidden="true"></span><span class="music-toggle-label">播放</span></button><span class="music-time">0:00 / --:--</span></div>
+            <div class="music-controls" role="group" aria-label="音乐播放控制">
+              <div class="music-playback-row"><button class="music-toggle" type="button" data-music-url="/assets/708a6ba302c38e6c7d03/music/earthing-vanbur.mp3" aria-label="播放音乐"><span class="music-state-icon" aria-hidden="true"></span><span class="music-toggle-label">播放</span></button><span class="music-time">0:00 / --:--</span></div>
               <input class="music-seek" type="range" min="0" max="100" step="0.1" value="0" disabled aria-label="播放进度">
               <div class="music-volume-row"><button class="music-mute" type="button" aria-label="静音" aria-pressed="false">音量</button><input class="music-volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="音量"><span class="music-volume-value">100%</span></div>
             </div>
@@ -8836,7 +8859,7 @@ setInterval("createtime()",250);
 })(window, document);
 </script>
 <template id="deferred-live2d"><script src="/assets/73db01a99fc5e7b53765/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/73db01a99fc5e7b53765/live2dw/assets/22.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
-<script src="/assets/187b83201a3240871e1e/js/deferred-widgets.js" defer></script>
+<script src="/assets/d182b546a16a3db12bdf/js/deferred-widgets.js" defer></script>
 <script src="/assets/3cc0e2b3bd6f3ec91051/js/site-account.js" defer></script>
 <dialog id="appearance-panel" class="appearance-panel" aria-labelledby="appearance-title">
   <div class="appearance-head"><h2 id="appearance-title">外观与配色</h2><button type="button" data-appearance-close aria-label="关闭配色面板"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>

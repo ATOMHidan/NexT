@@ -7193,11 +7193,6 @@ body:has(.main-inner.index) .sidebar-blogroll {
   height: 28px;
 }
 
-.music-player-info > button[data-music-url] {
-  width: 100%;
-  min-height: 44px;
-}
-
 .music-status:empty {
   display: none;
 }
@@ -7212,9 +7207,38 @@ body:has(.main-inner.index) .sidebar-blogroll {
   outline-offset: 3px;
 }
 
+.sidebar:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 4px;
+}
+
 @media (min-width: 992px) {
   .sidebar:has(.sidebar-music-player) {
-    top: var(--music-sidebar-top, auto);
+    top: 16px;
+    margin-top: 20px;
+    max-height: calc(100vh - 96px);
+    max-height: calc(100dvh - 96px);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--md-outline) transparent;
+    border-radius: 28px;
+  }
+
+  .sidebar:has(.sidebar-music-player) .sidebar-inner {
+    margin-top: 0;
+    margin-bottom: 20px;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .sidebar:has(.sidebar-music-player) .sidebar-inner:last-child {
+    margin-bottom: 0;
+  }
+
+  .sidebar:has(.sidebar-music-player) .sidebar-toc-active .sidebar-panel-container {
+    max-height: calc(100vh - 192px);
+    max-height: calc(100dvh - 192px);
   }
 }
 

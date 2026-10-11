@@ -2,19 +2,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.querySelector('[data-music-url]');
   if (music) {
-    // A tall sidebar must scroll with the page before sticking at its bottom.
-    // Observe size changes (TOC, fonts, playback controls), never poll on scroll.
-    const sidebar = music.closest('.sidebar');
-    if (sidebar && 'ResizeObserver' in window) {
-      const fitSidebar = () => {
-        if (innerWidth < 992) sidebar.style.removeProperty('--music-sidebar-top');
-        // Leave the bottom corner clear of NexT's fixed back-to-top button.
-        else sidebar.style.setProperty('--music-sidebar-top', Math.min(16, innerHeight - sidebar.offsetHeight - 80) + 'px');
-      };
-      new ResizeObserver(fitSidebar).observe(sidebar);
-      window.addEventListener('resize', fitSidebar);
-      fitSidebar();
-    }
     const slot = music.closest('.music-player-slot');
     const audio = slot.querySelector('audio');
     const status = slot.querySelector('.music-status');
@@ -27,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const volumeValue = controls.querySelector('.music-volume-value');
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const visualUnavailable = '可视化暂不可用，音乐仍可播放';
-    let graph, graphUnavailable = false, visualRequest;
+    let graph, graphUnavailable = false, visualRequest, playFailed = false;
     // Resume inside the playback gesture. Only route audio into Web Audio after
     // resume succeeds; an unavailable/suspended context cannot swallow playback.
     const prepareGraph = () => {
@@ -85,9 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
       seek.setAttribute('aria-valuetext', time.textContent);
     };
     const updatePlayback = () => {
-      toggle.querySelector('.music-toggle-label').textContent = audio.paused ? '播放' : '暂停';
+      toggle.querySelector('.music-toggle-label').textContent = playFailed ? '重试' : audio.paused ? '播放' : '暂停';
       toggle.classList.toggle('is-playing', !audio.paused && !audio.ended);
-      toggle.setAttribute('aria-label', audio.paused ? '播放音乐' : '暂停音乐');
+      toggle.setAttribute('aria-label', playFailed ? '重新播放音乐' : audio.paused ? '播放音乐' : '暂停音乐');
     };
     const updateVolume = () => {
       const level = audio.muted ? 0 : audio.volume;
@@ -98,9 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const fail = () => {
       controls.classList.remove('music-active');
-      controls.hidden = true;
-      music.hidden = false;
-      music.textContent = '重新播放';
+      playFailed = true;
+      seek.disabled = true;
+      updatePlayback();
       status.textContent = '播放未成功，请点击重试';
     };
     audio.addEventListener('error', fail);
@@ -108,11 +95,18 @@ document.addEventListener('DOMContentLoaded', () => {
     ['play', 'pause', 'ended'].forEach(name => audio.addEventListener(name, updatePlayback));
     audio.addEventListener('volumechange', updateVolume);
     const play = () => {
+      status.textContent = '';
+      playFailed = false;
+      // Controls have their final height from the first paint. Only this gesture
+      // attaches the audio URL; no media is fetched merely to display controls.
+      if (!audio.getAttribute('src')) audio.src = music.dataset.musicUrl;
+      else if (audio.error) audio.load();
+      updatePlayback();
       prepareGraph();
       audio.play().catch(fail);
       loadVisual();
     };
-    toggle.addEventListener('click', () => { if (audio.paused) play(); else audio.pause(); });
+    toggle.addEventListener('click', () => { if (audio.paused || playFailed) play(); else audio.pause(); });
     seek.addEventListener('input', () => {
       if (Number.isFinite(audio.duration) && audio.duration > 0) audio.currentTime = Number(seek.value) / 100 * audio.duration;
       updateTime();
@@ -125,16 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     audio.addEventListener('playing', () => { if (status.textContent !== visualUnavailable) status.textContent = ''; controls.classList.add('music-active'); });
     ['pause','ended','waiting','stalled','emptied'].forEach(name=>audio.addEventListener(name,()=>controls.classList.remove('music-active')));
-    music.addEventListener('click', () => {
-      status.textContent = '';
-      music.hidden = true;
-      controls.hidden = false;
-      // No src exists before this click, so initial page loading never fetches audio.
-      if (!audio.getAttribute('src')) audio.src = music.dataset.musicUrl;
-      else if (audio.error) audio.load();
-      toggle.focus();
-      play();
-    });
     updateTime();
     updateVolume();
   }
