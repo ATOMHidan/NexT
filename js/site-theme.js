@@ -24,33 +24,62 @@
   const paletteKey = 'soyo-palette';
   const validPalette = value => ['green', 'blue', 'purple', 'apricot'].includes(value) ? value : 'green';
   let palette = 'green';
+  const customKey = 'soyo-custom-palette';
+  const roles = ['surface','container','low','primary','on-primary','tonal','on-tonal','secondary','secondary-container','on-secondary-container','tertiary','tertiary-container','on-tertiary-container','text','muted','outline'];
+  const readCustom = value => {
+    try {
+      const v = typeof value === 'string' ? JSON.parse(value) : value;
+      if (v?.v !== 1 || !Number.isInteger(v.hue) || v.hue < 0 || v.hue > 359 || !['soft','balanced','vivid'].includes(v.level)) return null;
+      if (![v.light,v.dark].every(colors => Array.isArray(colors) && colors.length === roles.length && colors.every(c => /^#[0-9a-f]{6}$/i.test(c)))) return null;
+      return {v:1,hue:v.hue,level:v.level,light:v.light.slice(),dark:v.dark.slice()};
+    } catch { return null; }
+  };
+  let custom = null;
   try { preference = valid(localStorage.getItem(key)); } catch {}
   try { palette = validPalette(localStorage.getItem(paletteKey)); } catch {}
+  try { custom = readCustom(localStorage.getItem(customKey)); } catch {}
   function apply() {
-    root.dataset.palette = palette;
+    root.dataset.palette = custom ? 'custom' : palette;
     root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
     root.style.colorScheme = root.dataset.theme;
+    roles.forEach((role, i) => {
+      if (custom) root.style.setProperty('--md-' + role, custom[root.dataset.theme][i]);
+      else root.style.removeProperty('--md-' + role);
+    });
     document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
       meta.removeAttribute('media');
-      meta.content = palette === 'green' ? (root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed') : (root.dataset.theme === 'dark' ? '#191b1e' : '#f3f4f6');
+      meta.content = custom ? custom[root.dataset.theme][0] : palette === 'green' ? (root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed') : (root.dataset.theme === 'dark' ? '#191b1e' : '#f3f4f6');
     });
     document.querySelectorAll('[data-theme-select]').forEach(select => { select.value = preference; });
-    document.querySelectorAll('button[data-palette]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.palette === palette)));
+    document.dispatchEvent(new CustomEvent('soyo-appearance-change'));
   }
+  window.SoyoAppearance = {
+    roles,
+    get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null}),
+    setMode(value) { preference = valid(value); try { localStorage.setItem(key, preference); } catch {} apply(); },
+    setCustom(value) {
+      const next = readCustom(value); if (!next) return false;
+      custom = next; palette = 'green';
+      try { localStorage.setItem(customKey,JSON.stringify(custom)); localStorage.setItem(paletteKey,'green'); } catch {}
+      apply(); return true;
+    },
+    reset() {
+      custom = null; palette = 'green';
+      try { localStorage.removeItem(customKey); localStorage.setItem(paletteKey,'green'); } catch {}
+      apply();
+    }
+  };
   apply();
   system.addEventListener('change', apply);
   window.addEventListener('storage', event => {
-    if (event.key === key || event.key === null) { preference = valid(event.newValue); apply(); }
-    if (event.key === paletteKey || event.key === null) { palette = validPalette(event.newValue); apply(); }
+    if (![key,paletteKey,customKey,null].includes(event.key)) return;
+    try {
+      preference = valid(localStorage.getItem(key)); palette = validPalette(localStorage.getItem(paletteKey)); custom = readCustom(localStorage.getItem(customKey));
+    } catch {}
+    apply();
   });
   document.addEventListener('DOMContentLoaded', () => {
     apply();
-    document.querySelectorAll('button[data-palette]').forEach(button => button.addEventListener('click', () => {
-      if (palette === validPalette(button.dataset.palette)) return;
-      palette = validPalette(button.dataset.palette);
-      try { localStorage.setItem(paletteKey, palette); } catch {}
-      apply();
-    }));
     document.querySelectorAll('[data-theme-select]').forEach(select => {
       select.addEventListener('change', () => {
         preference = valid(select.value);

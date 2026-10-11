@@ -29,33 +29,62 @@
   const paletteKey = 'soyo-palette';
   const validPalette = value => ['green', 'blue', 'purple', 'apricot'].includes(value) ? value : 'green';
   let palette = 'green';
+  const customKey = 'soyo-custom-palette';
+  const roles = ['surface','container','low','primary','on-primary','tonal','on-tonal','secondary','secondary-container','on-secondary-container','tertiary','tertiary-container','on-tertiary-container','text','muted','outline'];
+  const readCustom = value => {
+    try {
+      const v = typeof value === 'string' ? JSON.parse(value) : value;
+      if (v?.v !== 1 || !Number.isInteger(v.hue) || v.hue < 0 || v.hue > 359 || !['soft','balanced','vivid'].includes(v.level)) return null;
+      if (![v.light,v.dark].every(colors => Array.isArray(colors) && colors.length === roles.length && colors.every(c => /^#[0-9a-f]{6}$/i.test(c)))) return null;
+      return {v:1,hue:v.hue,level:v.level,light:v.light.slice(),dark:v.dark.slice()};
+    } catch { return null; }
+  };
+  let custom = null;
   try { preference = valid(localStorage.getItem(key)); } catch {}
   try { palette = validPalette(localStorage.getItem(paletteKey)); } catch {}
+  try { custom = readCustom(localStorage.getItem(customKey)); } catch {}
   function apply() {
-    root.dataset.palette = palette;
+    root.dataset.palette = custom ? 'custom' : palette;
     root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
     root.style.colorScheme = root.dataset.theme;
+    roles.forEach((role, i) => {
+      if (custom) root.style.setProperty('--md-' + role, custom[root.dataset.theme][i]);
+      else root.style.removeProperty('--md-' + role);
+    });
     document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
       meta.removeAttribute('media');
-      meta.content = palette === 'green' ? (root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed') : (root.dataset.theme === 'dark' ? '#191b1e' : '#f3f4f6');
+      meta.content = custom ? custom[root.dataset.theme][0] : palette === 'green' ? (root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed') : (root.dataset.theme === 'dark' ? '#191b1e' : '#f3f4f6');
     });
     document.querySelectorAll('[data-theme-select]').forEach(select => { select.value = preference; });
-    document.querySelectorAll('button[data-palette]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.palette === palette)));
+    document.dispatchEvent(new CustomEvent('soyo-appearance-change'));
   }
+  window.SoyoAppearance = {
+    roles,
+    get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null}),
+    setMode(value) { preference = valid(value); try { localStorage.setItem(key, preference); } catch {} apply(); },
+    setCustom(value) {
+      const next = readCustom(value); if (!next) return false;
+      custom = next; palette = 'green';
+      try { localStorage.setItem(customKey,JSON.stringify(custom)); localStorage.setItem(paletteKey,'green'); } catch {}
+      apply(); return true;
+    },
+    reset() {
+      custom = null; palette = 'green';
+      try { localStorage.removeItem(customKey); localStorage.setItem(paletteKey,'green'); } catch {}
+      apply();
+    }
+  };
   apply();
   system.addEventListener('change', apply);
   window.addEventListener('storage', event => {
-    if (event.key === key || event.key === null) { preference = valid(event.newValue); apply(); }
-    if (event.key === paletteKey || event.key === null) { palette = validPalette(event.newValue); apply(); }
+    if (![key,paletteKey,customKey,null].includes(event.key)) return;
+    try {
+      preference = valid(localStorage.getItem(key)); palette = validPalette(localStorage.getItem(paletteKey)); custom = readCustom(localStorage.getItem(customKey));
+    } catch {}
+    apply();
   });
   document.addEventListener('DOMContentLoaded', () => {
     apply();
-    document.querySelectorAll('button[data-palette]').forEach(button => button.addEventListener('click', () => {
-      if (palette === validPalette(button.dataset.palette)) return;
-      palette = validPalette(button.dataset.palette);
-      try { localStorage.setItem(paletteKey, palette); } catch {}
-      apply();
-    }));
     document.querySelectorAll('[data-theme-select]').forEach(select => {
       select.addEventListener('change', () => {
         preference = valid(select.value);
@@ -5543,6 +5572,466 @@ button[data-music-url]:active {
   }
 }
 
+.appearance-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: calc(100% - 32px);
+  margin: 4px 16px 8px;
+  min-height: 48px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--md-text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.appearance-entry:hover {
+  background: var(--md-low);
+}
+
+.appearance-current {
+  margin-left: auto;
+  color: var(--md-muted);
+  font-size: 11px;
+}
+
+.appearance-entry svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--md-muted);
+  stroke-width: 1.8;
+}
+
+.appearance-emblem {
+  display: flex;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  transform: rotate(-30deg);
+}
+
+.appearance-emblem i {
+  flex: 1;
+  background: var(--md-primary);
+}
+
+.appearance-emblem i:nth-child(2) {
+  background: var(--md-secondary);
+}
+
+.appearance-emblem i:nth-child(3) {
+  background: var(--md-tertiary);
+}
+
+html.appearance-open {
+  overflow: hidden;
+}
+
+.appearance-panel {
+  position: fixed;
+  box-sizing: border-box;
+  margin: 0;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px);
+  padding: 24px;
+  border: 1px solid var(--md-outline);
+  border-radius: 28px;
+  background: var(--md-container);
+  color: var(--md-text);
+  box-shadow: 0 16px 56px rgba(0,0,0,0.2);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.appearance-panel::backdrop {
+  background: rgba(8,16,12,0.28);
+}
+
+.appearance-panel:not([open]) {
+  display: none;
+}
+
+.appearance-panel button {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.appearance-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.appearance-head h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  border: 0;
+}
+
+.appearance-head button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  padding: 10px;
+  margin: -6px -8px -6px 0;
+  color: var(--md-muted);
+}
+
+.appearance-panel svg {
+  display: block;
+}
+
+.appearance-head svg,
+.appearance-reset svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.appearance-samples {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.appearance-sample {
+  min-width: 0;
+  border: 1px solid var(--sample-outline);
+  border-radius: 20px;
+  padding: 12px;
+  background: var(--sample-surface);
+  color: var(--sample-text);
+}
+
+.appearance-sample[data-sample='light'] {
+  --sample-surface: #edf4ed;
+  --sample-container: #fff;
+  --sample-low: #edf4ed;
+  --sample-primary: #286a50;
+  --sample-on-primary: #fff;
+  --sample-secondary-container: #e5edfa;
+  --sample-tertiary-container: #f9eadb;
+  --sample-text: #22252a;
+  --sample-muted: #5d626b;
+  --sample-outline: #dce5dc;
+}
+
+.appearance-sample[data-sample='dark'] {
+  --sample-surface: #101c16;
+  --sample-container: #19251e;
+  --sample-low: #22332a;
+  --sample-primary: #9cd5b5;
+  --sample-on-primary: #003823;
+  --sample-secondary-container: #2c3b52;
+  --sample-tertiary-container: #473629;
+  --sample-text: #e4e5e9;
+  --sample-muted: #b7bbc4;
+  --sample-outline: #35483c;
+}
+
+.sample-mode {
+  display: block;
+  font-size: 11px;
+  color: var(--sample-muted);
+  margin-bottom: 8px;
+}
+
+.sample-cover {
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--sample-container);
+  margin-bottom: 12px;
+}
+
+.sample-cover svg {
+  width: 100%;
+  height: auto;
+}
+
+.sample-shape-primary {
+  fill: var(--sample-primary);
+}
+
+.sample-shape-secondary {
+  fill: var(--sample-secondary-container);
+}
+
+.sample-shape-tertiary {
+  fill: var(--sample-tertiary-container);
+}
+
+.sample-line {
+  fill: none;
+  stroke: var(--sample-on-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.65;
+}
+
+.sample-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.sample-text {
+  display: block;
+  font-size: 11px;
+  color: var(--sample-muted);
+  margin: 4px 0 14px;
+}
+
+.sample-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.sample-button {
+  background: var(--sample-primary);
+  color: var(--sample-on-primary);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+.sample-link {
+  color: var(--sample-primary);
+}
+
+.appearance-field {
+  display: block;
+  min-width: 0;
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+}
+
+.appearance-field legend {
+  padding: 0;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--md-muted);
+}
+
+.appearance-segments {
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--md-low);
+}
+
+.appearance-segments button {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 4px;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--md-muted);
+}
+
+.appearance-segments button[aria-pressed='true'] {
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  font-weight: 600;
+}
+
+.appearance-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--md-muted);
+  margin-bottom: 6px;
+}
+
+.appearance-label output {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.appearance-hue input {
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 44px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.appearance-hue input::-webkit-slider-runnable-track {
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d57c8b, #c19c63, #a6ad68, #73b491, #62adb7, #8b9ccd, #b28fc1, #d57c8b);
+}
+
+.appearance-hue input::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -7px;
+  border: 3px solid var(--md-container);
+  border-radius: 50%;
+  background: var(--md-primary);
+  box-shadow: 0 0 0 1px var(--md-outline), 0 2px 5px rgba(0,0,0,0.16);
+}
+
+.appearance-hue input::-moz-range-track {
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d57c8b, #c19c63, #a6ad68, #73b491, #62adb7, #8b9ccd, #b28fc1, #d57c8b);
+}
+
+.appearance-hue input::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--md-container);
+  border-radius: 50%;
+  background: var(--md-primary);
+  box-shadow: 0 0 0 1px var(--md-outline);
+}
+
+.appearance-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--md-outline);
+}
+
+.appearance-foot .appearance-reset {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  color: var(--md-primary);
+  font-size: 13px;
+}
+
+.appearance-foot > span {
+  color: var(--md-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.appearance-status {
+  margin: 10px 0 0;
+  color: var(--md-muted);
+  font-size: 12px;
+}
+
+.appearance-panel [hidden] {
+  display: none !important;
+}
+
+.appearance-panel button:disabled,
+.appearance-hue input:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.appearance-panel :focus-visible,
+.appearance-entry:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .appearance-head button:hover {
+    background: var(--md-low);
+  }
+
+  .appearance-reset:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+@media (max-width: 991px) {
+  .appearance-entry {
+    margin: 4px 20px 12px;
+    width: calc(100% - 40px);
+    background: var(--md-low);
+  }
+
+  .appearance-panel {
+    inset: auto 0 0;
+    margin: 0 auto;
+    width: 560px;
+    max-width: 100%;
+    max-height: calc(100dvh - 12px);
+    padding: 22px 24px calc(16px + env(safe-area-inset-bottom));
+    border-radius: 28px 28px 0 0;
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 359px) {
+  .appearance-panel {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .appearance-sample {
+    padding: 10px;
+  }
+
+  .sample-actions {
+    gap: 6px;
+  }
+
+  .sample-button {
+    padding: 6px 10px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .appearance-sample,
+  .appearance-segments button {
+    transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  }
+}
+
 .home-welcome {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 184px;
@@ -7631,16 +8120,6 @@ body:has(.main-inner.index) .sidebar-blogroll {
   --md-secondary:#d9c4ae; --md-secondary-container:#514437; --md-on-secondary-container:#eee2d4;
   --md-tertiary:#b7cfa9; --md-tertiary-container:#3c5035; --md-on-tertiary-container:#dcebd4;
 }
-.palette-control { display:flex; justify-content:space-between; gap:2px; padding:0 16px 10px; }
-.palette-control button { --swatch:#286a50; display:grid; place-items:center; width:44px; height:44px; flex:0 1 44px; padding:0; border:0; border-radius:50%; background:transparent; cursor:pointer; }
-.palette-control button[data-palette="blue"] { --swatch:#355e87; }
-.palette-control button[data-palette="purple"] { --swatch:#685487; }
-.palette-control button[data-palette="apricot"] { --swatch:#805632; }
-.palette-control button span { display:grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--swatch); color:#fff; font:16px/1 system-ui; }
-.palette-control button[aria-pressed="true"] span:after { content:'✓'; }
-.palette-control button[aria-pressed="true"] { outline:1px solid var(--md-outline, var(--outline)); outline-offset:-4px; }
-.palette-control button:focus-visible { outline:2px solid var(--md-primary, var(--primary)); outline-offset:0; }
-@media(max-width:991px) { .palette-control { justify-content:flex-end; gap:8px; padding:0 20px 12px; } }
 </style>
   <noscript>
     <link rel="stylesheet" href="/assets/4e519d870cc065f121c7/css/noscript.css">
@@ -7654,11 +8133,11 @@ body:has(.main-inner.index) .sidebar-blogroll {
     <div class="column">
       <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏" role="button">
+    <button type="button" class="toggle" aria-label="切换导航栏">
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
-    </div>
+    </button>
   </div>
 
   <div class="site-meta">
@@ -7695,19 +8174,11 @@ body:has(.main-inner.index) .sidebar-blogroll {
     </details>
     <p class="account-status" data-account-status role="status" aria-live="polite" hidden></p>
   </div>
-  <label class="theme-control">外观
-  <select data-theme-select aria-label="外观主题">
-    <option value="system">跟随系统</option>
-    <option value="light">浅色</option>
-    <option value="dark">深色</option>
-  </select>
-</label>
-<div class="palette-control" role="group" aria-label="博客配色">
-  <button type="button" data-palette="green" aria-label="松绿" title="松绿" aria-pressed="true"><span aria-hidden="true"></span></button>
-  <button type="button" data-palette="blue" aria-label="雾蓝" title="雾蓝" aria-pressed="false"><span aria-hidden="true"></span></button>
-  <button type="button" data-palette="purple" aria-label="藤紫" title="藤紫" aria-pressed="false"><span aria-hidden="true"></span></button>
-  <button type="button" data-palette="apricot" aria-label="暖杏" title="暖杏" aria-pressed="false"><span aria-hidden="true"></span></button>
-</div>
+  <button type="button" class="appearance-entry" data-appearance-open data-engine="/assets/2e6c57ac728b1b87d7a6/js/palette-engine.js" aria-haspopup="dialog" aria-expanded="false" aria-controls="appearance-panel">
+  <span class="appearance-emblem" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span>外观与配色</span><span class="appearance-current" data-appearance-current>默认</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+</button>
 
   <a class="home-layout-entry" href="/#customize-home">布置首页</a>
   <details class="nav-extras">
@@ -8143,6 +8614,39 @@ setInterval("createtime()",250);
 <template id="deferred-live2d"><script src="/assets/73db01a99fc5e7b53765/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/73db01a99fc5e7b53765/live2dw/assets/22.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
 <script src="/assets/b11922922f5f8466110f/js/deferred-widgets.js" defer></script>
 <script src="/assets/3cc0e2b3bd6f3ec91051/js/site-account.js" defer></script>
+<dialog id="appearance-panel" class="appearance-panel" aria-labelledby="appearance-title">
+  <div class="appearance-head"><h2 id="appearance-title">外观与配色</h2><button type="button" data-appearance-close aria-label="关闭配色面板"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+  <div class="appearance-samples" aria-label="浅色与深色配色预览">
+    
+    <div class="appearance-sample" data-sample="light">
+      <span class="sample-mode">浅色</span>
+      <div class="sample-cover" aria-hidden="true"><svg viewBox="0 0 160 80"><path class="sample-shape-secondary" d="M20 64V24a14 14 0 0 1 14-14h78v54Z"/><path class="sample-shape-primary" d="M48 70V24h56a26 26 0 0 1 26 26v20Z"/><circle class="sample-shape-tertiary" cx="121" cy="19" r="13"/><path class="sample-line" d="M31 47h59M31 55h41"/></svg></div>
+      <strong class="sample-title">一页文章</strong><span class="sample-text">记录、思考与发现。</span>
+      <div class="sample-actions"><span class="sample-button">阅读</span><span class="sample-link">目录 ↗</span></div>
+    </div>
+    
+    <div class="appearance-sample" data-sample="dark">
+      <span class="sample-mode">深色</span>
+      <div class="sample-cover" aria-hidden="true"><svg viewBox="0 0 160 80"><path class="sample-shape-secondary" d="M20 64V24a14 14 0 0 1 14-14h78v54Z"/><path class="sample-shape-primary" d="M48 70V24h56a26 26 0 0 1 26 26v20Z"/><circle class="sample-shape-tertiary" cx="121" cy="19" r="13"/><path class="sample-line" d="M31 47h59M31 55h41"/></svg></div>
+      <strong class="sample-title">一页文章</strong><span class="sample-text">记录、思考与发现。</span>
+      <div class="sample-actions"><span class="sample-button">阅读</span><span class="sample-link">目录 ↗</span></div>
+    </div>
+    
+  </div>
+  <fieldset class="appearance-field"><legend>外观</legend><div class="appearance-segments" data-mode-group>
+    <button type="button" data-mode="system" aria-pressed="true">跟随系统</button><button type="button" data-mode="light" aria-pressed="false">浅色</button><button type="button" data-mode="dark" aria-pressed="false">深色</button>
+  </div></fieldset>
+  <div class="appearance-field appearance-hue"><div class="appearance-label"><label for="appearance-hue">主题色相</label><output for="appearance-hue" id="appearance-hue-value">默认绿色</output></div>
+    <input type="range" id="appearance-hue" min="0" max="359" step="1" value="164" disabled aria-describedby="appearance-hue-value">
+  </div>
+  <fieldset class="appearance-field"><legend>色彩浓度</legend><div class="appearance-segments" data-level-group>
+    <button type="button" data-level="soft" aria-pressed="false" disabled>柔和</button><button type="button" data-level="balanced" aria-pressed="true" disabled>均衡</button><button type="button" data-level="vivid" aria-pressed="false" disabled>鲜明</button>
+  </div></fieldset>
+  <div class="appearance-foot"><button type="button" class="appearance-reset" data-appearance-reset><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1 8M4 4v6h6"/></svg>恢复默认绿色</button><span data-appearance-saved>自动保存</span></div>
+  <p class="appearance-status" data-appearance-status role="status" aria-live="polite" hidden></p>
+</dialog>
+
+<script src="/assets/a251bc1c6ae91297c80f/js/appearance-panel.js" defer></script>
 <dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/e78fa95bb36914aa437e/search.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear>清空</button></div>
