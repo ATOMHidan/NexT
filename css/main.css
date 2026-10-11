@@ -5332,7 +5332,7 @@ button[data-music-url]:active {
   display: none !important;
 }
 
-.account-login,
+.site-account .account-login,
 .account-menu summary {
   display: flex;
   align-items: center;
@@ -5343,10 +5343,21 @@ button[data-music-url]:active {
   padding: 10px 20px;
   border: 0;
   border-radius: 999px;
-  color: var(--md-muted);
+  color: var(--md-text);
   font: inherit;
   line-height: 24px;
   cursor: pointer;
+}
+
+.site-account .account-label {
+  display: block;
+  flex: 1;
+  visibility: inherit;
+  opacity: 1;
+  color: var(--md-text);
+  font: inherit;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .account-login svg,
@@ -5447,21 +5458,58 @@ button[data-music-url]:active {
 }
 
 @media (max-width: 991px) {
-  .site-account {
-    margin: 0 20px 4px;
+  .nav-utilities {
+    margin: 0 20px 12px;
+    padding: 4px;
+    border-radius: 20px;
+    background: var(--md-low);
   }
 
-  .account-login {
-    padding: 10px 16px;
+  .nav-utilities .site-account {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .site-account .account-login,
+  .nav-utilities .account-menu summary {
+    min-height: 48px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    gap: 10px;
+  }
+
+  .site-account .account-person {
+    flex-basis: 26px;
+    width: 26px;
+    height: 26px;
+    padding: 3px;
+    box-sizing: border-box;
+  }
+
+  .site-account .account-chevron {
+    flex-basis: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--md-muted);
+  }
+
+  .nav-utilities .appearance-entry {
+    margin: 0;
+    width: 100%;
+    background: transparent;
+    font-size: 14px;
+    border-radius: 16px;
   }
 
   .account-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 4px 8px 8px;
   }
 
   .account-actions button {
     text-align: center;
-    background: var(--md-low);
+    background: var(--md-container);
+    border-radius: 14px;
   }
 }
 
@@ -6574,22 +6622,6 @@ html.article-share-open {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.home-layout-entry {
-  display: block;
-  margin: 0 20px 8px;
-  padding: 8px 12px;
-  min-height: 28px;
-  border: 0;
-  color: var(--md-muted);
-  font-size: 13px;
-  border-radius: 999px;
-}
-
-.home-layout-entry:hover {
-  color: var(--md-primary);
-  background: var(--md-low);
 }
 
 .main-inner.index {

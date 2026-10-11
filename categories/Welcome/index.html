@@ -5439,7 +5439,7 @@ button[data-music-url]:active {
   display: none !important;
 }
 
-.account-login,
+.site-account .account-login,
 .account-menu summary {
   display: flex;
   align-items: center;
@@ -5450,10 +5450,21 @@ button[data-music-url]:active {
   padding: 10px 20px;
   border: 0;
   border-radius: 999px;
-  color: var(--md-muted);
+  color: var(--md-text);
   font: inherit;
   line-height: 24px;
   cursor: pointer;
+}
+
+.site-account .account-label {
+  display: block;
+  flex: 1;
+  visibility: inherit;
+  opacity: 1;
+  color: var(--md-text);
+  font: inherit;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .account-login svg,
@@ -5554,21 +5565,58 @@ button[data-music-url]:active {
 }
 
 @media (max-width: 991px) {
-  .site-account {
-    margin: 0 20px 4px;
+  .nav-utilities {
+    margin: 0 20px 12px;
+    padding: 4px;
+    border-radius: 20px;
+    background: var(--md-low);
   }
 
-  .account-login {
-    padding: 10px 16px;
+  .nav-utilities .site-account {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .site-account .account-login,
+  .nav-utilities .account-menu summary {
+    min-height: 48px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    gap: 10px;
+  }
+
+  .site-account .account-person {
+    flex-basis: 26px;
+    width: 26px;
+    height: 26px;
+    padding: 3px;
+    box-sizing: border-box;
+  }
+
+  .site-account .account-chevron {
+    flex-basis: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--md-muted);
+  }
+
+  .nav-utilities .appearance-entry {
+    margin: 0;
+    width: 100%;
+    background: transparent;
+    font-size: 14px;
+    border-radius: 16px;
   }
 
   .account-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 4px 8px 8px;
   }
 
   .account-actions button {
     text-align: center;
-    background: var(--md-low);
+    background: var(--md-container);
+    border-radius: 14px;
   }
 }
 
@@ -6681,22 +6729,6 @@ html.article-share-open {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.home-layout-entry {
-  display: block;
-  margin: 0 20px 8px;
-  padding: 8px 12px;
-  min-height: 28px;
-  border: 0;
-  color: var(--md-muted);
-  font-size: 13px;
-  border-radius: 999px;
-}
-
-.home-layout-entry:hover {
-  color: var(--md-primary);
-  background: var(--md-low);
 }
 
 .main-inner.index {
@@ -8164,9 +8196,10 @@ body:has(.main-inner.index) .sidebar-blogroll {
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th-large fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-工具箱"><a href="/tools/2fa/" rel="section"><i class="fa fa-key fa-fw"></i>工具箱</a></li>
   </ul>
   <button type="button" class="site-search-open" data-search-open><i class="fa fa-search" aria-hidden="true"></i> 搜索</button>
+  <div class="nav-utilities">
   <div class="site-account" data-waline-account data-server="https://sign.262860.xyz/">
-    <a class="account-login" data-account-login target="_blank" rel="noopener" href="https://sign.262860.xyz/ui/login?lng=zh-CN">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg><span>登录</span>
+    <a class="account-login" data-account-login aria-label="登录" target="_blank" rel="noopener" href="https://sign.262860.xyz/ui/login?lng=zh-CN">
+      <svg class="account-person" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg><span class="account-label">登录</span><svg class="account-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
     </a>
     <details class="account-menu" data-account-menu hidden>
       <summary><span class="account-initial" data-account-initial aria-hidden="true"></span><span data-account-name>我的账户</span><svg class="account-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
@@ -8180,10 +8213,11 @@ body:has(.main-inner.index) .sidebar-blogroll {
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
 </button>
 
-  <a class="home-layout-entry" href="/#customize-home">布置首页</a>
+  </div>
   <details class="nav-extras">
     <summary><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>更多</span><svg class="nav-extra-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
     <div class="nav-extra-links">
+      <a class="home-layout-entry" href="/#customize-home"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M10 10v10"/></svg><span>布置首页</span></a>
       <a href="/gallery/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v16H3Z M3 15l5-5 5 5 3-3 5 5"/><circle cx="16" cy="8" r="1"/></svg><span>文章画廊</span></a>
       <a href="/book/"><span class="nav-extra-icon" aria-hidden="true">▤</span><span>数字文集</span></a>
       <a href="/map/"><svg class="nav-extra-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z M9 3v16 M15 5v16"/></svg><span>文章地图</span></a>
@@ -8243,7 +8277,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
         <span class="exturl" data-url="aHR0cHM6Ly9zci5taWhveW8uY29tLw==" title="E-Mail → https:&#x2F;&#x2F;sr.mihoyo.com&#x2F;"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
       </span>
       <span class="links-of-author-item">
-        <span class="exturl" data-url="aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL2F2MTQwMzczMjA3MC8/dmRfc291cmNlPTNiY2I4ZmEzZjA2YzhkYjkzZjMzZGVhNGJlZTYxMThm" title="Weibo → https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;av1403732070&#x2F;?vd_source&#x3D;3bcb8fa3f06c8db93f33dea4bee6118f"><i class="fab fa-weibo fa-fw"></i>Weibo</span>
+        <span class="exturl" data-url="aHR0cHM6Ly93d3cueXVhbnNoZW4uY29tLw==" title="Weibo → https:&#x2F;&#x2F;www.yuanshen.com&#x2F;"><i class="fab fa-weibo fa-fw"></i>Weibo</span>
       </span>
   </div>
 
@@ -8259,7 +8293,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
         </div>
         <ul class="links-of-blogroll-list">
             <li class="links-of-blogroll-item">
-              <span class="exturl" data-url="aHR0cHM6Ly95cy5taWhveW8uY29tL2Nsb3VkLyMv" title="https:&#x2F;&#x2F;ys.mihoyo.com&#x2F;cloud&#x2F;#&#x2F;">外链</span>
+              <span class="exturl" data-url="aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL0JWMVpNNDExYzc5by8=" title="https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1ZM411c79o&#x2F;">外链</span>
             </li>
         </ul>
       </div>
@@ -8425,8 +8459,8 @@ body:has(.main-inner.index) .sidebar-blogroll {
         <img src="/assets/1e831dbbe626db69ce2e/images/beian.jpg" alt="" width="658" height="327" loading="lazy" decoding="async">
       </figure>
     <div class="footer-note-copy">
-      <div class="footer-note-intro"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">春日影是一首好歌 </span></div>
-      <div class="footer-note-quote"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5tcHMuZ292LmNuLyMvcXVlcnkvd2ViU2VhcmNoP2NvZGU9MTAyNw==">我想我大概…<br>一辈子也忘不了CRYCHIC </span></div>
+      <div class="footer-note-intro"><span class="exturl" data-url="aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL0JWMUV4NHkxejdGVS8=">春日影是一首好歌 </span></div>
+      <div class="footer-note-quote"><span class="exturl" data-url="aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL0JWMTZ1NDExVjdFQS8=">我想我大概…<br>一辈子也忘不了CRYCHIC </span></div>
     </div>
   </div>
 
