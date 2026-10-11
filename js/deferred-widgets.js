@@ -2,15 +2,108 @@
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.querySelector('[data-music-url]');
   if (music) {
-    const audio = music.parentNode.querySelector('audio');
-    const status = music.parentNode.querySelector('.music-status');
-    const controls = music.parentNode.querySelector('.music-controls');
+    const slot = music.closest('.music-player-slot');
+    const audio = slot.querySelector('audio');
+    const status = slot.querySelector('.music-status');
+    const controls = slot.querySelector('.music-controls');
     const toggle = controls.querySelector('.music-toggle');
     const seek = controls.querySelector('.music-seek');
     const time = controls.querySelector('.music-time');
     const volume = controls.querySelector('.music-volume');
     const mute = controls.querySelector('.music-mute');
     const volumeValue = controls.querySelector('.music-volume-value');
+    const viewer = document.getElementById('music-viewer');
+    const expand = slot.querySelector('.music-expand');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const visualUnavailable = '可视化暂不可用，音乐仍可播放';
+    let graph, graphUnavailable = false, visualRequest;
+    // Resume inside the playback gesture. Only route audio into Web Audio after
+    // resume succeeds; an unavailable/suspended context cannot swallow playback.
+    const prepareGraph = () => {
+      const Context = window.AudioContext || window.webkitAudioContext;
+      if (!Context || graphUnavailable || reduced.matches) return;
+      try {
+        if (!graph) {
+          const context = new Context();
+          graph = { context, source: null, analyser: null };
+          context.addEventListener('statechange', () => slot.dispatchEvent(new Event('soyo-music-graph')));
+        }
+        graph.context.resume().then(() => {
+          if (graph.source || graphUnavailable || graph.context.state !== 'running') return;
+          // Local files are same-origin. A future remote URL keeps native playback.
+          if (new URL(audio.currentSrc || audio.src, location.href).origin !== location.origin) return;
+          const analyser = graph.context.createAnalyser();
+          analyser.fftSize = 1024;
+          analyser.smoothingTimeConstant = 0.65;
+          const source = graph.context.createMediaElementSource(audio);
+          source.connect(graph.context.destination);
+          graph.source = source;
+          source.connect(analyser);
+          graph.analyser = analyser;
+          slot.dispatchEvent(new Event('soyo-music-graph'));
+        }).catch(() => { /* Native media playback remains available. Retry on the next gesture. */ });
+      } catch (error) { graphUnavailable = true; }
+    };
+    const loadVisual = () => {
+      if (visualRequest) return visualRequest;
+      const script = document.createElement('script');
+      script.src = slot.dataset.visualEngine;
+      visualRequest = new Promise((resolve, reject) => {
+        script.onload = () => window.SoyoMusicVisual ? resolve(window.SoyoMusicVisual) : reject(new Error('Visual module unavailable'));
+        script.onerror = () => reject(new Error('Visual module unavailable'));
+        document.head.appendChild(script);
+      }).then(module => {
+        module.mount({ slot, audio, getGraph: () => graph });
+        if (status.textContent === visualUnavailable) status.textContent = '';
+      }).catch(() => {
+        script.remove(); visualRequest = null;
+        if (!audio.error && !status.textContent) status.textContent = visualUnavailable;
+      });
+      return visualRequest;
+    };
+    if (viewer?.showModal && expand) {
+      const mount = slot.parentNode;
+      const close = viewer.querySelector('.music-viewer-close');
+      let placeholder, backdropDown = false;
+      expand.hidden = false;
+      expand.addEventListener('click', () => {
+        if (viewer.open) return;
+        placeholder = document.createElement('div');
+        placeholder.className = 'music-slot-placeholder';
+        placeholder.style.height = slot.getBoundingClientRect().height + 'px';
+        placeholder.textContent = '音乐视图已展开';
+        viewer.querySelector('.music-viewer-content').appendChild(slot);
+        mount.appendChild(placeholder);
+        viewer.showModal();
+        expand.setAttribute('aria-expanded', 'true');
+        document.documentElement.classList.add('music-viewer-open');
+        close.focus({ preventScroll: true });
+        slot.dispatchEvent(new Event('soyo-music-view'));
+        loadVisual();
+      });
+      close.addEventListener('click', () => viewer.close());
+      viewer.addEventListener('close', () => {
+        mount.appendChild(slot);
+        placeholder?.remove();
+        expand.setAttribute('aria-expanded', 'false');
+        document.documentElement.classList.remove('music-viewer-open');
+        slot.dispatchEvent(new Event('soyo-music-view'));
+        const r = expand.getBoundingClientRect();
+        const visible = r.width>0 && r.right>0 && r.left<innerWidth && r.bottom>0 && r.top<innerHeight && getComputedStyle(expand).visibility !== 'hidden';
+        const target = visible ? expand : document.querySelector('.sidebar-toggle');
+        if (target?.matches('.sidebar-toggle')) target.tabIndex = 0;
+        target?.focus({ preventScroll: true });
+      });
+      const outside = event => {
+        const r = viewer.getBoundingClientRect();
+        return event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom;
+      };
+      viewer.addEventListener('pointerdown', event => { backdropDown = event.target === viewer && outside(event); });
+      viewer.addEventListener('pointerup', event => {
+        if (backdropDown && event.target === viewer && outside(event)) viewer.close();
+        backdropDown = false;
+      });
+    }
     const formatTime = seconds => {
       if (!Number.isFinite(seconds)) return '--:--';
       const value = Math.max(0, Math.floor(seconds));
@@ -46,7 +139,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ['timeupdate', 'loadedmetadata', 'durationchange', 'ended', 'emptied'].forEach(name => audio.addEventListener(name, updateTime));
     ['play', 'pause', 'ended'].forEach(name => audio.addEventListener(name, updatePlayback));
     audio.addEventListener('volumechange', updateVolume);
-    const play = () => audio.play().catch(fail);
+    const play = () => {
+      prepareGraph();
+      audio.play().catch(fail);
+      loadVisual();
+    };
     toggle.addEventListener('click', () => { if (audio.paused) play(); else audio.pause(); });
     seek.addEventListener('input', () => {
       if (Number.isFinite(audio.duration) && audio.duration > 0) audio.currentTime = Number(seek.value) / 100 * audio.duration;
@@ -58,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
       else audio.muted = true;
       updateVolume();
     });
-    audio.addEventListener('playing', () => { status.textContent = ''; controls.classList.add('music-active'); });
+    audio.addEventListener('playing', () => { if (status.textContent !== visualUnavailable) status.textContent = ''; controls.classList.add('music-active'); });
     ['pause','ended','waiting','stalled','emptied'].forEach(name=>audio.addEventListener(name,()=>controls.classList.remove('music-active')));
     music.addEventListener('click', () => {
       status.textContent = '';

@@ -7059,24 +7059,6 @@ body:has(.main-inner.index) .sidebar-blogroll {
   clip-path: polygon(65% 10%, 85% 10%, 85% 90%, 65% 90%);
 }
 
-.music-activity {
-  display: flex;
-  gap: 2px;
-  width: 10px;
-  height: 12px;
-  flex: 0 0 10px;
-  align-items: center;
-  color: var(--md-primary);
-}
-
-.music-activity i {
-  display: block;
-  width: 2px;
-  height: 3px;
-  background: currentColor;
-  border-radius: 2px;
-}
-
 .copy-feedback-button {
   display: inline-flex;
   align-items: center;
@@ -7145,18 +7127,6 @@ body:has(.main-inner.index) .sidebar-blogroll {
     transition: transform 0.2s ease, opacity 0.2s ease, border-radius 0.2s ease;
   }
 
-  .music-active .music-activity i {
-    animation: music-short-line 0.85s ease-in-out infinite alternate;
-  }
-
-  .music-active .music-activity i:nth-child(2) {
-    animation-delay: -0.3s;
-  }
-
-  .music-active .music-activity i:nth-child(3) {
-    animation-delay: -0.6s;
-  }
-
   .nav-extras[open] .nav-extra-links a {
     animation: extra-unfold 0.2s ease-out both;
     transform-origin: top left;
@@ -7175,12 +7145,6 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }
 
-@keyframes music-short-line {
-  to {
-    height: 11px;
-  }
-}
-
 @keyframes extra-unfold {
   from {
     opacity: 0;
@@ -7190,6 +7154,368 @@ body:has(.main-inner.index) .sidebar-blogroll {
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+.music-player-mount {
+  min-width: 0;
+}
+
+:root.music-viewer-open {
+  overflow: hidden;
+}
+
+.music-player-slot {
+  gap: 10px;
+}
+
+.music-player-info {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.music-visual {
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 360/280;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--md-low);
+}
+
+.music-visual svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.music-art-guide {
+  fill: none;
+  stroke: var(--md-outline);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.music-art-orbit {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-width: 1.4;
+  opacity: 0.5;
+}
+
+.music-art-tonal {
+  fill: var(--md-tonal);
+}
+
+.music-art-ink {
+  fill: var(--md-primary);
+}
+
+.music-art-core-light {
+  fill: var(--md-on-primary);
+  opacity: 0.2;
+}
+
+.music-art-center {
+  fill: var(--md-container);
+}
+
+.music-art-secondary {
+  fill: var(--md-secondary-container);
+}
+
+.music-art-secondary-line {
+  fill: none;
+  stroke: var(--md-on-secondary-container);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.music-art-secondary-dot {
+  fill: var(--md-secondary);
+}
+
+.music-art-warm {
+  fill: var(--md-tertiary-container);
+}
+
+.music-art-warm-ink {
+  fill: var(--md-tertiary);
+  opacity: 0.55;
+}
+
+.music-art-mark {
+  fill: var(--md-primary);
+}
+
+.music-art-mark-line {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+[data-music-motion] {
+  transform-origin: 0 0;
+}
+
+[data-music-motion^='mark-'] {
+  opacity: 0.55;
+}
+
+.music-player-slot .music-track-title {
+  justify-self: start;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.music-track-title span {
+  font-weight: 400;
+}
+
+.music-track-title span::before {
+  content: '· ';
+}
+
+.music-controls button {
+  min-height: 44px;
+}
+
+.music-controls input[type='range'] {
+  height: 36px;
+}
+
+.music-player-info > button[data-music-url] {
+  width: 100%;
+  min-height: 44px;
+}
+
+.music-expand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--md-primary);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.music-expand svg,
+.music-viewer-close svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.music-status:empty {
+  display: none;
+}
+
+.music-status {
+  max-width: 100%;
+  text-align: left;
+}
+
+.music-expand:focus-visible,
+.music-viewer button:focus-visible,
+.music-controls input:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 3px;
+}
+
+.music-viewer {
+  box-sizing: border-box;
+  width: calc(100% - 32px);
+  max-width: 880px;
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  padding: 24px;
+  border: 1px solid var(--md-outline);
+  border-radius: 28px;
+  background: var(--md-container);
+  color: var(--md-text);
+  box-shadow: var(--md-shadow);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.music-viewer::backdrop {
+  background: rgba(0,0,0,0.5);
+}
+
+.music-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.music-viewer-header h2 {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--md-muted);
+}
+
+.music-viewer-close {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--md-low);
+  color: var(--md-text);
+  cursor: pointer;
+}
+
+.music-viewer .music-player-slot {
+  grid-template-columns: minmax(0, 1.5fr) minmax(210px, 1fr);
+  align-items: center;
+  column-gap: 28px;
+  row-gap: 14px;
+}
+
+.music-viewer .music-visual {
+  grid-column: 1;
+  grid-row: 1;
+  border-radius: 24px;
+}
+
+.music-viewer .music-player-info {
+  grid-column: 2;
+  grid-row: 1;
+  gap: 20px;
+}
+
+.music-viewer .music-track-title {
+  width: 100%;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.music-viewer .music-track-title span {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--md-muted);
+}
+
+.music-viewer .music-track-title span::before {
+  content: none;
+}
+
+.music-viewer .music-controls {
+  align-self: start;
+  padding: 14px;
+  border-radius: 20px;
+}
+
+.music-viewer .music-expand {
+  display: none;
+}
+
+.music-viewer .music-time {
+  font-size: 12px;
+}
+
+.music-slot-placeholder {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 16px;
+  border-radius: 20px;
+  background: var(--md-low);
+  color: var(--md-muted);
+  font-size: 12px;
+}
+
+@media (hover: hover) {
+  .music-expand:hover,
+  .music-viewer-close:hover {
+    background: var(--md-tonal);
+    color: var(--md-on-tonal);
+  }
+}
+
+@media (max-width: 991px) {
+  .sidebar:has(.sidebar-music-player) {
+    padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .music-visual:not(.music-visual-running) [data-music-motion] {
+    transition: transform 0.4s var(--md-ease), opacity 0.4s var(--md-ease);
+  }
+}
+
+@media (max-width: 600px) {
+  .music-viewer {
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .music-viewer-header {
+    margin-bottom: 12px;
+  }
+
+  .music-viewer .music-player-slot {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .music-viewer .music-visual {
+    grid-column: 1;
+    grid-row: auto;
+    height: clamp(140px, 32dvh, 280px);
+    aspect-ratio: auto;
+    border-radius: 20px;
+  }
+
+  .music-viewer .music-player-info {
+    grid-column: 1;
+    grid-row: 2;
+    gap: 12px;
+  }
+
+  .music-viewer .music-track-title {
+    font-size: 24px;
+  }
+
+  .music-viewer .music-track-title span {
+    display: inline;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .music-viewer .music-track-title span::before {
+    content: '· ';
   }
 }
 
@@ -8306,17 +8632,53 @@ body:has(.main-inner.index) .sidebar-blogroll {
           <i class="fa fa-music fa-fw"></i>音乐
         </div>
         <div class="links-of-blogroll-list">
-          <div class="music-player-slot">
-            <div class="music-track-title">Earthing <span>· Vanbur</span></div>
+          <div class="music-player-mount"><div class="music-player-slot" data-visual-engine="/assets/e92b7213cbe6f5057022/js/music-visual.js">
+            <div class="music-visual" aria-hidden="true">
+  <svg viewBox="0 0 360 280" focusable="false">
+    <circle class="music-art-guide" cx="180" cy="139" r="91"/>
+    <ellipse class="music-art-orbit" cx="180" cy="139" rx="139" ry="58" transform="rotate(-24 180 139)"/>
+    <path class="music-art-guide" d="M29 238h38m-19-19v38M294 40h22"/>
+    <g transform="translate(180 139)"><g data-music-motion="core">
+      <circle class="music-art-tonal" r="57"/>
+      <circle class="music-art-ink" r="35"/>
+      <path class="music-art-core-light" d="M0-35a35 35 0 0 1 0 70Z"/>
+      <circle class="music-art-center" r="12"/>
+    </g></g>
+    <g transform="translate(80 106) rotate(-18)"><g data-music-motion="paper-a">
+      <rect class="music-art-secondary" x="-23" y="-40" width="46" height="80" rx="23"/>
+      <path class="music-art-secondary-line" d="M0-24v48"/>
+    </g></g>
+    <g transform="translate(275 100) rotate(28)"><g data-music-motion="paper-b">
+      <rect class="music-art-warm" x="-26" y="-33" width="52" height="66" rx="17"/>
+      <rect class="music-art-warm-ink" x="-15" y="-22" width="30" height="44" rx="10"/>
+    </g></g>
+    <g transform="translate(135 225) rotate(24)"><g data-music-motion="paper-c">
+      <rect class="music-art-secondary" x="-41" y="-14" width="82" height="28" rx="14"/>
+      <circle class="music-art-secondary-dot" cx="-24" r="4"/>
+      <path class="music-art-secondary-line" d="M-11 0h35"/>
+    </g></g>
+    <g transform="translate(205 42)"><g data-music-motion="mark-0"><circle class="music-art-mark" r="3"/></g></g>
+    <g transform="translate(229 49)"><g data-music-motion="mark-1"><path class="music-art-mark-line" d="M-3-4 3 4"/></g></g>
+    <g transform="translate(251 60)"><g data-music-motion="mark-2"><circle class="music-art-mark" r="3"/></g></g>
+    <g transform="translate(280 189)"><g data-music-motion="mark-3"><path class="music-art-mark-line" d="M-4 2 4-2"/></g></g>
+    <g transform="translate(260 207)"><g data-music-motion="mark-4"><circle class="music-art-mark" r="3"/></g></g>
+    <g transform="translate(235 220)"><g data-music-motion="mark-5"><path class="music-art-mark-line" d="M-2-4 2 4"/></g></g>
+  </svg>
+</div>
+
+            <div class="music-player-info">
+            <div class="music-track-title">Earthing <span>Vanbur</span></div>
             <button type="button" class="btn" data-music-url="/assets/708a6ba302c38e6c7d03/music/earthing-vanbur.mp3">播放音乐</button>
             <audio class="local-music-audio" preload="none" hidden aria-label="Earthing — Vanbur"></audio>
             <div class="music-controls" hidden role="group" aria-label="音乐播放控制">
-              <div class="music-playback-row"><button class="music-toggle" type="button" aria-label="播放音乐"><span class="music-state-icon" aria-hidden="true"></span><span class="music-toggle-label">播放</span></button><span class="music-time">0:00 / --:--</span><span class="music-activity" aria-hidden="true"><i></i><i></i><i></i></span></div>
+              <div class="music-playback-row"><button class="music-toggle" type="button" aria-label="播放音乐"><span class="music-state-icon" aria-hidden="true"></span><span class="music-toggle-label">播放</span></button><span class="music-time">0:00 / --:--</span></div>
               <input class="music-seek" type="range" min="0" max="100" step="0.1" value="0" disabled aria-label="播放进度">
               <div class="music-volume-row"><button class="music-mute" type="button" aria-label="静音" aria-pressed="false">音量</button><input class="music-volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="音量"><span class="music-volume-value">100%</span></div>
             </div>
+            <button type="button" class="music-expand" aria-haspopup="dialog" aria-controls="music-viewer" aria-expanded="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg>展开观看</button>
             <span class="music-status" role="status" aria-live="polite"></span>
-          </div>
+            </div>
+          </div></div>
         </div>
       </div>
     </div>
@@ -8637,7 +8999,12 @@ setInterval("createtime()",250);
 })(window, document);
 </script>
 <template id="deferred-live2d"><script src="/assets/73db01a99fc5e7b53765/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/73db01a99fc5e7b53765/live2dw/assets/22.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
-<script src="/assets/b11922922f5f8466110f/js/deferred-widgets.js" defer></script>
+<dialog id="music-viewer" class="music-viewer" aria-labelledby="music-viewer-title">
+  <header class="music-viewer-header"><h2 id="music-viewer-title">音乐</h2><button type="button" class="music-viewer-close" aria-label="收起音乐视图"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></header>
+  <div class="music-viewer-content"></div>
+</dialog>
+
+<script src="/assets/061e10ab8a8113dea770/js/deferred-widgets.js" defer></script>
 <script src="/assets/3cc0e2b3bd6f3ec91051/js/site-account.js" defer></script>
 <dialog id="appearance-panel" class="appearance-panel" aria-labelledby="appearance-title">
   <div class="appearance-head"><h2 id="appearance-title">外观与配色</h2><button type="button" data-appearance-close aria-label="关闭配色面板"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
