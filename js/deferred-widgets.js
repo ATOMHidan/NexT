@@ -2,6 +2,15 @@
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.querySelector('[data-music-url]');
   if (music) {
+    // Pin only when the entire sidebar fits. Short windows use page scrolling,
+    // with no negative offset or nested sidebar scroll area.
+    const sidebar = music.closest('.sidebar');
+    if (sidebar && 'ResizeObserver' in window) {
+      const fit = () => sidebar.classList.toggle('sidebar-fits', innerWidth >= 992 && sidebar.offsetHeight <= innerHeight - 96);
+      new ResizeObserver(fit).observe(sidebar);
+      window.addEventListener('resize', fit);
+      fit();
+    }
     const slot = music.closest('.music-player-slot');
     const audio = slot.querySelector('audio');
     const status = slot.querySelector('.music-status');
@@ -11,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const time = controls.querySelector('.music-time');
     const volume = controls.querySelector('.music-volume');
     const mute = controls.querySelector('.music-mute');
-    const volumeValue = controls.querySelector('.music-volume-value');
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const visualUnavailable = '可视化暂不可用，音乐仍可播放';
     let graph, graphUnavailable = false, visualRequest, playFailed = false;
@@ -68,20 +76,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const available = Number.isFinite(audio.duration) && audio.duration > 0;
       seek.disabled = !available;
       seek.value = available ? Math.min(100, audio.currentTime / audio.duration * 100) : 0;
-      time.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+      time.textContent = formatTime(audio.currentTime) + ' / ' + (available ? formatTime(audio.duration) : '—');
       seek.setAttribute('aria-valuetext', time.textContent);
+      seek.style.setProperty('--range-progress', seek.value + '%');
     };
     const updatePlayback = () => {
-      toggle.querySelector('.music-toggle-label').textContent = playFailed ? '重试' : audio.paused ? '播放' : '暂停';
-      toggle.classList.toggle('is-playing', !audio.paused && !audio.ended);
-      toggle.setAttribute('aria-label', playFailed ? '重新播放音乐' : audio.paused ? '播放音乐' : '暂停音乐');
+      toggle.classList.toggle('is-playing', !playFailed && !audio.paused && !audio.ended);
+      const label = playFailed ? '重新播放音乐' : audio.paused ? '播放音乐' : '暂停音乐';
+      toggle.setAttribute('aria-label', label);
+      toggle.title = label;
     };
     const updateVolume = () => {
       const level = audio.muted ? 0 : audio.volume;
       volume.value = level;
-      volumeValue.textContent = Math.round(level * 100) + '%';
+      const percentage = Math.round(level * 100) + '%';
+      volume.setAttribute('aria-valuetext', percentage);
+      volume.title = '音量 ' + percentage;
+      volume.style.setProperty('--range-progress', percentage);
+      mute.classList.toggle('is-muted', level === 0);
       mute.setAttribute('aria-pressed', String(audio.muted || audio.volume === 0));
       mute.setAttribute('aria-label', level === 0 ? '取消静音' : '静音');
+      mute.title = mute.getAttribute('aria-label');
     };
     const fail = () => {
       controls.classList.remove('music-active');
