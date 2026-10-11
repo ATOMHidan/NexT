@@ -77,11 +77,6 @@
       art.classList.add('music-visual-running');
       if (!frame) frame = requestAnimationFrame(draw);
     }
-    function view() {
-      const r = art.getBoundingClientRect();
-      visible = r.width>0 && r.height>0 && r.bottom>0 && r.top<innerHeight && r.right>0 && r.left<innerWidth;
-      sync();
-    }
     const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
       visible = entries.some(entry => entry.isIntersecting && entry.intersectionRatio>0);
       sync();
@@ -94,7 +89,6 @@
     audio.addEventListener('seeked', () => { playing = !audio.paused && audio.readyState>=3; sync(); });
     audio.addEventListener('volumechange', sync);
     slot.addEventListener('soyo-music-graph', sync);
-    slot.addEventListener('soyo-music-view', () => { if(observer) view(); });
     document.addEventListener('visibilitychange', sync);
     window.addEventListener('pagehide', rest);
     window.addEventListener('pageshow', sync);

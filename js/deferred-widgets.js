@@ -2,6 +2,19 @@
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.querySelector('[data-music-url]');
   if (music) {
+    // A tall sidebar must scroll with the page before sticking at its bottom.
+    // Observe size changes (TOC, fonts, playback controls), never poll on scroll.
+    const sidebar = music.closest('.sidebar');
+    if (sidebar && 'ResizeObserver' in window) {
+      const fitSidebar = () => {
+        if (innerWidth < 992) sidebar.style.removeProperty('--music-sidebar-top');
+        // Leave the bottom corner clear of NexT's fixed back-to-top button.
+        else sidebar.style.setProperty('--music-sidebar-top', Math.min(16, innerHeight - sidebar.offsetHeight - 80) + 'px');
+      };
+      new ResizeObserver(fitSidebar).observe(sidebar);
+      window.addEventListener('resize', fitSidebar);
+      fitSidebar();
+    }
     const slot = music.closest('.music-player-slot');
     const audio = slot.querySelector('audio');
     const status = slot.querySelector('.music-status');
@@ -12,8 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const volume = controls.querySelector('.music-volume');
     const mute = controls.querySelector('.music-mute');
     const volumeValue = controls.querySelector('.music-volume-value');
-    const viewer = document.getElementById('music-viewer');
-    const expand = slot.querySelector('.music-expand');
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const visualUnavailable = '可视化暂不可用，音乐仍可播放';
     let graph, graphUnavailable = false, visualRequest;
@@ -61,49 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       return visualRequest;
     };
-    if (viewer?.showModal && expand) {
-      const mount = slot.parentNode;
-      const close = viewer.querySelector('.music-viewer-close');
-      let placeholder, backdropDown = false;
-      expand.hidden = false;
-      expand.addEventListener('click', () => {
-        if (viewer.open) return;
-        placeholder = document.createElement('div');
-        placeholder.className = 'music-slot-placeholder';
-        placeholder.style.height = slot.getBoundingClientRect().height + 'px';
-        placeholder.textContent = '音乐视图已展开';
-        viewer.querySelector('.music-viewer-content').appendChild(slot);
-        mount.appendChild(placeholder);
-        viewer.showModal();
-        expand.setAttribute('aria-expanded', 'true');
-        document.documentElement.classList.add('music-viewer-open');
-        close.focus({ preventScroll: true });
-        slot.dispatchEvent(new Event('soyo-music-view'));
-        loadVisual();
-      });
-      close.addEventListener('click', () => viewer.close());
-      viewer.addEventListener('close', () => {
-        mount.appendChild(slot);
-        placeholder?.remove();
-        expand.setAttribute('aria-expanded', 'false');
-        document.documentElement.classList.remove('music-viewer-open');
-        slot.dispatchEvent(new Event('soyo-music-view'));
-        const r = expand.getBoundingClientRect();
-        const visible = r.width>0 && r.right>0 && r.left<innerWidth && r.bottom>0 && r.top<innerHeight && getComputedStyle(expand).visibility !== 'hidden';
-        const target = visible ? expand : document.querySelector('.sidebar-toggle');
-        if (target?.matches('.sidebar-toggle')) target.tabIndex = 0;
-        target?.focus({ preventScroll: true });
-      });
-      const outside = event => {
-        const r = viewer.getBoundingClientRect();
-        return event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom;
-      };
-      viewer.addEventListener('pointerdown', event => { backdropDown = event.target === viewer && outside(event); });
-      viewer.addEventListener('pointerup', event => {
-        if (backdropDown && event.target === viewer && outside(event)) viewer.close();
-        backdropDown = false;
-      });
-    }
     const formatTime = seconds => {
       if (!Number.isFinite(seconds)) return '--:--';
       const value = Math.max(0, Math.floor(seconds));
