@@ -41,6 +41,25 @@
     }
   };
   const removeReceipt = () => { try { sessionStorage.removeItem(key); } catch {} };
+  let renderGate;
+  // A streamed response can reveal its head before the article has been parsed.
+  // Delay only a matching incoming transition until its cover/title exist.
+  // Ordinary first visits, hash links and reduced motion never get this gate.
+  try {
+    const receipt = JSON.parse(sessionStorage.getItem(key)), activation = navigation.activation;
+    if (!reduced.matches && receipt && receipt.to === url(location.href)?.href &&
+        receipt.from === url(activation?.from?.url)?.href &&
+        (!receipt.fromKey || receipt.fromKey === activation.from.key)) {
+      const link = document.createElement('link');
+      if (link.relList.supports('expect')) {
+        link.rel = 'expect';
+        link.href = '#article-transition-ready';
+        link.setAttribute('blocking', 'render');
+        document.head.append(link);
+        renderGate = link;
+      }
+    }
+  } catch {}
   window.addEventListener('pageswap', event => {
     reset();
     removeReceipt();
@@ -71,6 +90,8 @@
   });
   window.addEventListener('pagereveal', event => {
     reset();
+    renderGate?.remove();
+    renderGate = undefined;
     let receipt;
     try { receipt = JSON.parse(sessionStorage.getItem(key)); } catch {}
     removeReceipt();
