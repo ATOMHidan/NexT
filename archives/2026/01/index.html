@@ -8447,7 +8447,11 @@ body:has(.main-inner.index) .sidebar-blogroll {
   const url = value => {
     try {
       const result = new URL(value, location.href);
-      return result.origin === location.origin && !result.hash ? result : null;
+      if (result.origin !== location.origin || result.hash) return null;
+      // Netlify canonicalizes path casing on redirect. Keep query values intact
+      // while matching the same article before and after that redirect.
+      result.pathname = result.pathname.toLowerCase();
+      return result;
     } catch { return null; }
   };
   const visible = element => {
