@@ -5045,6 +5045,10 @@ button[data-music-url]:active {
   background: rgba(6,18,12,0.55);
 }
 
+#site-search [hidden] {
+  display: none !important;
+}
+
 #site-search .search-heading {
   display: flex;
   justify-content: space-between;
@@ -5079,6 +5083,11 @@ button[data-music-url]:active {
   z-index: 1;
 }
 
+.search-field > button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 #search-query {
   min-width: 0;
   width: 100%;
@@ -5101,6 +5110,116 @@ button[data-music-url]:active {
   font-size: 13px;
   color: var(--md-muted);
   margin: 0 0 16px;
+}
+
+#search-actions {
+  margin-bottom: 20px;
+}
+
+.search-actions-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+#search-actions-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--md-muted);
+}
+
+#search-keyboard-hint {
+  font-size: 11px;
+  color: var(--md-muted);
+}
+
+#search-action-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#site-search .search-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 64px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-low);
+  color: var(--md-text);
+  text-align: left;
+  font: inherit;
+  text-decoration: none;
+}
+
+#site-search .search-action:hover,
+#site-search .search-action:focus-visible {
+  background: var(--md-secondary-container);
+  border-color: var(--md-secondary);
+}
+
+#site-search .search-action:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+#site-search .search-action:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.search-action-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  font-size: 20px;
+}
+
+.search-action-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.search-action-copy strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.search-action-copy small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--md-muted);
+}
+
+.search-action-kind {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--md-primary);
+}
+
+#search-action-status {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  font-size: 13px;
 }
 
 .search-result {
@@ -5201,6 +5320,18 @@ button[data-music-url]:active {
 
   .search-field {
     top: -20px;
+  }
+}
+
+@media (max-width: 480px) {
+  #search-action-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (pointer: coarse) {
+  #search-keyboard-hint {
+    display: none;
   }
 }
 

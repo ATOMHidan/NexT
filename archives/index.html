@@ -5152,6 +5152,10 @@ button[data-music-url]:active {
   background: rgba(6,18,12,0.55);
 }
 
+#site-search [hidden] {
+  display: none !important;
+}
+
 #site-search .search-heading {
   display: flex;
   justify-content: space-between;
@@ -5186,6 +5190,11 @@ button[data-music-url]:active {
   z-index: 1;
 }
 
+.search-field > button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 #search-query {
   min-width: 0;
   width: 100%;
@@ -5208,6 +5217,116 @@ button[data-music-url]:active {
   font-size: 13px;
   color: var(--md-muted);
   margin: 0 0 16px;
+}
+
+#search-actions {
+  margin-bottom: 20px;
+}
+
+.search-actions-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+#search-actions-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--md-muted);
+}
+
+#search-keyboard-hint {
+  font-size: 11px;
+  color: var(--md-muted);
+}
+
+#search-action-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+#site-search .search-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 64px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-low);
+  color: var(--md-text);
+  text-align: left;
+  font: inherit;
+  text-decoration: none;
+}
+
+#site-search .search-action:hover,
+#site-search .search-action:focus-visible {
+  background: var(--md-secondary-container);
+  border-color: var(--md-secondary);
+}
+
+#site-search .search-action:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+#site-search .search-action:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.search-action-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  font-size: 20px;
+}
+
+.search-action-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.search-action-copy strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.search-action-copy small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--md-muted);
+}
+
+.search-action-kind {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--md-primary);
+}
+
+#search-action-status {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  font-size: 13px;
 }
 
 .search-result {
@@ -5308,6 +5427,18 @@ button[data-music-url]:active {
 
   .search-field {
     top: -20px;
+  }
+}
+
+@media (max-width: 480px) {
+  #search-action-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (pointer: coarse) {
+  #search-keyboard-hint {
+    display: none;
   }
 }
 
@@ -9375,16 +9506,37 @@ setInterval("createtime()",250);
 </dialog>
 
 <script src="/assets/a251bc1c6ae91297c80f/js/appearance-panel.js" defer></script>
-<dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/e78fa95bb36914aa437e/search.json">
+<dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/e78fa95bb36914aa437e/search.json" data-random-index="/assets/363c3e46c37e1deae82a/footer-garden.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
-  <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="输入标题或关键词…" aria-label="搜索关键词" aria-describedby="search-status"><button type="button" data-search-clear>清空</button></div>
-  <p id="search-status" role="status" aria-live="polite">试试课程名称、技术问题或文章标题。</p>
+  <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="搜索文章，或输入画廊、深色、随机…" aria-label="搜索文章或快捷操作" aria-describedby="search-status search-keyboard-hint"><button type="button" data-search-clear>清空</button></div>
+  <section id="search-actions" aria-labelledby="search-actions-title" hidden>
+    <div class="search-actions-heading"><h3 id="search-actions-title">快捷操作</h3><span id="search-keyboard-hint">↑ ↓ 选择 · Enter 执行</span></div>
+    <div id="search-action-list">
+      <a class="search-action" href="/gallery/" data-search-action="gallery" data-search-keywords="画廊,文章画廊,gallery" data-search-default><span class="search-action-icon" aria-hidden="true">▧</span><span class="search-action-copy"><strong>文章画廊</strong><small>用封面浏览文章</small></span><span class="search-action-kind">前往</span></a>
+      <a class="search-action" href="/book/" data-search-action="book" data-search-keywords="文集,数字文集,my book,book" data-search-default><span class="search-action-icon" aria-hidden="true">▤</span><span class="search-action-copy"><strong>数字文集</strong><small>打开 My Book</small></span><span class="search-action-kind">前往</span></a>
+      <button type="button" class="search-action" data-search-action="random" data-search-keywords="随机,随机文章,随便逛逛,random" data-search-default><span class="search-action-icon" aria-hidden="true">↝</span><span class="search-action-copy"><strong>随机文章</strong><small>找一篇公开文章</small></span><span class="search-action-kind">打开</span></button>
+      <button type="button" class="search-action" data-search-action="dark" data-search-mode="dark" data-search-keywords="深色,深色模式,切换深色,暗色,夜间模式,dark"><span class="search-action-icon" aria-hidden="true">◐</span><span class="search-action-copy"><strong>深色模式</strong><small>使用深色外观</small></span><span class="search-action-kind">切换</span></button>
+      <button type="button" class="search-action" data-search-action="light" data-search-mode="light" data-search-keywords="浅色,浅色模式,切换浅色,亮色,日间模式,light"><span class="search-action-icon" aria-hidden="true">◑</span><span class="search-action-copy"><strong>浅色模式</strong><small>使用浅色外观</small></span><span class="search-action-kind">切换</span></button>
+      <button type="button" class="search-action" data-search-action="system" data-search-mode="system" data-search-keywords="跟随系统,系统外观,自动外观,system" data-search-default><span class="search-action-icon" aria-hidden="true">◒</span><span class="search-action-copy"><strong>跟随系统</strong><small>自动选择浅色或深色</small></span><span class="search-action-kind">切换</span></button>
+      <button type="button" class="search-action" data-search-action="appearance" data-search-keywords="外观,配色,外观与配色,主题色,appearance" data-search-default><span class="search-action-icon" aria-hidden="true">◈</span><span class="search-action-copy"><strong>外观与配色</strong><small>调整博客主题色</small></span><span class="search-action-kind">打开</span></button>
+      <button type="button" class="search-action" data-search-action="reset" data-search-keywords="默认绿色,恢复默认绿色,恢复配色,reset"><span class="search-action-icon" aria-hidden="true">↺</span><span class="search-action-copy"><strong>恢复默认绿色</strong><small>恢复原始主题配色</small></span><span class="search-action-kind">恢复</span></button>
+      <a class="search-action" href="/map/" data-search-action="map" data-search-keywords="地图,文章地图,map"><span class="search-action-icon" aria-hidden="true">◇</span><span class="search-action-copy"><strong>文章地图</strong><small>按分类探索文章</small></span><span class="search-action-kind">前往</span></a>
+      <a class="search-action" href="/archives/" data-search-action="archives" data-search-keywords="归档,文章归档,archive,archives"><span class="search-action-icon" aria-hidden="true">▦</span><span class="search-action-copy"><strong>文章归档</strong><small>沿着时间查找记录</small></span><span class="search-action-kind">前往</span></a>
+      <a class="search-action" href="/categories/" data-search-action="categories" data-search-keywords="分类,文章分类,category,categories"><span class="search-action-icon" aria-hidden="true">⋮</span><span class="search-action-copy"><strong>文章分类</strong><small>查看各个内容分类</small></span><span class="search-action-kind">前往</span></a>
+      <a class="search-action" href="/start/" data-search-action="start" data-search-keywords="从这里开始,开始,start"><span class="search-action-icon" aria-hidden="true">↗</span><span class="search-action-copy"><strong>从这里开始</strong><small>第一次来，随意逛逛</small></span><span class="search-action-kind">前往</span></a>
+      <a class="search-action" href="/ask/" data-search-action="ask" data-search-keywords="问题,问答,提问,留一个问题,ask"><span class="search-action-icon" aria-hidden="true">?</span><span class="search-action-copy"><strong>留一个问题</strong><small>查看问答与提问方式</small></span><span class="search-action-kind">前往</span></a>
+      <a class="search-action" href="/about/" data-search-action="about" data-search-keywords="关于,关于博客,about"><span class="search-action-icon" aria-hidden="true">○</span><span class="search-action-copy"><strong>关于博客</strong><small>认识这个博客</small></span><span class="search-action-kind">前往</span></a>
+      <a class="search-action" href="/" data-search-action="home" data-search-keywords="首页,主页,home"><span class="search-action-icon" aria-hidden="true">⌂</span><span class="search-action-copy"><strong>返回首页</strong><small>回到文章列表</small></span><span class="search-action-kind">前往</span></a>
+    </div>
+  </section>
+  <p id="search-action-status" role="status" aria-live="polite" hidden></p>
+  <p id="search-status" role="status" aria-live="polite">输入关键词查找文章，也可以选择快捷操作。</p>
   <button type="button" id="search-retry" hidden>重新加载</button>
   <div id="search-results"></div>
   <nav class="search-shortcuts" aria-label="继续浏览"><a href="/categories/">浏览分类</a><a href="/archives/">查看归档</a></nav>
 </dialog>
 
-<script src="/assets/4dda5a1936ea9b28f2cd/js/site-search.js" defer></script>
+<script src="/assets/b441cec4439f10fcad69/js/site-search.js" defer></script>
 <script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://sign.262860.xyz/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"path":"/archives/"}</script>
 
 </body>

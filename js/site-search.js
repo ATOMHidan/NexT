@@ -23,7 +23,92 @@
   const results = document.getElementById('search-results');
   const status = document.getElementById('search-status');
   const retry = document.getElementById('search-retry');
-  let entries, request, timer, opener;
+  const actionSection = document.getElementById('search-actions');
+  const actionList = document.getElementById('search-action-list');
+  const actionStatus = document.getElementById('search-action-status');
+  const normalize = text => text.trim().toLowerCase().replace(/\s+/g, ' ');
+  const actions = [...dialog.querySelectorAll('[data-search-action]')].map(node => ({
+    node, aliases: node.dataset.searchKeywords.split(',').map(normalize)
+  }));
+  let entries, request, timer, opener, loadError = '', composing = false;
+  let randomRequest, randomBusy = false, randomRun = 0;
+  function sameOriginURL(value) {
+    try {
+      const url = new URL(value, location.href);
+      return url.origin === location.origin && /^https?:$/.test(url.protocol) && !url.username && !url.password ? url : null;
+    } catch { return null; }
+  }
+  function notice(text) {
+    actionStatus.textContent = text;
+    actionStatus.hidden = !text;
+  }
+  function renderActions() {
+    const query = normalize(input.value), words = query.split(' ').filter(Boolean);
+    const appearance = window.SoyoAppearance;
+    const matches = [];
+    for (const action of actions) {
+      const {node, aliases} = action;
+      const name = node.dataset.searchAction;
+      const available = node.dataset.searchMode ? Boolean(appearance?.setMode) :
+        name === 'reset' ? Boolean(appearance?.reset) :
+        name === 'appearance' ? Boolean(appearance && document.querySelector('[data-appearance-open]')) : true;
+      const defaultMode = node.dataset.searchMode && node.dataset.searchMode !== 'system' && node.dataset.searchMode !== document.documentElement.dataset.theme;
+      const score = query ? (aliases.includes(query) ? 3 : aliases.some(alias => alias.startsWith(query)) ? 2 : words.every(word => aliases.some(alias => alias.includes(word))) ? 1 : 0) : 1;
+      node.hidden = !available || !score || (!query && !node.hasAttribute('data-search-default') && !defaultMode);
+      if (node.dataset.searchMode) node.querySelector('.search-action-kind').textContent = appearance?.get?.()?.mode === node.dataset.searchMode ? '当前' : '切换';
+      if (!node.hidden) matches.push({...action, score});
+    }
+    matches.sort((a,b) => b.score - a.score);
+    // Keep native links and buttons; no navigation interception or custom roles.
+    for (const {node} of matches) actionList.append(node);
+    actionSection.hidden = !matches.length;
+    return matches;
+  }
+  function pathKey(url) {
+    try { return decodeURI(new URL(url, location.href).pathname).replace(/\/+$/, '').toLowerCase(); }
+    catch { return ''; }
+  }
+  async function randomArticle(button) {
+    if (randomBusy) return;
+    randomBusy = true;
+    const run = ++randomRun;
+    button.disabled = true; button.setAttribute('aria-busy', 'true');
+    notice('正在找一篇公开文章…');
+    try {
+      if (!randomRequest) randomRequest = fetch(dialog.dataset.randomIndex).then(response => {
+        if (!response.ok) throw new Error('Random index unavailable');
+        return response.json();
+      }).then(data => {
+        if (!Array.isArray(data.urls)) throw new Error('Invalid random index');
+        return [...new Set(data.urls.filter(value => typeof value === 'string').map(value => {
+          const url = sameOriginURL(value);
+          return url && !url.search && !url.hash ? url.href : null;
+        }).filter(Boolean))];
+      }).catch(error => { randomRequest = null; throw error; });
+      const choices = (await randomRequest).filter(url => pathKey(url) !== pathKey(location.href));
+      // Closing search cancels the action, even if its request finishes later.
+      if (!dialog.open || run !== randomRun) return;
+      if (!choices.length) { notice('暂时没有其他公开文章，可以浏览分类或归档。'); return; }
+      dialog.close();
+      location.assign(choices[Math.floor(Math.random() * choices.length)]);
+    } catch {
+      if (dialog.open && run === randomRun) notice('随机文章暂时未加载，请再试一次。');
+    } finally {
+      randomBusy = false;
+      button.disabled = false; button.removeAttribute('aria-busy');
+    }
+  }
+  actions.forEach(({node}) => {
+    if (node.tagName === 'A') return;
+    node.addEventListener('click', () => {
+      if (node.dataset.searchAction === 'random') { randomArticle(node); return; }
+      input.value = '';
+      dialog.close();
+      if (node.dataset.searchMode) window.SoyoAppearance.setMode(node.dataset.searchMode);
+      else if (node.dataset.searchAction === 'reset') window.SoyoAppearance.reset();
+      else if (node.dataset.searchAction === 'appearance') document.querySelector('[data-appearance-open]').click();
+    });
+  });
   function highlight(text, words) {
     const fragment = document.createDocumentFragment();
     const escaped = words.map(word => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
@@ -39,20 +124,23 @@
     return fragment;
   }
   function render() {
+    const shortcuts = renderActions();
     results.replaceChildren();
-    if (!entries) return;
     const words = [...new Set(input.value.trim().toLowerCase().split(/\s+/).filter(Boolean))];
-    if (!words.length) { status.textContent = '试试课程名称、技术问题或文章标题。'; return; }
+    retry.hidden = !words.length || !loadError;
+    if (!words.length) { status.textContent = '输入关键词查找文章，也可以选择快捷操作。'; return; }
+    const prefix = shortcuts.length ? `${shortcuts.length} 项快捷操作 · ` : '';
+    if (!entries) { status.textContent = prefix + (loadError || '正在查找文章…'); return; }
     const matches = entries.map(entry => {
       const title = entry.title.toLowerCase(), body = entry.content.toLowerCase();
       const hits = words.filter(word => title.includes(word) || body.includes(word)).length;
       return { entry, score: hits * 10 + words.filter(word => title.includes(word)).length * 5 + (hits === words.length ? 100 : 0) };
     }).filter(item => item.score > 0).sort((a, b) => b.score - a.score);
-    status.textContent = matches.length ? `找到 ${matches.length} 篇文章${matches.length > 30 ? '，显示最相关的 30 篇' : ''}` : '没有找到相关文章。试试缩短关键词，或浏览分类与归档。';
+    status.textContent = prefix + (matches.length ? `找到 ${matches.length} 篇文章${matches.length > 30 ? '，显示最相关的 30 篇' : ''}` : '没有找到相关文章。试试缩短关键词，或浏览分类与归档。');
     for (const { entry } of matches.slice(0, 30)) {
       const link = document.createElement('a');
-      const url = new URL(entry.url, location.origin);
-      if (url.origin !== location.origin) continue;
+      const url = sameOriginURL(entry.url);
+      if (!url) continue;
       link.href = url.href; link.className = 'search-result';
       const title = document.createElement('strong'); title.append(highlight(entry.title, words));
       const meta = document.createElement('small'); meta.textContent = [...entry.categories, entry.date, entry.locked ? '加密文章' : ''].filter(Boolean).join(' · ');
@@ -89,7 +177,7 @@
   async function load() {
     if (entries) { render(); return; }
     if (request) return request;
-    retry.hidden = true; status.textContent = '正在加载搜索数据…';
+    loadError = ''; retry.hidden = true;
     request = (async () => {
       try {
         const response = await fetch(dialog.dataset.indexUrl);
@@ -97,31 +185,60 @@
         const data = await response.json();
         if (!Array.isArray(data) || data.some(row => typeof row.title !== 'string' || typeof row.content !== 'string' || typeof row.url !== 'string' || !Array.isArray(row.categories))) throw new Error('Invalid search index');
         entries = data; render();
-      } catch { status.textContent = '搜索数据加载失败，请重试。'; retry.hidden = false; }
+      } catch { loadError = '搜索数据加载失败，请重试。快捷操作仍可使用。'; render(); }
       finally { request = null; }
     })();
     return request;
   }
   function open() {
-    if (dialog.open) return;
+    if (dialog.open) { input.focus(); return; }
+    if (document.querySelector('dialog[open]')) return;
     opener = document.activeElement;
-    dialog.showModal(); document.documentElement.classList.add('search-open'); input.focus(); load();
+    notice(''); render();
+    dialog.showModal(); document.documentElement.classList.add('search-open'); input.focus();
+    if (input.value.trim() && !loadError) load();
   }
   document.querySelectorAll('[data-search-open]').forEach(button => button.addEventListener('click', open));
   dialog.querySelector('[data-search-close]').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('close', () => { document.documentElement.classList.remove('search-open'); opener?.focus(); });
+  dialog.addEventListener('close', () => {
+    ++randomRun; clearTimeout(timer);
+    document.documentElement.classList.remove('search-open');
+    if (!document.querySelector('dialog[open]')) opener?.focus({preventScroll:true});
+  });
   dialog.addEventListener('click', event => { if (event.target === dialog && (event.clientX < dialog.getBoundingClientRect().left || event.clientX > dialog.getBoundingClientRect().right || event.clientY < dialog.getBoundingClientRect().top || event.clientY > dialog.getBoundingClientRect().bottom)) dialog.close(); });
-  dialog.querySelector('[data-search-clear]').addEventListener('click', () => { input.value = ''; render(); input.focus(); });
-  input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(render, 120); });
+  dialog.querySelector('[data-search-clear]').addEventListener('click', () => { clearTimeout(timer); input.value = ''; notice(''); render(); input.focus(); });
+  function changed() {
+    clearTimeout(timer); notice(''); render();
+    if (input.value.trim()) timer = setTimeout(() => {
+      if (dialog.open && !loadError) load();
+    }, 120);
+  }
+  input.addEventListener('input', event => { if (!composing && !event.isComposing) changed(); });
+  input.addEventListener('compositionstart', () => { composing = true; clearTimeout(timer); });
+  input.addEventListener('compositionend', () => { composing = false; changed(); });
   retry.addEventListener('click', load);
   document.addEventListener('keydown', event => {
-    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); open(); }
+    if (!event.isComposing && !composing && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && !document.querySelector('dialog[open]:not(#site-search)')) { event.preventDefault(); open(); }
   });
   dialog.addEventListener('keydown', event => {
+    if (composing || event.isComposing || event.keyCode === 229) return;
+    if (event.key === 'Enter' && event.target === input) {
+      if (!input.value.trim()) return;
+      render();
+      const first = selectable()[0];
+      if (first) { event.preventDefault(); first.click(); }
+      return;
+    }
     if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
-    const links = [...results.querySelectorAll('a')].filter(link => !link.closest('details:not([open])')); if (!links.length) return;
+    const links = selectable();
+    if (!links.length || (event.target !== input && !links.includes(event.target))) return;
     event.preventDefault(); const index = links.indexOf(document.activeElement);
     const next = index < 0 ? (event.key === 'ArrowDown' ? 0 : links.length - 1) : (index + (event.key === 'ArrowDown' ? 1 : -1) + links.length) % links.length;
     links[next].focus();
   });
+  function selectable() {
+    return [...actionList.querySelectorAll('a,button'), ...results.querySelectorAll('a')]
+      .filter(node => !node.disabled && !node.closest('[hidden],details:not([open])'));
+  }
+  document.addEventListener('soyo-appearance-change', () => { if (dialog.open) renderActions(); });
 })();
