@@ -8628,6 +8628,8 @@ body:has(.main-inner.index) .sidebar-blogroll {
     removeReceipt();
     const transition = event.viewTransition, activation = event.activation;
     if (!transition) return;
+    // Native cancellation rejects ready, including ordinary non-article links.
+    transition.ready.catch(() => {});
     const from = url(location.href), to = url(activation?.entry?.url);
     if (reduced.matches || !from || !to || !activation || activation.navigationType === 'reload') {
       transition.skipTransition(); return;
@@ -8660,6 +8662,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
     removeReceipt();
     const transition = event.viewTransition, activation = navigation.activation;
     if (!transition) return;
+    transition.ready.catch(() => {});
     const from = url(activation?.from?.url), to = url(location.href), article = url(receipt?.article);
     if (reduced.matches || !receipt || !from || !to || !article ||
         receipt.from !== from.href || receipt.to !== to.href ||
@@ -8691,19 +8694,17 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"neatblog.netlify.app","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#1abc9c","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"duration":300,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/assets/a65fc965d74fd991d506/js/config.js" defer></script>
 
-    <meta name="description" content="凑粉毛唐似了😓ano 酱好可爱🥰凑粉毛唐似了😓ano 酱好可爱🥰凑粉毛唐似了😓ano 酱好可爱🥰凑粉毛唐似了😓ano 酱好可爱🥰凑粉毛唐似了😓ano 酱好可爱🥰">
+    <meta name="description" content="按分类浏览文章，查看各个主题的近期公开内容。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="categories">
 <meta property="og:url" content="https://neatblog.netlify.app/categories/index.html">
 <meta property="og:site_name" content="Soyo Course">
-<meta property="og:description" content="凑粉毛唐似了😓ano 酱好可爱🥰凑粉毛唐似了😓ano 酱好可爱🥰凑粉毛唐似了😓ano 酱好可爱🥰凑粉毛唐似了😓ano 酱好可爱🥰凑粉毛唐似了😓ano 酱好可爱🥰">
+<meta property="og:description" content="按分类浏览文章，查看各个主题的近期公开内容。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://i1.hdslb.com/bfs/new_dyn/6f02daaf3ad6a7b429e2e9ef538a3964112855903.jpg@1192w.avif">
-<meta property="article:published_time" content="2026-09-15T14:19:04.131Z">
-<meta property="article:modified_time" content="2025-08-21T15:47:53.200Z">
+<meta property="article:published_time" content="2026-10-16T09:52:36.121Z">
+<meta property="article:modified_time" content="2026-10-16T09:52:36.121Z">
 <meta property="article:author" content="Lotta Moeea">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i1.hdslb.com/bfs/new_dyn/6f02daaf3ad6a7b429e2e9ef538a3964112855903.jpg@1192w.avif">
 
 
 <link rel="canonical" href="https://neatblog.netlify.app/categories/">
@@ -8712,8 +8713,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"https://neatblog.netlify.app/categories/index.html","path":"categories/index.html","title":"categories"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>categories | Soyo Course
-</title>
+<title>分类 | Soyo Course</title>
   
 
 
@@ -8863,7 +8863,6 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
 </header>
         
-  
   <aside class="sidebar" aria-label="侧栏">
 
     <div class="sidebar-inner sidebar-profile sidebar-overview-active">
@@ -8981,46 +8980,79 @@ body:has(.main-inner.index) .sidebar-blogroll {
     </div>
   </aside>
 
-
     </div>
 
-    <div class="main-inner page posts-expand">
+    <div class="main-inner category-themes">
 
 
+<link rel="stylesheet" href="/assets/d4a4a06da26dbcba1311/css/category-themes.css">
+<div class="post-block category-overview">
+  <header class="category-heading"><p class="category-eyebrow">分类</p><h1>按主题浏览</h1><p>4 个分类 · 10 篇文章</p></header>
+  <div class="category-grid">
     
-    
-    
-    <div class="post-block" lang="zh-CN"><header class="post-header">
-
-<h1 class="post-title" itemprop="name headline">categories
-</h1>
-
-<div class="post-meta-container">
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body"><div class="category-all-page">
-  <div class="category-all-title">
-    目前共计 4 个分类
-  </div>
-  <div class="category-all">
-    <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Anime/">Anime</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Entermainment/">Entermainment</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Study/">Study</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Welcome/">Welcome</a><span class="category-list-count">1</span></li></ul>
-  </div>
-</div>
-
+    <a class="category-card category-palette" data-tone="1" href="/categories/Anime/">
+      <div class="category-art"><svg viewBox="0 0 640 240" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle class="topic-tone" cx="320" cy="120" r="101"/><circle class="topic-soft" cx="320" cy="120" r="72"/><path class="topic-line" d="M185 165 455 75M205 190 435 50"/><circle class="topic-ink" cx="368" cy="104" r="38"/><circle class="topic-warm" cx="270" cy="152" r="25"/><circle class="topic-warm" cx="94" cy="65" r="18"/><circle class="topic-line" cx="526" cy="166" r="31"/><path class="topic-line" d="M66 180h58m-58 12h34M512 57h28m-14-14v28"/></svg></div>
+      <div class="category-card-body">
+        
+        <div class="category-card-heading"><h2>Anime</h2><span class="category-count">1 篇</span></div>
+        <div class="category-preview">
+          
+          <p class="category-caption">最近公开文章 <time datetime="2025-06-21">2025-06-21</time></p>
+          <h3>《葬送的芙莉莲》</h3><p class="category-summary">打开文章，看看作者写下了什么。</p>
+          
+        </div>
+        <div class="category-card-footer"><span>浏览这个分类</span><span class="category-arrow" aria-hidden="true">↗</span></div>
       </div>
-      
-      
-      
-    </div>
-
+    </a>
     
+    <a class="category-card category-palette" data-tone="2" href="/categories/Entermainment/">
+      <div class="category-art"><svg viewBox="0 0 640 240" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path class="topic-tone" d="M184 44c68-49 136 49 204 0s68 0 68 0v142c-68 49-136-49-204 0s-68 0-68 0Z"/><path class="topic-ink" d="M184 90c68-49 136 49 204 0s68 0 68 0v42c-68 49-136-49-204 0s-68 0-68 0Z"/><circle class="topic-warm" cx="94" cy="92" r="18"/><circle class="topic-line" cx="526" cy="166" r="31"/><path class="topic-line" d="M66 180h58m-58 12h34M512 57h28m-14-14v28"/></svg></div>
+      <div class="category-card-body">
+        
+        <div class="category-card-heading"><h2>Entermainment</h2><span class="category-count">1 篇</span></div>
+        <div class="category-preview">
+          
+          <p class="category-caption">最近公开文章 <time datetime="2025-08-20">2025-08-20</time></p>
+          <h3>原神介绍（Powerer By Wiki）</h3><p class="category-summary">原来你也玩原神！</p>
+          
+        </div>
+        <div class="category-card-footer"><span>浏览这个分类</span><span class="category-arrow" aria-hidden="true">↗</span></div>
+      </div>
+    </a>
     
-
+    <a class="category-card category-palette" data-tone="2" href="/categories/Study/">
+      <div class="category-art"><svg viewBox="0 0 640 240" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle class="topic-tone" cx="278" cy="120" r="98"/><circle class="topic-ink" cx="360" cy="120" r="80"/><circle class="topic-warm" cx="385" cy="120" r="50"/><circle class="topic-soft" cx="398" cy="120" r="22"/><circle class="topic-warm" cx="94" cy="69" r="18"/><circle class="topic-line" cx="526" cy="166" r="31"/><path class="topic-line" d="M66 180h58m-58 12h34M512 57h28m-14-14v28"/></svg></div>
+      <div class="category-card-body">
+        
+        <div class="category-card-heading"><h2>Study</h2><span class="category-count">7 篇</span></div>
+        <div class="category-preview">
+          
+          <p class="category-caption">最近公开文章 <time datetime="2026-01-17">2026-01-17</time></p>
+          <h3>迷惑的 Error: Spawn failed 报错</h3><p class="category-summary">部署时莫名其妙报错：Error: Spawn failed at ChildProcess… at ChildProcess.emit… at cp.emit… at ChildProcess._handle.onexi…</p>
+          
+        </div>
+        <div class="category-card-footer"><span>2 篇需密码</span><span class="category-arrow" aria-hidden="true">↗</span></div>
+      </div>
+    </a>
+    
+    <a class="category-card category-palette" data-tone="0" href="/categories/Welcome/">
+      <div class="category-art"><svg viewBox="0 0 640 240" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path class="topic-tone" d="M208 120a92 92 0 0 1 92-92v92Zm112-92a92 92 0 0 1 92 92h-92ZM208 140h92v92a92 92 0 0 1-92-92Z"/><path class="topic-ink" d="M320 140h92a92 92 0 0 1-92 92Z"/><circle class="topic-warm" cx="94" cy="81" r="18"/><circle class="topic-line" cx="526" cy="166" r="31"/><path class="topic-line" d="M66 180h58m-58 12h34M512 57h28m-14-14v28"/></svg></div>
+      <div class="category-card-body">
+        
+        <div class="category-card-heading"><h2>Welcome</h2><span class="category-count">1 篇</span></div>
+        <div class="category-preview">
+          
+          <p class="category-caption">最近公开文章 <time datetime="2025-06-21">2025-06-21</time></p>
+          <h3>Welcome!</h3><p class="category-summary">Welcome to My Space!Sit Down and Relax. If you want to contact with me,please leave your comments here.</p>
+          
+        </div>
+        <div class="category-card-footer"><span>浏览这个分类</span><span class="category-arrow" aria-hidden="true">↗</span></div>
+      </div>
+    </a>
+    
+  </div>
+  
+</div>
 
     <div class="comments" id="waline"></div>
 </div>

@@ -65,6 +65,8 @@
     removeReceipt();
     const transition = event.viewTransition, activation = event.activation;
     if (!transition) return;
+    // Native cancellation rejects ready, including ordinary non-article links.
+    transition.ready.catch(() => {});
     const from = url(location.href), to = url(activation?.entry?.url);
     if (reduced.matches || !from || !to || !activation || activation.navigationType === 'reload') {
       transition.skipTransition(); return;
@@ -97,6 +99,7 @@
     removeReceipt();
     const transition = event.viewTransition, activation = navigation.activation;
     if (!transition) return;
+    transition.ready.catch(() => {});
     const from = url(activation?.from?.url), to = url(location.href), article = url(receipt?.article);
     if (reduced.matches || !receipt || !from || !to || !article ||
         receipt.from !== from.href || receipt.to !== to.href ||

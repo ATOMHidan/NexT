@@ -8628,6 +8628,8 @@ body:has(.main-inner.index) .sidebar-blogroll {
     removeReceipt();
     const transition = event.viewTransition, activation = event.activation;
     if (!transition) return;
+    // Native cancellation rejects ready, including ordinary non-article links.
+    transition.ready.catch(() => {});
     const from = url(location.href), to = url(activation?.entry?.url);
     if (reduced.matches || !from || !to || !activation || activation.navigationType === 'reload') {
       transition.skipTransition(); return;
@@ -8660,6 +8662,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
     removeReceipt();
     const transition = event.viewTransition, activation = navigation.activation;
     if (!transition) return;
+    transition.ready.catch(() => {});
     const from = url(activation?.from?.url), to = url(location.href), article = url(receipt?.article);
     if (reduced.matches || !receipt || !from || !to || !article ||
         receipt.from !== from.href || receipt.to !== to.href ||
@@ -8979,50 +8982,37 @@ body:has(.main-inner.index) .sidebar-blogroll {
 
     </div>
 
-    <div class="main-inner category posts-collapse">
+    <div class="main-inner category category-themes">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h1 class="collection-header">Entermainment
-          <small>分类</small>
-        </h1>
-      </div>
-
-      
-    <div class="collection-year">
-      <span class="collection-header">2025</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2025-08-20T18:31:41+08:00"
-              content="2025-08-20">
-          08-20
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2025/08/20/%E5%8E%9F%E7%A5%9E/" itemprop="url">
-            <span itemprop="name">原神介绍（Powerer By Wiki）</span>
-          </a>
-      </div>
-
-      
+  <link rel="stylesheet" href="/assets/d4a4a06da26dbcba1311/css/category-themes.css">
+  <div class="post-block category-topic category-palette" data-tone="2">
+    <a class="category-back" href="/categories/"><span aria-hidden="true">←</span> 全部分类</a>
+    <header class="category-topic-heading">
+      <div class="category-art"><svg viewBox="0 0 640 240" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path class="topic-tone" d="M184 44c68-49 136 49 204 0s68 0 68 0v142c-68 49-136-49-204 0s-68 0-68 0Z"/><path class="topic-ink" d="M184 90c68-49 136 49 204 0s68 0 68 0v42c-68 49-136-49-204 0s-68 0-68 0Z"/><circle class="topic-warm" cx="94" cy="92" r="18"/><circle class="topic-line" cx="526" cy="166" r="31"/><path class="topic-line" d="M66 180h58m-58 12h34M512 57h28m-14-14v28"/></svg></div>
+      <div class="category-topic-title"><p class="category-eyebrow">分类专题</p><h1>Entermainment</h1><p>1 篇文章</p></div>
     </header>
-  </article>
-
-    </div>
   </div>
-  
-  
-  
+  <section class="post-block category-feed category-palette" data-tone="2" aria-labelledby="category-articles-title">
+    <div class="category-feed-heading"><h2 id="category-articles-title">文章</h2><span>按发布时间</span></div>
+    <div class="category-articles">
+      
+      
+      <article class="category-article">
+        <a class="category-article-link" href="/2025/08/20/%E5%8E%9F%E7%A5%9E/">
+          <div class="article-cover cover-ink-2" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle class="cover-tone" cx="401" cy="112" r="125"/><circle class="cover-base" cx="401" cy="112" r="119"/><g transform="translate(401 112) scale(0.72)"><g transform="rotate(12)"><path class="cover-tone" d="M0 80C-135 85-153-21-130-101-31-90 7-15 0 80Z"/><path class="cover-accent" d="M5 82C8-60 81-94 156-73 144 37 93 83 5 82Z"/><path class="cover-line" d="M-107-70 0 100 125-42"/></g><circle class="cover-warm" cx="46" cy="-93" r="20"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></svg></div>
+          <div class="category-article-body">
+            <div class="category-article-meta"><time datetime="2025-08-20">2025-08-20</time></div>
+            <h3>原神介绍（Powerer By Wiki）</h3>
+            <p class="category-summary">原来你也玩原神！</p>
+            <span class="category-read">阅读全文<span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </article>
+      
+    </div>
+  </section>
 
 </div>
   </main>
