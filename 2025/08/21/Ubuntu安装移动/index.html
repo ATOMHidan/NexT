@@ -4856,6 +4856,68 @@ button[data-music-url]:hover {
   opacity: 1;
 }
 
+#waline .comment-geo-slot {
+  position: relative;
+}
+
+#waline .comment-geo-source {
+  visibility: hidden;
+}
+
+#waline .comment-geo-avatar {
+  --geo-base: var(--md-tonal);
+  --geo-ink: var(--md-primary);
+  --geo-accent: var(--md-tertiary);
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--waline-avatar-radius, 50%);
+  pointer-events: none;
+}
+
+#waline .wl-user > .comment-geo-avatar {
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+}
+
+#waline .comment-geo-avatar[data-tone='1'] {
+  --geo-base: var(--md-secondary-container);
+  --geo-ink: var(--md-secondary);
+  --geo-accent: var(--md-primary);
+}
+
+#waline .comment-geo-avatar[data-tone='2'] {
+  --geo-base: var(--md-tertiary-container);
+  --geo-ink: var(--md-tertiary);
+  --geo-accent: var(--md-secondary);
+}
+
+#waline .geo-base {
+  fill: var(--geo-base);
+}
+
+#waline .geo-ink {
+  fill: var(--geo-ink);
+}
+
+#waline .geo-soft {
+  fill: var(--md-container);
+}
+
+#waline .geo-accent {
+  fill: var(--geo-accent);
+}
+
+#waline .geo-line {
+  fill: none;
+  stroke: var(--geo-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.65;
+}
+
 .post-body #hexo-blog-encrypt {
   background: var(--md-low);
   color: var(--md-text);
@@ -9416,7 +9478,7 @@ setInterval("createtime()",250);
 })(window, document);
 </script>
 <template id="deferred-live2d"><script src="/assets/73db01a99fc5e7b53765/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/73db01a99fc5e7b53765/live2dw/assets/22.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
-<script src="/assets/52847bd48f479dfe2234/js/deferred-widgets.js" defer=""></script>
+<script src="/assets/960b25362f2b1e0a78d2/js/deferred-widgets.js" defer=""></script>
 <script src="/assets/3cc0e2b3bd6f3ec91051/js/site-account.js" defer=""></script>
 <dialog id="appearance-panel" class="appearance-panel" aria-labelledby="appearance-title">
   <div class="appearance-head"><h2 id="appearance-title">外观与配色</h2><button type="button" data-appearance-close="" aria-label="关闭配色面板"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div>
@@ -9482,7 +9544,7 @@ setInterval("createtime()",250);
 </dialog>
 
 <script src="/assets/b441cec4439f10fcad69/js/site-search.js" defer=""></script>
-<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://sign.262860.xyz/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"path":"/2025/08/21/Ubuntu%E5%AE%89%E8%A3%85%E7%A7%BB%E5%8A%A8/"}</script>
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://sign.262860.xyz/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"avatarLibUrl":"/assets/bf8995a1ff8e893e13f1/js/comment-avatars.js","path":"/2025/08/21/Ubuntu%E5%AE%89%E8%A3%85%E7%A7%BB%E5%8A%A8/"}</script>
 
 
 

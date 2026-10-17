@@ -4751,6 +4751,68 @@ button[data-music-url]:hover {
   opacity: 1;
 }
 
+#waline .comment-geo-slot {
+  position: relative;
+}
+
+#waline .comment-geo-source {
+  visibility: hidden;
+}
+
+#waline .comment-geo-avatar {
+  --geo-base: var(--md-tonal);
+  --geo-ink: var(--md-primary);
+  --geo-accent: var(--md-tertiary);
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--waline-avatar-radius, 50%);
+  pointer-events: none;
+}
+
+#waline .wl-user > .comment-geo-avatar {
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+}
+
+#waline .comment-geo-avatar[data-tone='1'] {
+  --geo-base: var(--md-secondary-container);
+  --geo-ink: var(--md-secondary);
+  --geo-accent: var(--md-primary);
+}
+
+#waline .comment-geo-avatar[data-tone='2'] {
+  --geo-base: var(--md-tertiary-container);
+  --geo-ink: var(--md-tertiary);
+  --geo-accent: var(--md-secondary);
+}
+
+#waline .geo-base {
+  fill: var(--geo-base);
+}
+
+#waline .geo-ink {
+  fill: var(--geo-ink);
+}
+
+#waline .geo-soft {
+  fill: var(--md-container);
+}
+
+#waline .geo-accent {
+  fill: var(--geo-accent);
+}
+
+#waline .geo-line {
+  fill: none;
+  stroke: var(--geo-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.65;
+}
+
 .post-body #hexo-blog-encrypt {
   background: var(--md-low);
   color: var(--md-text);

@@ -161,7 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
             style.onerror = () => { style.remove(); reject(new Error('Comment stylesheet failed')); };
             document.head.appendChild(style);
           }),
-          NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+          NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline }),
+          // An unavailable decorative module must never prevent reading/replying.
+          NexT.utils.getScript(CONFIG.waline.avatarLibUrl, { condition: window.SoyoCommentAvatars }).catch(() => {})
         ]);
         button.remove();
         const options = Object.assign({}, CONFIG.waline, { el: comments });
@@ -170,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeholder: '你想问什么？可以附上相关文章链接和你尝试过的方法。请勿填写隐私信息。'
           });
         }
+        try { window.SoyoCommentAvatars?.mount(comments, options.serverURL); } catch { /* Comments work without decorative fallbacks. */ }
         window.Waline.init(options);
       } catch (error) {
         style.remove();
