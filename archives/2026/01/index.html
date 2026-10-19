@@ -5934,7 +5934,7 @@ html.appearance-open {
   position: fixed;
   box-sizing: border-box;
   margin: 0;
-  width: 360px;
+  width: 440px;
   max-width: calc(100vw - 32px);
   max-height: calc(100dvh - 32px);
   padding: 24px;
@@ -5948,6 +5948,7 @@ html.appearance-open {
   line-height: 1.5;
   overflow: auto;
   overscroll-behavior: contain;
+  scroll-padding-block: 72px 16px;
 }
 
 .appearance-panel::backdrop {
@@ -5971,11 +5972,16 @@ html.appearance-open {
 }
 
 .appearance-head {
+  position: sticky;
+  top: -24px;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
+  padding: 12px 0;
+  margin: -12px 0 12px;
+  background: var(--md-container);
 }
 
 .appearance-head h2 {
@@ -6268,6 +6274,167 @@ html.appearance-open {
 .appearance-entry:focus-visible {
   outline: 2px solid var(--md-primary);
   outline-offset: 3px;
+}
+
+.theme-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.appearance-panel .theme-preset {
+  display: block;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--md-outline);
+  border-radius: 20px;
+  background: var(--md-container);
+  text-align: left;
+}
+
+.theme-preset-art {
+  width: 100%;
+  height: auto;
+  border-radius: 13px;
+  overflow: hidden;
+  background: var(--preset-surface, var(--md-low));
+}
+
+.preset-ink {
+  fill: var(--preset-primary, var(--md-primary));
+}
+
+.preset-tone {
+  fill: var(--preset-tonal, var(--md-tonal));
+}
+
+.preset-soft {
+  fill: var(--preset-secondary-container, var(--md-secondary-container));
+}
+
+.preset-warm {
+  fill: var(--preset-tertiary-container, var(--md-tertiary-container));
+}
+
+.preset-line {
+  fill: none;
+  stroke: var(--preset-on-tonal, var(--md-on-tonal));
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.6;
+}
+
+.theme-preset-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 4px 0;
+}
+
+.theme-preset-name strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.theme-preset-check {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--md-tonal);
+  fill: none;
+  stroke: var(--md-on-tonal);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  visibility: hidden;
+}
+
+.theme-preset-description {
+  display: block;
+  padding: 3px 4px 2px;
+  font-size: 11px;
+  color: var(--md-muted);
+}
+
+.appearance-panel .theme-preset[aria-pressed='true'] {
+  border-color: var(--md-primary);
+  box-shadow: inset 0 0 0 1px var(--md-primary);
+  background: var(--md-low);
+}
+
+.theme-preset[aria-pressed='true'] .theme-preset-check {
+  visibility: visible;
+}
+
+.appearance-selection {
+  margin: 10px 0 0;
+  color: var(--md-muted);
+  font-size: 12px;
+}
+
+.appearance-custom {
+  margin: 0 0 18px;
+  border: 1px solid var(--md-outline);
+  border-radius: 18px;
+}
+
+.appearance-custom > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 12px;
+  list-style: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.appearance-custom > summary::-webkit-details-marker {
+  display: none;
+}
+
+.appearance-custom > summary small {
+  margin-left: auto;
+  color: var(--md-muted);
+  font-size: 11px;
+}
+
+.appearance-custom > summary svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--md-muted);
+  stroke-width: 1.5;
+}
+
+.appearance-custom[open] > summary svg {
+  transform: rotate(180deg);
+}
+
+.appearance-custom-content {
+  padding: 4px 12px 0;
+}
+
+.appearance-custom .appearance-samples {
+  margin-bottom: 18px;
+}
+
+.appearance-custom .sample-link {
+  display: none;
+}
+
+@media (hover: hover) {
+  .appearance-panel .theme-preset:hover {
+    border-color: var(--md-primary);
+    background: var(--md-low);
+  }
+
+  .appearance-custom > summary:hover {
+    color: var(--md-primary);
+  }
 }
 
 @media (hover: hover) {
@@ -9569,6 +9736,60 @@ setInterval("createtime()",250);
 <script src="/assets/3cc0e2b3bd6f3ec91051/js/site-account.js" defer></script>
 <dialog id="appearance-panel" class="appearance-panel" aria-labelledby="appearance-title">
   <div class="appearance-head"><h2 id="appearance-title">外观与配色</h2><button type="button" data-appearance-close aria-label="关闭配色面板"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+  <fieldset class="appearance-field"><legend>外观</legend><div class="appearance-segments" data-mode-group>
+    <button type="button" data-mode="system" aria-pressed="true">跟随系统</button><button type="button" data-mode="light" aria-pressed="false">浅色</button><button type="button" data-mode="dark" aria-pressed="false">深色</button>
+  </div></fieldset>
+  
+  <fieldset class="appearance-field appearance-showcase"><legend>配色橱窗</legend>
+    <div class="theme-preset-grid">
+      
+      <button type="button" class="theme-preset" data-appearance-preset="bamboo" aria-pressed="false">
+        <svg class="theme-preset-art" viewBox="0 0 160 88" aria-hidden="true" focusable="false">
+          
+          <circle class="preset-soft" cx="125" cy="20" r="24"/><path class="preset-tone" d="M22 78V37a27 27 0 0 1 54 0v41Z"/><path class="preset-ink" d="M76 78V28a25 25 0 0 1 50 0v50Z"/><path class="preset-warm" d="M105 78a25 25 0 0 1 25-25h17v25Z"/><path class="preset-line" d="M39 78V44m17 34V27m40 51V34"/>
+          
+        </svg>
+        <span class="theme-preset-name"><strong>竹绿</strong><svg class="theme-preset-check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10 3 3 7-7"/></svg></span>
+        <span class="theme-preset-description">清润 · 竹影</span>
+      </button>
+      
+      <button type="button" class="theme-preset" data-appearance-preset="mist" aria-pressed="false">
+        <svg class="theme-preset-art" viewBox="0 0 160 88" aria-hidden="true" focusable="false">
+          
+          <circle class="preset-tone" cx="118" cy="28" r="25"/><path class="preset-soft" d="M-8 77 44 15l52 62Z"/><path class="preset-ink" d="m43 88 52-63 55 63Z"/><path class="preset-warm" d="M113 88V64a23 23 0 0 1 46 0v24Z"/><path class="preset-line" d="M17 30h29M8 39h23M71 68h31"/>
+          
+        </svg>
+        <span class="theme-preset-name"><strong>雾蓝</strong><svg class="theme-preset-check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10 3 3 7-7"/></svg></span>
+        <span class="theme-preset-description">柔和 · 远山</span>
+      </button>
+      
+      <button type="button" class="theme-preset" data-appearance-preset="apricot" aria-pressed="false">
+        <svg class="theme-preset-art" viewBox="0 0 160 88" aria-hidden="true" focusable="false">
+          
+          <circle class="preset-warm" cx="119" cy="23" r="26"/><path class="preset-tone" d="M18 88V43a39 39 0 0 1 78 0v45Z"/><path class="preset-ink" d="M36 88V43a21 21 0 0 1 42 0v45H65V43a8 8 0 0 0-16 0v45Z"/><path class="preset-soft" d="M99 88V58h51v30Z"/><path class="preset-line" d="M106 45h37m-37 8h22"/>
+          
+        </svg>
+        <span class="theme-preset-name"><strong>杏橙</strong><svg class="theme-preset-check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10 3 3 7-7"/></svg></span>
+        <span class="theme-preset-description">温暖 · 日光</span>
+      </button>
+      
+      <button type="button" class="theme-preset" data-appearance-preset="berry" aria-pressed="false">
+        <svg class="theme-preset-art" viewBox="0 0 160 88" aria-hidden="true" focusable="false">
+          
+          <circle class="preset-tone" cx="53" cy="49" r="35"/><circle class="preset-ink" cx="99" cy="51" r="29"/><circle class="preset-warm" cx="125" cy="63" r="24"/><path class="preset-soft" d="M83 27C79 8 96 4 110 8c-1 15-12 22-27 19Z"/><path class="preset-line" d="m24 49 16-16m80-12h20m-10-10v20"/>
+          
+        </svg>
+        <span class="theme-preset-name"><strong>莓紫</strong><svg class="theme-preset-check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10 3 3 7-7"/></svg></span>
+        <span class="theme-preset-description">明快 · 果实</span>
+      </button>
+      
+    </div>
+    <p class="appearance-selection" data-appearance-selection>当前：默认绿色</p>
+  </fieldset>
+  <script id="appearance-presets" type="application/json">[{"id":"bamboo","name":"竹绿","description":"清润 · 竹影","colors":{"v":1,"hue":155,"level":"balanced","light":["#f9faf5","#f3f4ef","#e7e9e4","#306a43","#ffffff","#b2f1bf","#14512d","#4c6357","#cfe9d9","#354c40","#3b646e","#bfeaf5","#224c56","#191c19","#424842","#c2c8c0"],"dark":["#111411","#191c19","#282b28","#97d5a5","#00391a","#14512d","#b2f1bf","#b3ccbe","#354c40","#cfe9d9","#a3cdd9","#224c56","#bfeaf5","#e1e3de","#c2c8c0","#424842"]}},{"id":"mist","name":"雾蓝","description":"柔和 · 远山","colors":{"v":1,"hue":245,"level":"soft","light":["#f9f9fc","#f3f3f6","#e8e8eb","#486177","#ffffff","#cce5ff","#30495e","#595f68","#dee2ee","#414750","#635b6e","#eadef4","#4b4455","#1a1c1e","#42474c","#c3c7cd"],"dark":["#111416","#1a1c1e","#282a2d","#b0c9e2","#193346","#30495e","#cce5ff","#c1c7d2","#414750","#dee2ee","#cdc2d8","#4b4455","#eadef4","#e2e2e5","#c3c7cd","#42474c"]}},{"id":"apricot","name":"杏橙","description":"温暖 · 日光","colors":{"v":1,"hue":55,"level":"balanced","light":["#fff8f5","#fef1eb","#f2e6e0","#8a5021","#ffffff","#ffdcc5","#6d390b","#725a41","#feddbd","#58432b","#5e6136","#e4e6b0","#464921","#201a17","#50443d","#d5c3b9"],"dark":["#17120f","#201a17","#2f2925","#ffb783","#4f2500","#6d390b","#ffdcc5","#e1c1a2","#58432b","#feddbd","#c7ca96","#464921","#e4e6b0","#ece0da","#d5c3b9","#50443d"]}},{"id":"berry","name":"莓紫","description":"明快 · 果实","colors":{"v":1,"hue":325,"level":"balanced","light":["#fff7fa","#faf1f6","#eee6ea","#794f81","#ffffff","#fdd6ff","#603768","#6e5868","#f8daee","#554050","#81524d","#ffdad6","#663b36","#1e1a1e","#4c444b","#cec3cc"],"dark":["#161215","#1e1a1e","#2d292c","#e9b5ef","#472150","#603768","#fdd6ff","#dbbed2","#554050","#f8daee","#f4b8b1","#663b36","#ffdad6","#e8e0e4","#cec3cc","#4c444b"]}}]</script>
+  <details class="appearance-custom" data-appearance-custom>
+    <summary><span>自由调色</span><small>调整色相与浓度</small><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 8 5 5 5-5"/></svg></summary>
+    <div class="appearance-custom-content">
   <div class="appearance-samples" aria-label="浅色与深色配色预览">
     
     <div class="appearance-sample" data-sample="light">
@@ -9586,20 +9807,20 @@ setInterval("createtime()",250);
     </div>
     
   </div>
-  <fieldset class="appearance-field"><legend>外观</legend><div class="appearance-segments" data-mode-group>
-    <button type="button" data-mode="system" aria-pressed="true">跟随系统</button><button type="button" data-mode="light" aria-pressed="false">浅色</button><button type="button" data-mode="dark" aria-pressed="false">深色</button>
-  </div></fieldset>
   <div class="appearance-field appearance-hue"><div class="appearance-label"><label for="appearance-hue">主题色相</label><output for="appearance-hue" id="appearance-hue-value">默认绿色</output></div>
     <input type="range" id="appearance-hue" min="0" max="359" step="1" value="164" disabled aria-describedby="appearance-hue-value">
   </div>
   <fieldset class="appearance-field"><legend>色彩浓度</legend><div class="appearance-segments" data-level-group>
     <button type="button" data-level="soft" aria-pressed="false" disabled>柔和</button><button type="button" data-level="balanced" aria-pressed="true" disabled>均衡</button><button type="button" data-level="vivid" aria-pressed="false" disabled>鲜明</button>
   </div></fieldset>
+  <p class="appearance-status" data-appearance-engine-status role="status" aria-live="polite" hidden></p>
+    </div>
+  </details>
   <div class="appearance-foot"><button type="button" class="appearance-reset" data-appearance-reset><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1 8M4 4v6h6"/></svg>恢复默认绿色</button><span data-appearance-saved>自动保存</span></div>
   <p class="appearance-status" data-appearance-status role="status" aria-live="polite" hidden></p>
 </dialog>
 
-<script src="/assets/a251bc1c6ae91297c80f/js/appearance-panel.js" defer></script>
+<script src="/assets/e958b3bcc42cf5e5af28/js/appearance-panel.js" defer></script>
 <dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/e78fa95bb36914aa437e/search.json" data-random-index="/assets/363c3e46c37e1deae82a/footer-garden.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="搜索文章，或输入画廊、深色、随机…" aria-label="搜索文章或快捷操作" aria-describedby="search-status search-keyboard-hint"><button type="button" data-search-clear>清空</button></div>
