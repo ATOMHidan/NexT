@@ -23,6 +23,7 @@
   const results = document.getElementById('search-results');
   const status = document.getElementById('search-status');
   const retry = document.getElementById('search-retry');
+  const empty = document.getElementById('search-empty');
   const actionSection = document.getElementById('search-actions');
   const actionList = document.getElementById('search-action-list');
   const actionStatus = document.getElementById('search-action-status');
@@ -126,17 +127,32 @@
   function render() {
     const shortcuts = renderActions();
     results.replaceChildren();
+    if (empty) { empty.replaceChildren(); empty.hidden = true; }
+    status.classList.remove('search-status-illustrated');
+    const illustrate = (kind, title, description) => {
+      if (!empty || shortcuts.length) return;
+      const panel = window.SoyoStates?.create(kind, title, description);
+      if (!panel) return;
+      empty.append(panel); empty.hidden = false;
+      // Keep the existing live status announcement without repeating visible copy.
+      status.classList.add('search-status-illustrated');
+    };
     const words = [...new Set(input.value.trim().toLowerCase().split(/\s+/).filter(Boolean))];
     retry.hidden = !words.length || !loadError;
     if (!words.length) { status.textContent = '输入关键词查找文章，也可以选择快捷操作。'; return; }
     const prefix = shortcuts.length ? `${shortcuts.length} 项快捷操作 · ` : '';
-    if (!entries) { status.textContent = prefix + (loadError || '正在查找文章…'); return; }
+    if (!entries) {
+      status.textContent = prefix + (loadError || '正在查找文章…');
+      if (loadError) illustrate('error', '搜索暂时没能加载', '可以重新加载，或先浏览分类与归档。');
+      return;
+    }
     const matches = entries.map(entry => {
       const title = entry.title.toLowerCase(), body = entry.content.toLowerCase();
       const hits = words.filter(word => title.includes(word) || body.includes(word)).length;
       return { entry, score: hits * 10 + words.filter(word => title.includes(word)).length * 5 + (hits === words.length ? 100 : 0) };
     }).filter(item => item.score > 0).sort((a, b) => b.score - a.score);
     status.textContent = prefix + (matches.length ? `找到 ${matches.length} 篇文章${matches.length > 30 ? '，显示最相关的 30 篇' : ''}` : '没有找到相关文章。试试缩短关键词，或浏览分类与归档。');
+    if (!matches.length) illustrate('search', '还没找到这篇记录', '试试更短的关键词，或浏览分类与归档。');
     for (const { entry } of matches.slice(0, 30)) {
       const link = document.createElement('a');
       const url = sameOriginURL(entry.url);
@@ -177,7 +193,7 @@
   async function load() {
     if (entries) { render(); return; }
     if (request) return request;
-    loadError = ''; retry.hidden = true;
+    loadError = ''; retry.hidden = true; render();
     request = (async () => {
       try {
         const response = await fetch(dialog.dataset.indexUrl);
@@ -216,7 +232,7 @@
   input.addEventListener('input', event => { if (!composing && !event.isComposing) changed(); });
   input.addEventListener('compositionstart', () => { composing = true; clearTimeout(timer); });
   input.addEventListener('compositionend', () => { composing = false; changed(); });
-  retry.addEventListener('click', load);
+  retry.addEventListener('click', () => { input.focus(); load(); });
   document.addEventListener('keydown', event => {
     if (!event.isComposing && !composing && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && !document.querySelector('dialog[open]:not(#site-search)')) { event.preventDefault(); open(); }
   });

@@ -1,4 +1,45 @@
 /* global NexT, CONFIG */
+// The inert SVG template is shared with search; create art only for a real state.
+window.SoyoStates = {
+  create(kind, title, description) {
+    const template = document.getElementById('content-state-template');
+    if (!template || !['search', 'comments', 'error'].includes(kind)) return null;
+    const panel = template.content.firstElementChild.cloneNode(true);
+    panel.querySelector('use').setAttribute('href', '#content-state-' + kind);
+    panel.querySelector('.content-state-title').textContent = title;
+    panel.querySelector('.content-state-description').textContent = description;
+    return panel;
+  }
+};
+
+function watchCommentStates(root, refreshLabel) {
+  let surface;
+  const decorate = () => {
+    const empty = surface.querySelector(':scope > .wl-empty');
+    if (empty && !empty.querySelector('.content-state')) {
+      const panel = window.SoyoStates.create('comments', '还没有评论', '第一段对话，从你的留言开始。');
+      if (panel) empty.replaceChildren(panel);
+    }
+    const operation = surface.querySelector(':scope > .wl-operation');
+    // A load-more button shares this container. Keep its normal presentation.
+    if (operation?.querySelector('button')?.textContent === refreshLabel && !operation.querySelector('.content-state')) {
+      const panel = window.SoyoStates.create('error', '评论暂时没能加载', '可以重试一下，你已输入的内容会留在这里。');
+      if (panel) { panel.setAttribute('role', 'status'); operation.prepend(panel); }
+    }
+  };
+  const observer = new MutationObserver(decorate);
+  const connect = () => {
+    const next = root.querySelector('[data-waline]');
+    if (!next || next === surface) return;
+    observer.disconnect(); surface = next;
+    // Observe only state switches at the client root, never the editor subtree.
+    observer.observe(surface, { childList: true });
+    decorate();
+  };
+  new MutationObserver(connect).observe(root, { childList: true });
+  connect();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const music = document.querySelector('[data-music-url]');
   if (music) {
@@ -145,10 +186,11 @@ document.addEventListener('DOMContentLoaded', () => {
     button.className = 'btn';
     button.textContent = '加载评论';
     comments.appendChild(button);
-    let loading = false;
+    let loading = false, failure;
     const loadComments = async () => {
       if (loading) return;
       loading = true;
+      failure?.remove(); failure = null;
       button.disabled = true;
       button.textContent = '评论加载中…';
       const style = document.createElement('link');
@@ -167,6 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ]);
         button.remove();
         const options = Object.assign({}, CONFIG.waline, { el: comments });
+        options.locale = Object.assign({}, options.locale, { refresh: '重新加载评论' });
         if (document.querySelector('[data-question-page]')) {
           options.locale = Object.assign({}, options.locale, {
             placeholder: '你想问什么？可以附上相关文章链接和你尝试过的方法。请勿填写隐私信息。'
@@ -174,11 +217,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         try { window.SoyoCommentAvatars?.mount(comments, options.serverURL); } catch { /* Comments work without decorative fallbacks. */ }
         window.Waline.init(options);
+        try { watchCommentStates(comments, options.locale.refresh); } catch { /* Decoration cannot block comments. */ }
       } catch (error) {
         style.remove();
         loading = false;
         button.disabled = false;
         button.textContent = '评论加载失败，点击重试';
+        failure = window.SoyoStates.create('error', '评论暂时没能加载', '连接没有准备好，请再试一次。');
+        if (failure) { failure.setAttribute('role', 'status'); comments.prepend(failure); }
         if (!button.isConnected) comments.appendChild(button);
       }
     };

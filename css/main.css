@@ -5407,6 +5407,167 @@ button[data-music-url]:active {
   }
 }
 
+.content-state-symbols {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.content-state {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 24px 20px;
+  border-radius: 24px;
+  background: var(--md-low);
+  text-align: center;
+  color: var(--md-text);
+  overflow-wrap: anywhere;
+}
+
+.content-state[hidden] {
+  display: none !important;
+}
+
+.content-state-art {
+  display: block;
+  flex: 0 0 auto;
+  width: 144px;
+  height: 101px;
+  max-width: 100%;
+}
+
+.content-state-copy {
+  min-width: 0;
+  max-width: 34em;
+}
+
+.content-state .content-state-title {
+  margin: 0;
+  padding: 0;
+  color: var(--md-text);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.content-state .content-state-description {
+  margin: 5px 0 0;
+  padding: 0;
+  color: var(--md-muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.state-ground {
+  fill: var(--md-outline);
+  opacity: 0.24;
+}
+
+.state-soft {
+  fill: var(--md-tonal);
+  opacity: 0.55;
+}
+
+.state-accent {
+  fill: var(--md-tonal);
+}
+
+.state-alt {
+  fill: var(--md-tertiary-container);
+}
+
+.state-paper {
+  fill: var(--md-container);
+  stroke: var(--md-primary);
+  stroke-width: 1.5;
+}
+
+.state-ink {
+  fill: var(--md-primary);
+}
+
+.state-secondary {
+  fill: var(--md-tertiary);
+}
+
+.state-line {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.state-dash {
+  stroke-dasharray: 3 5;
+}
+
+#search-empty .content-state {
+  margin: 0 0 14px;
+  padding: 16px;
+}
+
+#search-empty .content-state-art {
+  width: 120px;
+  height: 84px;
+}
+
+#search-status.search-status-illustrated {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+#waline .wl-empty {
+  padding: 0;
+}
+
+#waline .content-state {
+  margin: 16px 0;
+}
+
+#waline .wl-operation > .content-state {
+  padding: 16px;
+}
+
+#waline .wl-operation > .content-state .content-state-art {
+  width: 112px;
+  height: 78px;
+}
+
+@media (max-width: 480px) {
+  .content-state {
+    padding: 20px 16px;
+  }
+
+  #search-empty .content-state {
+    flex-direction: row;
+    gap: 12px;
+    padding: 14px;
+    text-align: left;
+  }
+
+  #search-empty .content-state-art {
+    width: 80px;
+    height: 56px;
+  }
+
+  #search-empty .content-state-title {
+    font-size: 15px;
+  }
+}
+
 .site-account {
   margin: 8px 12px 0;
   min-width: 0;

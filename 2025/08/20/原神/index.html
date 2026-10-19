@@ -5512,6 +5512,167 @@ button[data-music-url]:active {
   }
 }
 
+.content-state-symbols {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.content-state {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 24px 20px;
+  border-radius: 24px;
+  background: var(--md-low);
+  text-align: center;
+  color: var(--md-text);
+  overflow-wrap: anywhere;
+}
+
+.content-state[hidden] {
+  display: none !important;
+}
+
+.content-state-art {
+  display: block;
+  flex: 0 0 auto;
+  width: 144px;
+  height: 101px;
+  max-width: 100%;
+}
+
+.content-state-copy {
+  min-width: 0;
+  max-width: 34em;
+}
+
+.content-state .content-state-title {
+  margin: 0;
+  padding: 0;
+  color: var(--md-text);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.content-state .content-state-description {
+  margin: 5px 0 0;
+  padding: 0;
+  color: var(--md-muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.state-ground {
+  fill: var(--md-outline);
+  opacity: 0.24;
+}
+
+.state-soft {
+  fill: var(--md-tonal);
+  opacity: 0.55;
+}
+
+.state-accent {
+  fill: var(--md-tonal);
+}
+
+.state-alt {
+  fill: var(--md-tertiary-container);
+}
+
+.state-paper {
+  fill: var(--md-container);
+  stroke: var(--md-primary);
+  stroke-width: 1.5;
+}
+
+.state-ink {
+  fill: var(--md-primary);
+}
+
+.state-secondary {
+  fill: var(--md-tertiary);
+}
+
+.state-line {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.state-dash {
+  stroke-dasharray: 3 5;
+}
+
+#search-empty .content-state {
+  margin: 0 0 14px;
+  padding: 16px;
+}
+
+#search-empty .content-state-art {
+  width: 120px;
+  height: 84px;
+}
+
+#search-status.search-status-illustrated {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+#waline .wl-empty {
+  padding: 0;
+}
+
+#waline .content-state {
+  margin: 16px 0;
+}
+
+#waline .wl-operation > .content-state {
+  padding: 16px;
+}
+
+#waline .wl-operation > .content-state .content-state-art {
+  width: 112px;
+  height: 78px;
+}
+
+@media (max-width: 480px) {
+  .content-state {
+    padding: 20px 16px;
+  }
+
+  #search-empty .content-state {
+    flex-direction: row;
+    gap: 12px;
+    padding: 14px;
+    text-align: left;
+  }
+
+  #search-empty .content-state-art {
+    width: 80px;
+    height: 56px;
+  }
+
+  #search-empty .content-state-title {
+    font-size: 15px;
+  }
+}
+
 .site-account {
   margin: 8px 12px 0;
   min-width: 0;
@@ -9893,7 +10054,36 @@ setInterval("createtime()",250);
 })(window, document);
 </script>
 <template id="deferred-live2d"><script src="/assets/73db01a99fc5e7b53765/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"tagMode":true,"pluginModelPath":"assets/","model":{"jsonPath":"/assets/73db01a99fc5e7b53765/live2dw/assets/22.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/"});</script></template>
-<script src="/assets/960b25362f2b1e0a78d2/js/deferred-widgets.js" defer=""></script>
+
+<svg class="content-state-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="content-state-search" viewBox="0 0 160 112">
+      <ellipse class="state-ground" cx="80" cy="94" rx="62" ry="9"></ellipse>
+      <circle class="state-soft" cx="80" cy="51" r="40"></circle>
+      <g transform="rotate(-16 40 61)"><rect class="state-accent" x="17" y="31" width="47" height="61" rx="9"></rect><path class="state-line" d="M29 49h19M29 58h13"></path></g>
+      <g transform="rotate(14 119 58)"><rect class="state-alt" x="100" y="29" width="39" height="57" rx="8"></rect><path class="state-line" d="M111 47h16M111 56h10"></path></g>
+      <g transform="rotate(-3 80 59)"><rect class="state-paper" x="55" y="22" width="51" height="70" rx="9"></rect><rect class="state-ink" x="66" y="34" width="16" height="12" rx="4"></rect><path class="state-line" d="M66 57h28M66 66h28M66 75h17"></path></g>
+      <path class="state-line state-dash" d="M25 20l7-4m97 77 8-2"></path><circle class="state-ink" cx="130" cy="17" r="4"></circle><circle class="state-secondary" cx="20" cy="83" r="3"></circle>
+    </symbol>
+    <symbol id="content-state-comments" viewBox="0 0 160 112">
+      <ellipse class="state-ground" cx="80" cy="94" rx="62" ry="9"></ellipse><circle class="state-soft" cx="80" cy="53" r="41"></circle>
+      <path class="state-alt" d="M77 44h53a10 10 0 0 1 10 10v23a10 10 0 0 1-10 10h-8l-13 11V87H77a10 10 0 0 1-10-10V54a10 10 0 0 1 10-10Z"></path>
+      <path class="state-paper" d="M28 20h59a11 11 0 0 1 11 11v30a11 11 0 0 1-11 11H53L36 86V72h-8a11 11 0 0 1-11-11V31a11 11 0 0 1 11-11Z"></path>
+      <circle class="state-ink" cx="40" cy="46" r="4"></circle><circle class="state-ink" cx="58" cy="46" r="4"></circle><circle class="state-ink" cx="76" cy="46" r="4"></circle>
+      <path class="state-line" d="M110 61h16m-16 10h10"></path><circle class="state-secondary" cx="124" cy="23" r="4"></circle><path class="state-line state-dash" d="m24 96 7 1"></path>
+    </symbol>
+    <symbol id="content-state-error" viewBox="0 0 160 112">
+      <ellipse class="state-ground" cx="80" cy="94" rx="62" ry="9"></ellipse><circle class="state-soft" cx="80" cy="52" r="41"></circle>
+      <g transform="rotate(-9 37 59)"><rect class="state-accent" x="17" y="30" width="40" height="57" rx="10"></rect><path class="state-line" d="M28 46h17M28 55h11"></path></g>
+      <g transform="rotate(9 123 59)"><rect class="state-alt" x="103" y="30" width="40" height="57" rx="10"></rect><path class="state-line" d="M114 46h17M114 55h11"></path></g>
+      <path class="state-line state-dash" d="M58 61h8m28 0h8"></path><circle class="state-paper" cx="80" cy="61" r="15"></circle><path class="state-line" d="M74 61h12"></path>
+      <path class="state-line state-dash" d="m71 24-3-5m22 5 3-5"></path><circle class="state-secondary" cx="43" cy="19" r="3"></circle>
+    </symbol>
+  </defs>
+</svg>
+<template id="content-state-template"><div class="content-state"><svg class="content-state-art" viewBox="0 0 160 112" aria-hidden="true" focusable="false"><use></use></svg><div class="content-state-copy"><p class="content-state-title"></p><p class="content-state-description"></p></div></div></template>
+
+<script src="/assets/9cdec52b6457a7325383/js/deferred-widgets.js" defer=""></script>
 <script src="/assets/3cc0e2b3bd6f3ec91051/js/site-account.js" defer=""></script>
 <dialog id="appearance-panel" class="appearance-panel" aria-labelledby="appearance-title">
   <div class="appearance-head"><h2 id="appearance-title">外观与配色</h2><button type="button" data-appearance-close="" aria-label="关闭配色面板"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div>
@@ -9953,12 +10143,13 @@ setInterval("createtime()",250);
   </section>
   <p id="search-action-status" role="status" aria-live="polite" hidden=""></p>
   <p id="search-status" role="status" aria-live="polite">输入关键词查找文章，也可以选择快捷操作。</p>
+  <div id="search-empty" hidden=""></div>
   <button type="button" id="search-retry" hidden="">重新加载</button>
   <div id="search-results"></div>
   <nav class="search-shortcuts" aria-label="继续浏览"><a href="/categories/">浏览分类</a><a href="/archives/">查看归档</a></nav>
 </dialog>
 
-<script src="/assets/b441cec4439f10fcad69/js/site-search.js" defer=""></script>
+<script src="/assets/58fb135a0d2bdcf06ce1/js/site-search.js" defer=""></script>
 <script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://sign.262860.xyz/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"avatarLibUrl":"/assets/bf8995a1ff8e893e13f1/js/comment-avatars.js","path":"/2025/08/20/%E5%8E%9F%E7%A5%9E/"}</script>
 
 
