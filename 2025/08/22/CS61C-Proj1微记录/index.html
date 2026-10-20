@@ -3692,23 +3692,6 @@ header.header {
   }
 }
 
-#hexo-blog-encrypt {
-  background: rgba(0,0,0,0.8);
-  padding: 20px;
-  border-radius: 8px;
-}
-
-#hexo-blog-encrypt input {
-  border: 1px solid #4a4a4a;
-  background: #2d2d2d;
-  color: #fff;
-}
-
-#hexo-blog-encrypt button {
-  background: #2196f3;
-  color: #fff;
-}
-
 :root,
 :root[data-theme] {
   --md-surface: #edf4ed;
@@ -4918,88 +4901,6 @@ button[data-music-url]:hover {
   opacity: 0.65;
 }
 
-.post-body #hexo-blog-encrypt {
-  background: var(--md-low);
-  color: var(--md-text);
-  border-radius: 20px;
-  padding: 24px;
-}
-
-#hexo-blog-encrypt .hbe-content {
-  font-size: 16px;
-  text-align: left;
-  padding: 0;
-}
-
-#hexo-blog-encrypt .hbe-input {
-  display: grid;
-  gap: 12px;
-  width: 100%;
-  min-width: 0;
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 0;
-  overflow: visible;
-}
-
-#hexo-blog-encrypt .hbe-input-label {
-  position: static;
-  order: -1;
-  float: none;
-  width: 100%;
-  padding: 0;
-  font-weight: 600;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--md-text);
-  pointer-events: auto;
-}
-
-#hexo-blog-encrypt .hbe-input-label::before,
-#hexo-blog-encrypt .hbe-input-label::after {
-  content: none;
-  display: none;
-}
-
-#hexo-blog-encrypt .hbe-input-label-content {
-  padding: 0;
-  color: var(--md-text);
-  transform: none;
-  transition: none;
-}
-
-.post-body #hexo-blog-encrypt .hbe-input-field {
-  width: 100%;
-  min-width: 0;
-  min-height: 56px;
-  margin: 0;
-  padding: 14px 16px;
-  float: none;
-  opacity: 1;
-  border: 1px solid var(--md-outline);
-  border-radius: 12px;
-  background: var(--md-container);
-  color: var(--md-text);
-  caret-color: var(--md-primary);
-  font-family: inherit;
-  font-size: 16px;
-  line-height: 1.5;
-  transition: border-color 0.2s var(--md-ease), box-shadow 0.2s var(--md-ease);
-}
-
-.post-body #hexo-blog-encrypt .hbe-input-field:focus {
-  outline: none;
-  border-color: var(--md-primary);
-  box-shadow: 0 0 0 2px var(--md-primary);
-}
-
-.post-body #hexo-blog-encrypt button {
-  border-radius: 999px;
-  background: var(--md-primary);
-  color: var(--md-on-primary);
-}
-
 .note,
 .post-copyright,
 .link-grid-container .link-grid {
@@ -5147,6 +5048,287 @@ button[data-music-url]:active {
   .btn:active,
   button[data-music-url]:active {
     transform: none;
+  }
+}
+
+.post-body .article-unlock {
+  box-sizing: border-box;
+  padding: 28px;
+  margin: 24px 0;
+  border: 1px solid var(--md-outline);
+  border-radius: 24px;
+  background: var(--md-low);
+  color: var(--md-text);
+}
+
+.article-unlock-art {
+  display: block;
+  width: 144px;
+  height: 101px;
+  margin: 0 auto 12px;
+}
+
+.unlock-ground {
+  fill: var(--md-outline);
+  opacity: 0.3;
+}
+
+.unlock-halo {
+  fill: var(--md-tonal);
+  opacity: 0.55;
+}
+
+.unlock-soft {
+  fill: var(--md-secondary-container);
+}
+
+.unlock-accent {
+  fill: var(--md-tertiary-container);
+}
+
+.unlock-shackle {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.unlock-lock {
+  fill: var(--md-tonal);
+  stroke: var(--md-primary);
+  stroke-width: 1.5;
+}
+
+.unlock-key,
+.unlock-dot {
+  fill: var(--md-primary);
+}
+
+.unlock-key-line {
+  stroke: var(--md-primary);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.unlock-line {
+  stroke: var(--md-secondary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.article-unlock-heading {
+  text-align: center;
+}
+
+.post-body .article-unlock-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.post-body .article-unlock-description {
+  margin: 8px 0 0;
+  color: var(--md-muted);
+  font-size: 14px;
+}
+
+.post-body .article-unlock-note {
+  margin: 8px 0 0;
+  color: var(--md-secondary);
+  font-size: 12px;
+}
+
+.article-unlock-form {
+  max-width: 560px;
+  margin: 24px auto 0;
+}
+
+.article-unlock-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.article-unlock-controls {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.article-unlock-controls input {
+  box-sizing: border-box;
+  flex: 1;
+  min-width: 0;
+  min-height: 52px;
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--md-outline);
+  border-radius: 14px;
+  background: var(--md-container);
+  color: var(--md-text);
+  caret-color: var(--md-primary);
+  font: inherit;
+  font-size: 16px;
+}
+
+.article-unlock-controls input:focus {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 1px;
+  border-color: var(--md-primary);
+}
+
+.article-unlock-controls input[aria-invalid='true'] {
+  border-color: var(--md-tertiary);
+}
+
+.article-unlock-controls input::placeholder {
+  color: var(--md-muted);
+  opacity: 1;
+}
+
+.article-unlock-controls button,
+.article-relock {
+  flex: 0 0 auto;
+  min-height: 52px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.article-unlock-controls button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.article-unlock-controls button:focus-visible,
+.article-relock:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 3px;
+}
+
+.post-body .article-unlock-error {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--md-text);
+}
+
+.article-unlock-error small {
+  display: block;
+  margin-top: 3px;
+  color: var(--md-muted);
+  font-size: 12px;
+}
+
+.post-body .article-unlock-help {
+  margin: 12px 0 0;
+  color: var(--md-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.article-unlock [hidden] {
+  display: none !important;
+}
+
+.post-body .article-unlocked {
+  display: block;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+}
+
+.article-relock {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 24px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--md-tonal);
+  color: var(--md-on-tonal);
+  font-size: 13px;
+}
+
+.post-body .article-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 32px 0;
+}
+
+.article-divider::before,
+.article-divider::after {
+  content: '';
+  height: 1px;
+  min-width: 0;
+  flex: 1;
+  background: var(--md-outline);
+}
+
+.post-body .article-divider > hr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.article-divider-art {
+  display: block;
+  flex: 0 0 56px;
+  width: 56px;
+  height: 24px;
+}
+
+.divider-ink {
+  fill: var(--md-primary);
+  opacity: 0.8;
+}
+
+.divider-tone {
+  fill: var(--md-tonal);
+}
+
+.divider-accent {
+  fill: var(--md-tertiary);
+  opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+  .post-body .article-unlock {
+    padding: 24px 20px;
+  }
+
+  .article-unlock-controls {
+    flex-direction: column;
+  }
+
+  .post-body .article-unlock-title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 359px) {
+  .post-body .article-unlock {
+    padding: 20px 16px;
+  }
+
+  .article-unlock-art {
+    width: 120px;
+    height: 84px;
   }
 }
 
@@ -9955,7 +10137,7 @@ setInterval("createtime()",250);
 </dialog>
 
 <script src="/assets/e958b3bcc42cf5e5af28/js/appearance-panel.js" defer=""></script>
-<dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/e78fa95bb36914aa437e/search.json" data-random-index="/assets/363c3e46c37e1deae82a/footer-garden.json">
+<dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/823a167626c62377026a/search.json" data-random-index="/assets/363c3e46c37e1deae82a/footer-garden.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close="" aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="搜索文章，或输入画廊、深色、随机…" aria-label="搜索文章或快捷操作" aria-describedby="search-status search-keyboard-hint"><button type="button" data-search-clear="">清空</button></div>
   <section id="search-actions" aria-labelledby="search-actions-title" hidden="">
