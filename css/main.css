@@ -5109,6 +5109,10 @@ button[data-music-url]:active {
 }
 
 #waline .comment-note .wl-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   box-sizing: border-box;
   width: 44px;
   height: 44px;
