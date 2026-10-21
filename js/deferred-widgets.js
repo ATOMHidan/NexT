@@ -216,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }
         try { window.SoyoCommentAvatars?.mount(comments, options.serverURL); } catch { /* Comments work without decorative fallbacks. */ }
+        try { window.SoyoCommentNote?.mount(comments); } catch { /* The native editor remains usable without presentation. */ }
         window.Waline.init(options);
         try { watchCommentStates(comments, options.locale.refresh); } catch { /* Decoration cannot block comments. */ }
       } catch (error) {

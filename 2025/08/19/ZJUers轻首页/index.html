@@ -5051,6 +5051,418 @@ button[data-music-url]:active {
   }
 }
 
+#waline .wl-panel.comment-note {
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 8px 0;
+  padding: 24px;
+  border: 1px solid var(--md-outline);
+  border-radius: 24px;
+  background: var(--md-low);
+  box-shadow: none;
+  scroll-margin-block-start: 96px;
+}
+
+#waline .comment-note:focus-within {
+  border-color: var(--md-primary);
+}
+
+#waline .comment-note-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 20px;
+}
+
+#waline .comment-note-heading > div {
+  min-width: 0;
+}
+
+#waline .comment-note-title {
+  margin: 0;
+  color: var(--md-text);
+  font-size: 19px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+#waline .comment-note-art {
+  display: block;
+  flex: 0 0 80px;
+  width: 80px;
+  height: 64px;
+  pointer-events: none;
+}
+
+#waline .note-halo {
+  fill: var(--md-tonal);
+  opacity: 0.65;
+}
+
+#waline .note-back {
+  fill: var(--md-secondary-container);
+}
+
+#waline .note-paper {
+  fill: var(--md-container);
+  stroke: var(--md-primary);
+  stroke-width: 1.2;
+}
+
+#waline .note-line {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+#waline .note-dot {
+  fill: var(--md-tertiary);
+}
+
+#waline .comment-note .wl-header {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  overflow: visible;
+  padding: 0;
+  margin: 0 0 16px;
+  border: 0;
+  border-radius: 0;
+}
+
+#waline .comment-note .wl-header-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  width: auto;
+  border: 0;
+}
+
+#waline .comment-note .wl-header label {
+  min-width: 0;
+  padding: 0 2px;
+  color: var(--md-muted);
+  text-align: start;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+#waline .comment-note .wl-header .wl-input {
+  box-sizing: border-box;
+  flex: none;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--md-outline);
+  border-radius: 12px;
+  background: var(--md-container);
+  color: var(--md-text);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  transition: none;
+}
+
+#waline .comment-note .wl-editor {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-height: 176px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-container);
+  color: var(--md-text);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.8;
+  resize: vertical;
+  transition: none;
+}
+
+#waline .comment-note .wl-input:focus,
+#waline .comment-note .wl-editor:focus {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+  border-color: var(--md-primary);
+  background: var(--md-container);
+}
+
+#waline .comment-note .wl-footer {
+  display: flex;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 16px;
+  margin: 16px 0 0;
+}
+
+#waline .comment-note .wl-actions {
+  flex: 1 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+#waline .comment-note .wl-action {
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  border-radius: 12px;
+  color: var(--md-muted);
+}
+
+#waline .comment-note .wl-action:hover,
+#waline .comment-note .wl-action.active {
+  background: var(--md-tonal);
+  color: var(--md-primary);
+}
+
+#waline .comment-note .wl-info {
+  flex: 0 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+#waline .comment-note .wl-text-number {
+  color: var(--md-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#waline .comment-note .wl-info button {
+  box-sizing: border-box;
+  min-height: 44px;
+  margin: 0;
+  padding: 10px 18px;
+  border: 1px solid var(--md-outline);
+  border-radius: 999px;
+  background: var(--md-container);
+  color: var(--md-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  transition: none;
+}
+
+#waline .comment-note .wl-info .primary {
+  min-width: 88px;
+  border-color: var(--md-primary);
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+}
+
+#waline .comment-note .wl-info button:disabled {
+  border-color: var(--md-outline);
+  background: var(--md-tonal);
+  color: var(--md-muted);
+  cursor: wait;
+}
+
+#waline .comment-note .wl-action:focus-visible,
+#waline .comment-note .wl-info button:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+#waline .comment-note .wl-preview {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--md-outline);
+  border-radius: 16px;
+  background: var(--md-container);
+  overflow-wrap: anywhere;
+}
+
+#waline .comment-note .wl-preview > hr {
+  display: none;
+}
+
+#waline .comment-note .wl-preview h4 {
+  margin: 0 0 8px;
+  color: var(--md-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+#waline .comment-note .wl-preview .wl-content {
+  padding: 0;
+}
+
+#waline .comment-note .wl-preview pre {
+  max-width: 100%;
+  overflow: auto;
+}
+
+#waline .comment-note-status {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--md-container);
+  color: var(--md-text);
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+#waline .comment-note-status[data-kind='error'] {
+  border-inline-start: 3px solid var(--md-tertiary);
+}
+
+#waline .comment-note-status[hidden] {
+  display: none !important;
+}
+
+#waline .comment-note-reply .comment-note-heading {
+  padding-inline-end: 40px;
+}
+
+#waline .comment-note-reply .comment-note-art {
+  display: none;
+}
+
+#waline .wl-comment > .wl-close {
+  top: 16px;
+  inset-inline-end: 16px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: var(--md-muted);
+  background: var(--md-container);
+}
+
+#waline .wl-comment > .wl-close:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  #waline .wl-panel.comment-note {
+    padding: 20px 16px;
+  }
+
+  #waline .comment-note-heading {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  #waline .comment-note-title {
+    font-size: 18px;
+  }
+
+  #waline .comment-note-art {
+    flex-basis: 60px;
+    width: 60px;
+    height: 48px;
+  }
+
+  #waline .comment-note .wl-header {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  #waline .comment-note .wl-header-item {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #waline .comment-note .wl-header label {
+    flex: 0 0 64px;
+    font-size: 12px;
+  }
+
+  #waline .comment-note .wl-header .wl-input {
+    flex: 1;
+    width: 0;
+  }
+
+  #waline .comment-note .wl-editor {
+    min-height: 168px;
+    padding: 12px;
+  }
+
+  #waline .comment-note .wl-footer {
+    gap: 8px;
+  }
+
+  #waline .comment-note .wl-actions {
+    flex: 1 0 100%;
+  }
+
+  #waline .comment-note .wl-info {
+    flex: 1 0 100%;
+  }
+
+  #waline .comment-note .wl-text-number {
+    margin-inline-end: auto;
+  }
+
+  #waline .comment-note .wl-info button {
+    padding-inline: 16px;
+  }
+
+  #waline .wl-comment {
+    display: block;
+  }
+
+  #waline .wl-login-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: none;
+    margin: 0 0 12px;
+    text-align: start;
+  }
+
+  #waline .wl-login-info .wl-avatar {
+    flex-shrink: 0;
+  }
+
+  #waline .wl-login-nick {
+    min-width: 0;
+  }
+
+  #waline .wl-card > .wl-reply-wrapper,
+  #waline .wl-card > .wl-edit-wrapper {
+    margin-inline-start: calc(-1 * var(--waline-m-avatar-size) - 0.75em);
+  }
+
+  @supports (width: 1cqw) {
+    #waline {
+      container-type: inline-size;
+    }
+
+    #waline .wl-card > .wl-reply-wrapper,
+    #waline .wl-card > .wl-edit-wrapper {
+      width: calc(100cqw - 16px);
+      margin-inline-start: calc(100% - 100cqw + 16px);
+    }
+  }
+}
+
+@media (max-width: 359px) {
+  #waline .comment-note .wl-actions {
+    gap: 0;
+  }
+}
+
 .post-body .article-unlock {
   box-sizing: border-box;
   padding: 28px;
@@ -10118,7 +10530,7 @@ setInterval("createtime()",250);
 </svg>
 <template id="content-state-template"><div class="content-state"><svg class="content-state-art" viewBox="0 0 160 112" aria-hidden="true" focusable="false"><use></use></svg><div class="content-state-copy"><p class="content-state-title"></p><p class="content-state-description"></p></div></div></template>
 
-<script src="/assets/9cdec52b6457a7325383/js/deferred-widgets.js" defer=""></script>
+<script src="/assets/5b2de8d491e23ae70a6e/js/deferred-widgets.js" defer=""></script>
 <script src="/assets/3cc0e2b3bd6f3ec91051/js/site-account.js" defer=""></script>
 <dialog id="appearance-panel" class="appearance-panel" aria-labelledby="appearance-title">
   <div class="appearance-head"><h2 id="appearance-title">外观与配色</h2><button type="button" data-appearance-close="" aria-label="关闭配色面板"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div>
@@ -10239,7 +10651,7 @@ setInterval("createtime()",250);
 </dialog>
 
 <script src="/assets/58fb135a0d2bdcf06ce1/js/site-search.js" defer=""></script>
-<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://sign.262860.xyz/","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"你这个人，满脑子都只想到自己呢"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","copyright":false,"el":"#waline","comment":false,"avatarLibUrl":"/assets/bf8995a1ff8e893e13f1/js/comment-avatars.js","path":"/2025/08/19/ZJUers%E8%BD%BB%E9%A6%96%E9%A1%B5/"}</script>
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"https://sign.262860.xyz/","cssUrl":"/assets/420f92db6af698dab82b/lib/waline/waline.css","commentCount":false,"pageview":false,"dark":"html[data-theme=\"dark\"]","locale":{"placeholder":"写下你的想法……"},"avatar":"mm","meta":["nick","mail","link"],"pageSize":6,"visitor":false,"requiredFields":[],"libUrl":"/assets/bcf9920043256148fbff/js/waline-note.js","copyright":false,"el":"#waline","comment":false,"avatarLibUrl":"/assets/bf8995a1ff8e893e13f1/js/comment-avatars.js","path":"/2025/08/19/ZJUers%E8%BD%BB%E9%A6%96%E9%A1%B5/"}</script>
 
 
 
