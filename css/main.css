@@ -6767,6 +6767,82 @@ html.appearance-open {
   outline-offset: 3px;
 }
 
+.cover-style-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.appearance-panel .cover-style-choice {
+  display: block;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--md-outline);
+  border-radius: 18px;
+  background: var(--md-container);
+  text-align: left;
+}
+
+.appearance-panel .cover-style-choice .article-cover {
+  position: relative;
+  height: auto;
+  aspect-ratio: 800/240;
+  margin: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cover-style-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 8px 4px 0;
+}
+
+.cover-style-name strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cover-style-description {
+  display: block;
+  padding: 2px 4px;
+  color: var(--md-muted);
+  font-size: 11px;
+}
+
+.cover-style-check {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  border-radius: 50%;
+  background: var(--md-tonal);
+  fill: none;
+  stroke: var(--md-on-tonal);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  visibility: hidden;
+}
+
+.cover-style-choice[aria-pressed='true'] .cover-style-check {
+  visibility: visible;
+}
+
+.appearance-panel .cover-style-choice[aria-pressed='true'] {
+  border-color: var(--md-primary);
+  box-shadow: inset 0 0 0 1px var(--md-primary);
+  background: var(--md-low);
+}
+
+@media (hover: hover) {
+  .appearance-panel .cover-style-choice:hover {
+    border-color: var(--md-primary);
+    background: var(--md-low);
+  }
+}
+
 .theme-preset-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -8477,12 +8553,15 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }
 
-.index .article-cover,
-.post .article-cover {
+.article-cover {
   --cover-bg: var(--md-low);
   --cover-tone: var(--md-tonal);
   --cover-ink: var(--md-primary);
   --cover-warm: var(--md-tertiary-container);
+}
+
+.index .article-cover,
+.post .article-cover {
   position: relative;
   overflow: hidden;
   border-radius: 20px;
@@ -8553,6 +8632,178 @@ body:has(.main-inner.index) .sidebar-blogroll {
   stroke: var(--cover-tone);
   stroke-width: 32;
   opacity: 1;
+}
+
+.article-cover .cover-landscape,
+.article-cover .scene-night {
+  display: none;
+}
+
+:root[data-cover-style='landscape'] .article-cover:not([data-cover-preview]) .cover-geometry,
+.article-cover[data-cover-preview='landscape'] .cover-geometry {
+  display: none;
+}
+
+:root[data-cover-style='landscape'] .article-cover:not([data-cover-preview]) .cover-landscape,
+.article-cover[data-cover-preview='landscape'] .cover-landscape {
+  display: inline;
+}
+
+:root[data-theme='dark'] .article-cover .scene-day {
+  display: none;
+}
+
+:root[data-theme='dark'] .article-cover .scene-night {
+  display: inline;
+}
+
+.article-cover .cover-landscape {
+  --scene-near: var(--cover-ink, var(--md-primary));
+}
+
+:root[data-theme='dark'] .article-cover .cover-landscape {
+  --scene-near: var(--cover-tone, var(--md-tonal));
+}
+
+.article-cover .scene-sky {
+  fill: var(--cover-bg, var(--md-low));
+}
+
+.article-cover .scene-far {
+  fill: var(--md-secondary-container);
+}
+
+.article-cover .scene-ridge {
+  fill: var(--md-container);
+  opacity: 0.6;
+}
+
+.article-cover .scene-mid,
+.article-cover .scene-island {
+  fill: var(--cover-tone, var(--md-tonal));
+}
+
+.article-cover .scene-near,
+.article-cover .scene-tree {
+  fill: var(--scene-near);
+}
+
+.article-cover .scene-water {
+  fill: var(--md-secondary-container);
+}
+
+.article-cover .scene-sun-halo {
+  fill: var(--cover-warm, var(--md-tertiary-container));
+}
+
+.article-cover .scene-sun {
+  fill: var(--md-tertiary);
+  opacity: 0.65;
+}
+
+.article-cover .scene-moon,
+.article-cover .scene-star {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-stars {
+  fill: none;
+  stroke: var(--md-tertiary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.article-cover .scene-wall {
+  fill: var(--md-container);
+  stroke: var(--md-outline);
+  stroke-width: 1;
+}
+
+.article-cover .scene-roof,
+.article-cover .scene-sail {
+  fill: var(--cover-ink, var(--md-primary));
+}
+
+.article-cover .scene-door,
+.article-cover .scene-pot {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-window {
+  fill: var(--cover-tone, var(--md-tonal));
+}
+
+:root[data-theme='dark'] .article-cover .scene-window {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-detail,
+.article-cover .scene-trunk {
+  fill: none;
+  stroke: var(--cover-ink, var(--md-primary));
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.article-cover .scene-trunk {
+  stroke-width: 3;
+}
+
+.article-cover .scene-path {
+  fill: none;
+  stroke: var(--cover-bg, var(--md-low));
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.article-cover .scene-reflection,
+.article-cover .scene-wave {
+  fill: none;
+  stroke: var(--md-secondary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+
+.article-cover .scene-beam {
+  fill: var(--md-tertiary);
+  opacity: 0.14;
+}
+
+.article-cover .scene-frame {
+  fill: var(--cover-tone, var(--md-tonal));
+}
+
+.article-cover .scene-frame-line {
+  fill: none;
+  stroke: var(--cover-ink, var(--md-primary));
+  stroke-width: 4;
+}
+
+.article-cover .scene-sill,
+.article-cover .scene-bridge,
+.article-cover .scene-step {
+  fill: var(--cover-ink, var(--md-primary));
+}
+
+.article-cover .scene-leaf,
+.article-cover .scene-arch {
+  fill: var(--scene-near);
+}
+
+.article-cover .scene-hub {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-terrace {
+  fill: var(--cover-warm, var(--md-tertiary-container));
+}
+
+.article-cover .scene-edge {
+  fill: none;
+  stroke: var(--md-outline);
+  stroke-width: 1;
 }
 
 .article-cover-link {

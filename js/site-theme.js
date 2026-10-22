@@ -35,10 +35,15 @@
     } catch { return null; }
   };
   let custom = null;
+  const coverKey = 'soyo-cover-style';
+  const validCover = value => ['geometry', 'landscape'].includes(value) ? value : 'geometry';
+  let coverStyle = 'geometry';
   try { preference = valid(localStorage.getItem(key)); } catch {}
   try { palette = validPalette(localStorage.getItem(paletteKey)); } catch {}
   try { custom = readCustom(localStorage.getItem(customKey)); } catch {}
+  try { coverStyle = validCover(localStorage.getItem(coverKey)); } catch {}
   function apply() {
+    root.dataset.coverStyle = coverStyle;
     root.dataset.palette = custom ? 'custom' : palette;
     root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
     root.style.colorScheme = root.dataset.theme;
@@ -55,7 +60,8 @@
   }
   window.SoyoAppearance = {
     roles,
-    get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null}),
+    get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null,coverStyle}),
+    setCoverStyle(value) { coverStyle = validCover(value); try { localStorage.setItem(coverKey, coverStyle); } catch {} apply(); },
     setMode(value) { preference = valid(value); try { localStorage.setItem(key, preference); } catch {} apply(); },
     setCustom(value) {
       const next = readCustom(value); if (!next) return false;
@@ -72,9 +78,10 @@
   apply();
   system.addEventListener('change', apply);
   window.addEventListener('storage', event => {
-    if (![key,paletteKey,customKey,null].includes(event.key)) return;
+    if (![key,paletteKey,customKey,coverKey,null].includes(event.key)) return;
     try {
       preference = valid(localStorage.getItem(key)); palette = validPalette(localStorage.getItem(paletteKey)); custom = readCustom(localStorage.getItem(customKey));
+      coverStyle = validCover(localStorage.getItem(coverKey));
     } catch {}
     apply();
   });

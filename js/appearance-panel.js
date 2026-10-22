@@ -10,6 +10,7 @@
   const levels = [...panel.querySelectorAll('[data-level]')];
   const samples = [...panel.querySelectorAll('[data-sample]')];
   const cards = [...panel.querySelectorAll('[data-appearance-preset]')];
+  const coverChoices = [...panel.querySelectorAll('[data-cover-choice]')];
   const selection = panel.querySelector('[data-appearance-selection]');
   const customOptions = panel.querySelector('[data-appearance-custom]');
   const engineStatus = panel.querySelector('[data-appearance-engine-status]');
@@ -34,6 +35,7 @@
   }
   function sync() {
     const state = appearance.get();
+    coverChoices.forEach(choice => choice.setAttribute('aria-pressed', String(choice.dataset.coverChoice === state.coverStyle)));
     const custom = state.custom;
     const selected = selectedPreset(custom);
     const label = state.palette === 'green' ? '默认绿色' : selected?.name || '自定义配色';
@@ -90,7 +92,7 @@
     try {
       await loadEngine();hue.disabled=false;levels.forEach(b=>b.disabled=false);
       engineNotice('');sync();position();
-    } catch {engineNotice('自由调色暂不可用，请关闭面板后重试。主题配色和恢复默认绿色仍可使用。');}
+    } catch {engineNotice('自由调色暂不可用，请关闭面板后重试。封面、主题配色和恢复默认绿色仍可使用。');}
   }
   function updatePalette(level) {
     if (!window.SoyoPaletteEngine) return;
@@ -124,6 +126,10 @@
     cancelDrag();
     appearance.setCustom(preset.colors);
     notice('已应用' + preset.name + '配色。');
+  }));
+  coverChoices.forEach(choice => choice.addEventListener('click', () => {
+    appearance.setCoverStyle(choice.dataset.coverChoice);
+    notice('已切换为' + choice.querySelector('strong').textContent + '封面。');
   }));
   customOptions?.addEventListener('toggle', position);
   panel.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>appearance.setMode(b.dataset.mode)));

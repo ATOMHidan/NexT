@@ -40,10 +40,15 @@
     } catch { return null; }
   };
   let custom = null;
+  const coverKey = 'soyo-cover-style';
+  const validCover = value => ['geometry', 'landscape'].includes(value) ? value : 'geometry';
+  let coverStyle = 'geometry';
   try { preference = valid(localStorage.getItem(key)); } catch {}
   try { palette = validPalette(localStorage.getItem(paletteKey)); } catch {}
   try { custom = readCustom(localStorage.getItem(customKey)); } catch {}
+  try { coverStyle = validCover(localStorage.getItem(coverKey)); } catch {}
   function apply() {
+    root.dataset.coverStyle = coverStyle;
     root.dataset.palette = custom ? 'custom' : palette;
     root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
     root.style.colorScheme = root.dataset.theme;
@@ -60,7 +65,8 @@
   }
   window.SoyoAppearance = {
     roles,
-    get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null}),
+    get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null,coverStyle}),
+    setCoverStyle(value) { coverStyle = validCover(value); try { localStorage.setItem(coverKey, coverStyle); } catch {} apply(); },
     setMode(value) { preference = valid(value); try { localStorage.setItem(key, preference); } catch {} apply(); },
     setCustom(value) {
       const next = readCustom(value); if (!next) return false;
@@ -77,9 +83,10 @@
   apply();
   system.addEventListener('change', apply);
   window.addEventListener('storage', event => {
-    if (![key,paletteKey,customKey,null].includes(event.key)) return;
+    if (![key,paletteKey,customKey,coverKey,null].includes(event.key)) return;
     try {
       preference = valid(localStorage.getItem(key)); palette = validPalette(localStorage.getItem(paletteKey)); custom = readCustom(localStorage.getItem(customKey));
+      coverStyle = validCover(localStorage.getItem(coverKey));
     } catch {}
     apply();
   });
@@ -6874,6 +6881,82 @@ html.appearance-open {
   outline-offset: 3px;
 }
 
+.cover-style-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.appearance-panel .cover-style-choice {
+  display: block;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--md-outline);
+  border-radius: 18px;
+  background: var(--md-container);
+  text-align: left;
+}
+
+.appearance-panel .cover-style-choice .article-cover {
+  position: relative;
+  height: auto;
+  aspect-ratio: 800/240;
+  margin: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cover-style-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 8px 4px 0;
+}
+
+.cover-style-name strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cover-style-description {
+  display: block;
+  padding: 2px 4px;
+  color: var(--md-muted);
+  font-size: 11px;
+}
+
+.cover-style-check {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  border-radius: 50%;
+  background: var(--md-tonal);
+  fill: none;
+  stroke: var(--md-on-tonal);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  visibility: hidden;
+}
+
+.cover-style-choice[aria-pressed='true'] .cover-style-check {
+  visibility: visible;
+}
+
+.appearance-panel .cover-style-choice[aria-pressed='true'] {
+  border-color: var(--md-primary);
+  box-shadow: inset 0 0 0 1px var(--md-primary);
+  background: var(--md-low);
+}
+
+@media (hover: hover) {
+  .appearance-panel .cover-style-choice:hover {
+    border-color: var(--md-primary);
+    background: var(--md-low);
+  }
+}
+
 .theme-preset-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -8584,12 +8667,15 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }
 
-.index .article-cover,
-.post .article-cover {
+.article-cover {
   --cover-bg: var(--md-low);
   --cover-tone: var(--md-tonal);
   --cover-ink: var(--md-primary);
   --cover-warm: var(--md-tertiary-container);
+}
+
+.index .article-cover,
+.post .article-cover {
   position: relative;
   overflow: hidden;
   border-radius: 20px;
@@ -8660,6 +8746,178 @@ body:has(.main-inner.index) .sidebar-blogroll {
   stroke: var(--cover-tone);
   stroke-width: 32;
   opacity: 1;
+}
+
+.article-cover .cover-landscape,
+.article-cover .scene-night {
+  display: none;
+}
+
+:root[data-cover-style='landscape'] .article-cover:not([data-cover-preview]) .cover-geometry,
+.article-cover[data-cover-preview='landscape'] .cover-geometry {
+  display: none;
+}
+
+:root[data-cover-style='landscape'] .article-cover:not([data-cover-preview]) .cover-landscape,
+.article-cover[data-cover-preview='landscape'] .cover-landscape {
+  display: inline;
+}
+
+:root[data-theme='dark'] .article-cover .scene-day {
+  display: none;
+}
+
+:root[data-theme='dark'] .article-cover .scene-night {
+  display: inline;
+}
+
+.article-cover .cover-landscape {
+  --scene-near: var(--cover-ink, var(--md-primary));
+}
+
+:root[data-theme='dark'] .article-cover .cover-landscape {
+  --scene-near: var(--cover-tone, var(--md-tonal));
+}
+
+.article-cover .scene-sky {
+  fill: var(--cover-bg, var(--md-low));
+}
+
+.article-cover .scene-far {
+  fill: var(--md-secondary-container);
+}
+
+.article-cover .scene-ridge {
+  fill: var(--md-container);
+  opacity: 0.6;
+}
+
+.article-cover .scene-mid,
+.article-cover .scene-island {
+  fill: var(--cover-tone, var(--md-tonal));
+}
+
+.article-cover .scene-near,
+.article-cover .scene-tree {
+  fill: var(--scene-near);
+}
+
+.article-cover .scene-water {
+  fill: var(--md-secondary-container);
+}
+
+.article-cover .scene-sun-halo {
+  fill: var(--cover-warm, var(--md-tertiary-container));
+}
+
+.article-cover .scene-sun {
+  fill: var(--md-tertiary);
+  opacity: 0.65;
+}
+
+.article-cover .scene-moon,
+.article-cover .scene-star {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-stars {
+  fill: none;
+  stroke: var(--md-tertiary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.article-cover .scene-wall {
+  fill: var(--md-container);
+  stroke: var(--md-outline);
+  stroke-width: 1;
+}
+
+.article-cover .scene-roof,
+.article-cover .scene-sail {
+  fill: var(--cover-ink, var(--md-primary));
+}
+
+.article-cover .scene-door,
+.article-cover .scene-pot {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-window {
+  fill: var(--cover-tone, var(--md-tonal));
+}
+
+:root[data-theme='dark'] .article-cover .scene-window {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-detail,
+.article-cover .scene-trunk {
+  fill: none;
+  stroke: var(--cover-ink, var(--md-primary));
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.article-cover .scene-trunk {
+  stroke-width: 3;
+}
+
+.article-cover .scene-path {
+  fill: none;
+  stroke: var(--cover-bg, var(--md-low));
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.article-cover .scene-reflection,
+.article-cover .scene-wave {
+  fill: none;
+  stroke: var(--md-secondary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+
+.article-cover .scene-beam {
+  fill: var(--md-tertiary);
+  opacity: 0.14;
+}
+
+.article-cover .scene-frame {
+  fill: var(--cover-tone, var(--md-tonal));
+}
+
+.article-cover .scene-frame-line {
+  fill: none;
+  stroke: var(--cover-ink, var(--md-primary));
+  stroke-width: 4;
+}
+
+.article-cover .scene-sill,
+.article-cover .scene-bridge,
+.article-cover .scene-step {
+  fill: var(--cover-ink, var(--md-primary));
+}
+
+.article-cover .scene-leaf,
+.article-cover .scene-arch {
+  fill: var(--scene-near);
+}
+
+.article-cover .scene-hub {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-terrace {
+  fill: var(--cover-warm, var(--md-tertiary-container));
+}
+
+.article-cover .scene-edge {
+  fill: none;
+  stroke: var(--md-outline);
+  stroke-width: 1;
 }
 
 .article-cover-link {
@@ -10337,6 +10595,23 @@ setInterval("createtime()",250);
   <fieldset class="appearance-field"><legend>外观</legend><div class="appearance-segments" data-mode-group>
     <button type="button" data-mode="system" aria-pressed="true">跟随系统</button><button type="button" data-mode="light" aria-pressed="false">浅色</button><button type="button" data-mode="dark" aria-pressed="false">深色</button>
   </div></fieldset>
+  <fieldset class="appearance-field appearance-covers"><legend>封面风格</legend>
+    <div class="cover-style-grid">
+      
+      <button type="button" class="cover-style-choice" data-cover-choice="geometry" aria-pressed="true">
+        <div class="article-cover cover-ink-1" data-cover-preview="geometry" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g class="cover-geometry"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(348 135) scale(0.83)"><g transform="translate(-135 -89) rotate(0 43 43)"><path class="cover-accent" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(-43 -89) rotate(90 43 43)"><path class="cover-tone" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(49 -89) rotate(180 43 43)"><path class="cover-warm" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(-135 3) rotate(270 43 43)"><path class="cover-accent" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(-43 3) rotate(0 43 43)"><path class="cover-tone" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(49 3) rotate(90 43 43)"><path class="cover-warm" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g></g><path class="cover-line" d="M567 168h64m-64 12h38"/></g></g><g class="cover-landscape" data-landscape="5"><rect class="scene-sky" x="0" y="0" width="800" height="240" rx="0"/><g class="scene-day"><circle class="scene-sun-halo" cx="628" cy="55" r="34"/><circle class="scene-sun" cx="628" cy="55" r="24"/></g><g class="scene-night"><g transform="translate(605 32)"><path class="scene-moon" d="M27 0a23 23 0 1 0 19 34A25 25 0 0 1 27 0Z"/></g><path class="scene-stars" d="M163 34v8m-4-4h8m254-17v8m-4-4h8m273 47v6m-3-3h6"/><circle class="scene-star" cx="310" cy="63" r="1.6"/><circle class="scene-star" cx="488" cy="31" r="1.6"/><circle class="scene-star" cx="717" cy="41" r="1.5"/></g><path class="scene-far" d="M0 166q129-98 269-7t250-12 281 11v82H0Z"/><path class="scene-mid" d="M0 193q120-66 238-15t227 3 335-14v73H0Z"/><rect class="scene-water" x="0" y="207" width="800" height="33" rx="0"/><path class="scene-bridge" fill-rule="evenodd" d="M255 210v-21a145 81 0 0 1 290 0v21h-28v-21a117 55 0 0 0-234 0v21Z"/><path class="scene-detail" d="M257 172h286m-260-19v-17m35 5v-22m40 17v-29m42 28v-31m42 32v-29m40 34v-22m35 34v-17"/><g transform="translate(181 208) scale(0.89)"><path class="scene-trunk" d="M0 0v-67"/><path class="scene-tree" d="M-30-19Q-51-35-27-55q-5-29 25-31 29 0 27 29 27 18 7 36-13 13-32 4-17 11-30-2Z"/></g><g transform="translate(608 207) scale(0.62)"><path class="scene-trunk" d="M0 0v-67"/><path class="scene-tree" d="M-30-19Q-51-35-27-55q-5-29 25-31 29 0 27 29 27 18 7 36-13 13-32 4-17 11-30-2Z"/></g><path class="scene-wave" d="M310 221h81m33 8h58m-297-3h40"/><path class="scene-edge" d="M24 239h752"/></g></svg></div>
+        <span class="cover-style-name"><strong>形色</strong><svg class="cover-style-check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10 3 3 7-7"/></svg></span>
+        <span class="cover-style-description">几何构成</span>
+      </button>
+      
+      <button type="button" class="cover-style-choice" data-cover-choice="landscape" aria-pressed="false">
+        <div class="article-cover cover-ink-1" data-cover-preview="landscape" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g class="cover-geometry"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(404 125) scale(1.05)"><path class="cover-tone" d="M-134 140V15a134 134 0 0 1 268 0v125Z"/><path class="cover-base" d="M-88 140V15a88 88 0 0 1 176 0v125Z"/><path class="cover-accent" d="M-42 140V15a42 42 0 0 1 84 0v125Z"/><circle class="cover-warm" cx="135" cy="-65" r="25"/></g><path class="cover-line" d="M141 168h64m-64 12h38"/></g></g><g class="cover-landscape" data-landscape="0"><rect class="scene-sky" x="0" y="0" width="800" height="240" rx="0"/><g class="scene-day"><circle class="scene-sun-halo" cx="628" cy="55" r="34"/><circle class="scene-sun" cx="628" cy="55" r="24"/></g><g class="scene-night"><g transform="translate(605 32)"><path class="scene-moon" d="M27 0a23 23 0 1 0 19 34A25 25 0 0 1 27 0Z"/></g><path class="scene-stars" d="M163 34v8m-4-4h8m254-17v8m-4-4h8m273 47v6m-3-3h6"/><circle class="scene-star" cx="310" cy="63" r="1.6"/><circle class="scene-star" cx="488" cy="31" r="1.6"/><circle class="scene-star" cx="717" cy="41" r="1.5"/></g><path class="scene-far" d="M0 165 132 54 259 164 411 52 579 167 714 83 800 142V240H0Z"/><path class="scene-ridge" d="m106 77 26-23 40 35-32-10-13 8Z m264-7 41-19 48 40-34-13-17 7Z"/><path class="scene-mid" d="M0 195Q139 118 279 170T557 166 800 160V240H0Z"/><path class="scene-near" d="M0 222Q159 177 330 202T800 191V240H0Z"/><g transform="translate(-8 0)"><g transform="translate(388 191) scale(0.83)"><rect class="scene-wall" x="0" y="-54" width="88" height="54" rx="3"/><path class="scene-roof" d="M-12-53 44-91l56 38Z"/><rect class="scene-door" x="53" y="-31" width="17" height="31" rx="2"/><rect class="scene-window" x="14" y="-34" width="18" height="17" rx="2"/><path class="scene-detail" d="M23-34v17m-9-8.5h18"/><rect class="scene-roof" x="67" y="-88" width="9" height="21" rx="1"/></g><g transform="translate(333 204) scale(0.7)"><path class="scene-trunk" d="M0 0v-67"/><path class="scene-tree" d="M-30-19Q-51-35-27-55q-5-29 25-31 29 0 27 29 27 18 7 36-13 13-32 4-17 11-30-2Z"/></g><g transform="translate(502 203) scale(0.51)"><path class="scene-trunk" d="M0 0v-67"/><path class="scene-tree" d="M-30-19Q-51-35-27-55q-5-29 25-31 29 0 27 29 27 18 7 36-13 13-32 4-17 11-30-2Z"/></g></g><path class="scene-path" d="M434 194q-59 9-26 23t-41 23"/><path class="scene-edge" d="M24 239h752"/></g></svg></div>
+        <span class="cover-style-name"><strong>山海</strong><svg class="cover-style-check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10 3 3 7-7"/></svg></span>
+        <span class="cover-style-description">风景插画</span>
+      </button>
+      
+    </div>
+  </fieldset>
   
   <fieldset class="appearance-field appearance-showcase"><legend>配色橱窗</legend>
     <div class="theme-preset-grid">
@@ -10418,7 +10693,7 @@ setInterval("createtime()",250);
   <p class="appearance-status" data-appearance-status role="status" aria-live="polite" hidden></p>
 </dialog>
 
-<script src="/assets/e958b3bcc42cf5e5af28/js/appearance-panel.js" defer></script>
+<script src="/assets/404beb1f12552d2b5dcb/js/appearance-panel.js" defer></script>
 <dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/823a167626c62377026a/search.json" data-random-index="/assets/363c3e46c37e1deae82a/footer-garden.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="搜索文章，或输入画廊、深色、随机…" aria-label="搜索文章或快捷操作" aria-describedby="search-status search-keyboard-hint"><button type="button" data-search-clear>清空</button></div>
