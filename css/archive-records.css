@@ -10,7 +10,7 @@
 .archive-records .record-heading h1{margin:0;font-size:28px;line-height:1.4;letter-spacing:-.03em}
 .record-heading h1 span{display:block;font-weight:500;font-size:14px;letter-spacing:.12em;color:var(--md-primary);margin-top:6px}
 .record-total{flex-shrink:0;font-size:12px;border:1px solid var(--md-outline);border-radius:999px;padding:5px 12px;color:var(--md-muted)}
-.archive-records .record-header p{margin:16px 0 24px;font-size:13px;color:var(--md-muted)}
+.record-header{margin-bottom:24px}
 .record-years{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
 .record-years a{display:flex;gap:12px;align-items:center;min-height:44px;padding:8px 18px;border-radius:999px;background:var(--md-low)}
 .record-years a span{font-size:17px;font-weight:650;font-variant-numeric:tabular-nums}
@@ -52,7 +52,6 @@
 .record-label small{position:absolute;left:4%;right:4%;bottom:10%;text-align:center;font-size:9px;line-height:1.2;color:var(--md-on-tonal);background:var(--md-tonal);border-radius:10px;padding:2px}
 .record-caption{display:flex;justify-content:space-between;align-items:center;margin:10px 14px;color:var(--md-muted);font-size:10px;letter-spacing:.14em;font-variant-numeric:tabular-nums}
 .record-browse{display:flex;justify-content:space-between;gap:4px;align-items:center;margin-top:12px}
-.record-browse span{font-size:11px;color:var(--md-muted)}
 .record-browse button{width:44px;height:44px;border-radius:50%;background:var(--md-low);color:var(--md-primary)}
 .record-library{min-width:0}
 .record-preview{padding:14px;border:1px solid var(--md-outline);border-radius:22px;background:var(--md-low)}

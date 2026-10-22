@@ -7177,7 +7177,6 @@ html.appearance-open {
 .home-welcome {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 184px;
-  grid-template-rows: 1fr auto;
   gap: 20px 28px;
   padding: 32px;
   margin-bottom: 24px;
@@ -7205,7 +7204,7 @@ html.appearance-open {
   margin: 0;
   font-size: clamp(36px, 4vw, 54px);
   font-weight: 850;
-  line-height: 1.12;
+  line-height: 1.36;
   letter-spacing: -0.045em;
   text-wrap: balance;
   color: var(--md-primary);
@@ -7249,7 +7248,7 @@ html.appearance-open {
 
 .home-welcome .home-welcome-image {
   grid-column: 2;
-  grid-row: 1/3;
+  grid-row: 1;
   align-self: center;
   display: block;
   width: 184px;
@@ -7263,36 +7262,77 @@ html.appearance-open {
   object-fit: contain;
 }
 
-.home-welcome-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: center;
-  gap: 12px;
+.welcome-signature {
+  width: 180px;
+  max-width: 100%;
+  margin-top: 18px;
+}
+
+.welcome-signature svg {
+  display: block;
   width: 100%;
-  max-width: 320px;
+  height: auto;
+  overflow: visible;
 }
 
-.home-welcome-actions a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 44px;
-  box-sizing: border-box;
-  padding: 10px 14px;
-  border: 0;
-  border-radius: 999px;
-  font-size: 14px;
-  line-height: 24px;
-  font-weight: 600;
-  background: var(--md-tonal);
-  color: var(--md-on-tonal);
+.signature-tone {
+  fill: var(--md-primary);
+  opacity: 0.65;
 }
 
-.home-welcome-actions a:hover {
-  background: var(--md-primary);
-  color: var(--md-on-primary);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+.signature-ring {
+  fill: none;
+  stroke: var(--md-secondary);
+  stroke-width: 2;
+  opacity: 0.65;
+}
+
+.signature-warm {
+  fill: var(--md-tertiary);
+  opacity: 0.65;
+}
+
+.signature-line {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0.3;
+}
+
+.signature-dot {
+  fill: var(--md-primary);
+  opacity: 0.5;
+}
+
+.signature-soft {
+  fill: var(--md-secondary-container);
+}
+
+.signature-ridge {
+  fill: var(--md-primary);
+  opacity: 0.5;
+}
+
+.signature-landscape,
+.signature-night {
+  display: none;
+}
+
+:root[data-cover-style='landscape'] .signature-geometry {
+  display: none;
+}
+
+:root[data-cover-style='landscape'] .signature-landscape {
+  display: inline;
+}
+
+:root[data-theme='dark'] .signature-day {
+  display: none;
+}
+
+:root[data-theme='dark'] .signature-night {
+  display: inline;
 }
 
 #home-posts {
@@ -7328,14 +7368,6 @@ html.appearance-open {
     border-radius: 20px;
     grid-row: 1;
   }
-
-  .home-welcome-actions {
-    grid-column: 1/-1;
-  }
-
-  .home-welcome-actions a {
-    padding: 10px 8px;
-  }
 }
 
 @media (max-width: 360px) {
@@ -7347,14 +7379,6 @@ html.appearance-open {
 @media (prefers-reduced-motion: no-preference) {
   html:has(#home-posts:target) {
     scroll-behavior: smooth;
-  }
-
-  .home-welcome-actions a {
-    transition: background-color 0.18s var(--md-ease), box-shadow 0.18s var(--md-ease), transform 0.18s var(--md-ease);
-  }
-
-  .home-welcome-actions a:active {
-    transform: scale(0.98);
   }
 }
 
@@ -7614,7 +7638,7 @@ html.article-share-open {
 
 .blog-star {
   grid-column: 2;
-  grid-row: 1/3;
+  grid-row: 1;
   align-self: center;
   position: relative;
   min-width: 0;
@@ -7890,7 +7914,7 @@ html.article-share-open {
 
 :root[data-home-welcome='brief'] .index .home-welcome .blog-star,
 :root[data-home-welcome='brief'] .index .home-welcome-description,
-:root[data-home-welcome='brief'] .index .home-welcome-actions {
+:root[data-home-welcome='brief'] .index .welcome-signature {
   display: none;
 }
 
@@ -10285,12 +10309,11 @@ body:has(.main-inner.index) .sidebar-blogroll {
     <div class="main-inner archive archive-record-page">
 
 
-<link rel="stylesheet" href="/assets/7d358f07a3a3ee52bad1/css/archive-records.css">
+<link rel="stylesheet" href="/assets/24d82390810e97d5b5c6/css/archive-records.css">
 <section class="post-block archive-records" aria-labelledby="archive-heading">
   <header class="record-header">
     <span class="record-eyebrow">SOYO COURSE / ARCHIVES</span>
     <div class="record-heading"><h1 id="archive-heading">归档<span>2025 年 06 月</span></h1><span class="record-total">2 篇文章</span></div>
-    <p>把写过的日子，收进一张唱片。</p>
   </header>
   
   <a class="record-all" href="/archives/">← 全部年度唱片</a>
@@ -10310,7 +10333,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
         <div class="record-label" aria-hidden="true"><div id="record-label-art"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g class="label-geometry" transform="translate(200 0) scale(-1 1)"><path class="label-tone" d="M0 0h200v200H0z"/><circle class="label-warm" cx="152" cy="44" r="50"/><path class="label-ink" d="M0 115V0h100v15A100 100 0 0 1 0 115Z"/><path class="label-soft" d="M85 90h115v110H85z"/><path class="label-ink" d="M90 200a110 110 0 0 1 110-110v38a72 72 0 0 0-72 72Z"/></g><g class="label-landscape"><path class="label-tone" d="M0 0h200v200H0z"/><circle class="label-warm label-day" cx="151" cy="42" r="19"/><path class="label-warm label-night" d="M164 23a19 19 0 1 0 12 29 17 17 0 0 1-12-29Z"/><path class="label-soft" d="m-12 119 62-65 43 45 38-33 84 74v60H0Z"/><path class="label-ink" d="m-10 145 75-51 46 28 44-20 57 39v59H0Z"/><path class="label-water" d="M0 150q50-13 100 0t100 0v50H0Z"/></g></svg></div><i class="record-spindle"></i><strong id="record-year">2025</strong><small id="record-label-count">2 篇 · 2025 年 06 月</small></div>
       </div>
       <div class="record-caption"><span id="record-side-name">SIDE 01</span><span id="record-position">01 / 2</span></div>
-      <div class="record-browse" hidden><button type="button" data-record-prev aria-label="选择上一篇文章">←</button><span>点选轨道，翻阅这一年</span><button type="button" data-record-next aria-label="选择下一篇文章">→</button></div>
+      <div class="record-browse" hidden><button type="button" data-record-prev aria-label="选择上一篇文章">←</button><button type="button" data-record-next aria-label="选择下一篇文章">→</button></div>
     </div>
     <div class="record-library">
       
