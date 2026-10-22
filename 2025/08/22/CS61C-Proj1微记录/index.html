@@ -7199,12 +7199,43 @@ html.appearance-open {
 }
 
 #welcome-title {
+  position: relative;
   margin: 0;
-  font-size: clamp(25px, 2.8vw, 36px);
-  font-weight: 750;
-  line-height: 1.15;
-  letter-spacing: -0.04em;
+  font-size: clamp(36px, 4vw, 54px);
+  font-weight: 850;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
   text-wrap: balance;
+  color: var(--md-primary);
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  #welcome-title.welcome-wordmark-ready .welcome-letter {
+    background-image: var(--welcome-art);
+    background-size: var(--welcome-width) var(--welcome-line);
+    background-position: var(--welcome-x) 0;
+    background-repeat: repeat-y;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@media (forced-colors: active), (prefers-contrast: more), print {
+  #welcome-title.welcome-wordmark-ready .welcome-letter {
+    background: none;
+    color: var(--md-text);
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+@media print {
+  #welcome-title,
+  #welcome-title.welcome-wordmark-ready .welcome-letter {
+    color: #000;
+    -webkit-text-fill-color: #000;
+  }
 }
 
 .home-welcome-description {
@@ -7276,7 +7307,7 @@ html.appearance-open {
   }
 
   #welcome-title {
-    font-size: 26px;
+    font-size: 32px;
   }
 
   .home-welcome-eyebrow {
@@ -7302,6 +7333,12 @@ html.appearance-open {
 
   .home-welcome-actions a {
     padding: 10px 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  #welcome-title {
+    font-size: 28px;
   }
 }
 
