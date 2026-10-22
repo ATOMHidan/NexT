@@ -8885,17 +8885,36 @@ body:has(.main-inner.index) .sidebar-blogroll {
   opacity: 0.14;
 }
 
-.article-cover .scene-frame {
-  fill: var(--cover-tone, var(--md-tonal));
+.article-cover .scene-tent-fly {
+  fill: var(--md-tertiary-container);
 }
 
-.article-cover .scene-frame-line {
+.article-cover .scene-camp-bank {
+  fill: var(--md-tonal);
+}
+
+.article-cover .scene-tent-side {
+  fill: var(--cover-ink, var(--md-primary));
+}
+
+.article-cover .scene-tent-door {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-tent-seam {
   fill: none;
-  stroke: var(--cover-ink, var(--md-primary));
-  stroke-width: 4;
+  stroke: var(--md-on-tertiary-container);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.article-cover .scene-sill,
+.article-cover .scene-lantern {
+  fill: var(--md-tertiary);
+  stroke: var(--md-on-tertiary-container);
+  stroke-width: 1;
+}
+
 .article-cover .scene-bridge,
 .article-cover .scene-step {
   fill: var(--cover-ink, var(--md-primary));
@@ -10594,7 +10613,7 @@ setInterval("createtime()",250);
     <div class="cover-style-grid">
       
       <button type="button" class="cover-style-choice" data-cover-choice="geometry" aria-pressed="true">
-        <div class="article-cover cover-ink-1" data-cover-preview="geometry" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g class="cover-geometry"><g transform="translate(800 0) scale(-1 1)"><g transform="translate(348 135) scale(0.83)"><g transform="translate(-135 -89) rotate(0 43 43)"><path class="cover-accent" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(-43 -89) rotate(90 43 43)"><path class="cover-tone" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(49 -89) rotate(180 43 43)"><path class="cover-warm" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(-135 3) rotate(270 43 43)"><path class="cover-accent" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(-43 3) rotate(0 43 43)"><path class="cover-tone" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g><g transform="translate(49 3) rotate(90 43 43)"><path class="cover-warm" d="M0 0h86v86A86 86 0 0 1 0 0Z"/></g></g><path class="cover-line" d="M567 168h64m-64 12h38"/></g></g><g class="cover-landscape" data-landscape="5"><rect class="scene-sky" x="0" y="0" width="800" height="240" rx="0"/><g class="scene-day"><circle class="scene-sun-halo" cx="628" cy="55" r="34"/><circle class="scene-sun" cx="628" cy="55" r="24"/></g><g class="scene-night"><g transform="translate(605 32)"><path class="scene-moon" d="M27 0a23 23 0 1 0 19 34A25 25 0 0 1 27 0Z"/></g><path class="scene-stars" d="M163 34v8m-4-4h8m254-17v8m-4-4h8m273 47v6m-3-3h6"/><circle class="scene-star" cx="310" cy="63" r="1.6"/><circle class="scene-star" cx="488" cy="31" r="1.6"/><circle class="scene-star" cx="717" cy="41" r="1.5"/></g><path class="scene-far" d="M0 166q129-98 269-7t250-12 281 11v82H0Z"/><path class="scene-mid" d="M0 193q120-66 238-15t227 3 335-14v73H0Z"/><rect class="scene-water" x="0" y="207" width="800" height="33" rx="0"/><path class="scene-bridge" fill-rule="evenodd" d="M255 210v-21a145 81 0 0 1 290 0v21h-28v-21a117 55 0 0 0-234 0v21Z"/><path class="scene-detail" d="M257 172h286m-260-19v-17m35 5v-22m40 17v-29m42 28v-31m42 32v-29m40 34v-22m35 34v-17"/><g transform="translate(181 208) scale(0.89)"><path class="scene-trunk" d="M0 0v-67"/><path class="scene-tree" d="M-30-19Q-51-35-27-55q-5-29 25-31 29 0 27 29 27 18 7 36-13 13-32 4-17 11-30-2Z"/></g><g transform="translate(608 207) scale(0.62)"><path class="scene-trunk" d="M0 0v-67"/><path class="scene-tree" d="M-30-19Q-51-35-27-55q-5-29 25-31 29 0 27 29 27 18 7 36-13 13-32 4-17 11-30-2Z"/></g><path class="scene-wave" d="M310 221h81m33 8h58m-297-3h40"/><path class="scene-edge" d="M24 239h752"/></g></svg></div>
+        <div class="article-cover cover-ink-1" data-cover-preview="geometry" aria-hidden="true"><svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" focusable="false" xmlns="http://www.w3.org/2000/svg"><g class="cover-geometry"><rect class="cover-tone" x="0" y="0" width="800" height="240" rx="NaN"/><rect class="cover-warm" x="0" y="0" width="200" height="240" rx="NaN"/><path class="cover-accent" d="M0 240V40a200 200 0 0 1 200 200Z"/><circle class="cover-accent" cx="300" cy="120" r="96"/><circle class="cover-base" cx="300" cy="120" r="48"/><rect class="cover-warm" x="400" y="0" width="200" height="240" rx="NaN"/><path class="cover-accent" d="M400 240V0h200Z"/><path class="cover-accent" d="M600 0h200v200A200 200 0 0 1 600 0Z"/><path class="cover-warm" d="M600 240V120a120 120 0 0 1 120 120Z"/></g><g class="cover-landscape" data-landscape="5"><rect class="scene-sky" x="0" y="0" width="800" height="240" rx="0"/><g class="scene-day"><circle class="scene-sun-halo" cx="628" cy="55" r="34"/><circle class="scene-sun" cx="628" cy="55" r="24"/></g><g class="scene-night"><g transform="translate(605 32)"><path class="scene-moon" d="M27 0a23 23 0 1 0 19 34A25 25 0 0 1 27 0Z"/></g><path class="scene-stars" d="M163 34v8m-4-4h8m254-17v8m-4-4h8m273 47v6m-3-3h6"/><circle class="scene-star" cx="310" cy="63" r="1.6"/><circle class="scene-star" cx="488" cy="31" r="1.6"/><circle class="scene-star" cx="717" cy="41" r="1.5"/></g><path class="scene-far" d="M0 166q129-98 269-7t250-12 281 11v82H0Z"/><path class="scene-mid" d="M0 193q120-66 238-15t227 3 335-14v73H0Z"/><rect class="scene-water" x="0" y="207" width="800" height="33" rx="0"/><path class="scene-bridge" fill-rule="evenodd" d="M255 210v-21a145 81 0 0 1 290 0v21h-28v-21a117 55 0 0 0-234 0v21Z"/><path class="scene-detail" d="M257 172h286m-260-19v-17m35 5v-22m40 17v-29m42 28v-31m42 32v-29m40 34v-22m35 34v-17"/><g transform="translate(181 208) scale(0.89)"><path class="scene-trunk" d="M0 0v-67"/><path class="scene-tree" d="M-30-19Q-51-35-27-55q-5-29 25-31 29 0 27 29 27 18 7 36-13 13-32 4-17 11-30-2Z"/></g><g transform="translate(608 207) scale(0.62)"><path class="scene-trunk" d="M0 0v-67"/><path class="scene-tree" d="M-30-19Q-51-35-27-55q-5-29 25-31 29 0 27 29 27 18 7 36-13 13-32 4-17 11-30-2Z"/></g><path class="scene-wave" d="M310 221h81m33 8h58m-297-3h40"/><path class="scene-edge" d="M24 239h752"/></g></svg></div>
         <span class="cover-style-name"><strong>形色</strong><svg class="cover-style-check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10 3 3 7-7"/></svg></span>
         <span class="cover-style-description">几何构成</span>
       </button>

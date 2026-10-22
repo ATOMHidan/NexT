@@ -8771,17 +8771,36 @@ body:has(.main-inner.index) .sidebar-blogroll {
   opacity: 0.14;
 }
 
-.article-cover .scene-frame {
-  fill: var(--cover-tone, var(--md-tonal));
+.article-cover .scene-tent-fly {
+  fill: var(--md-tertiary-container);
 }
 
-.article-cover .scene-frame-line {
+.article-cover .scene-camp-bank {
+  fill: var(--md-tonal);
+}
+
+.article-cover .scene-tent-side {
+  fill: var(--cover-ink, var(--md-primary));
+}
+
+.article-cover .scene-tent-door {
+  fill: var(--md-tertiary);
+}
+
+.article-cover .scene-tent-seam {
   fill: none;
-  stroke: var(--cover-ink, var(--md-primary));
-  stroke-width: 4;
+  stroke: var(--md-on-tertiary-container);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.article-cover .scene-sill,
+.article-cover .scene-lantern {
+  fill: var(--md-tertiary);
+  stroke: var(--md-on-tertiary-container);
+  stroke-width: 1;
+}
+
 .article-cover .scene-bridge,
 .article-cover .scene-step {
   fill: var(--cover-ink, var(--md-primary));
