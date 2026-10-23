@@ -24,12 +24,11 @@
 .gallery .gallery-caption { color: var(--gallery-ink); font-size: 11px; letter-spacing: .06em; margin: 0 0 5px; }
 .gallery .gallery-room-heading h2 { margin: 0; font-size: 22px; font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
 .gallery-room-heading > span { font-size: 12px; color: var(--md-muted); flex-shrink: 0; }
-.gallery-exhibits { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 30px; align-items: start; }
-.gallery-exhibit { min-width: 0; }
-.gallery-exhibit:nth-child(even) { padding-top: 32px; }
+.gallery-exhibits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px; align-items: stretch; }
+.gallery-exhibit { min-width: 0; display: flex; flex-direction: column; }
 .gallery-exhibit summary { display: block; cursor: pointer; list-style: none; border-radius: 24px 24px 8px 8px; }
 .gallery-exhibit summary::-webkit-details-marker { display: none; }
-.gallery-art { position: relative; overflow: hidden; border-radius: 24px; background: var(--md-low); }
+.gallery-art { position: relative; flex-shrink: 0; overflow: hidden; border-radius: 24px; background: var(--md-low); }
 .gallery-art .article-cover { --cover-bg: var(--md-low); --cover-tone: var(--gallery-tone); --cover-ink: var(--gallery-ink); --cover-warm: var(--md-tertiary-container); aspect-ratio: 800 / 240; height: auto; }
 .gallery-art .article-cover svg { width: 100%; height: 100%; display: block; }
 .gallery-art-number { position: absolute; left: 10px; top: 8px; font-size: 10px; letter-spacing: .12em; color: var(--gallery-ink); background: var(--md-low); padding: 2px 6px; border-radius: 999px; pointer-events: none; }
@@ -42,7 +41,7 @@
 .gallery-information { margin-top: 18px; padding: 18px; border-radius: 20px; background: var(--md-low); }
 .gallery-information ol { margin: 8px 0; padding-left: 22px; font-size: 13px; line-height: 1.9; overflow-wrap: anywhere; }
 .gallery .gallery-facts { font-size: 12px; margin: 14px 0 8px; color: var(--md-muted); }
-.gallery-read { display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin-top: 12px; font-size: 14px; color: var(--gallery-ink); }
+.gallery-read { display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin-top: auto; padding-top: 12px; font-size: 14px; color: var(--gallery-ink); }
 .gallery-pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 34px; padding-top: 20px; border-top: 1px solid var(--md-outline); }
 .gallery-pagination > span { font-size: 12px; color: var(--md-muted); font-variant-numeric: tabular-nums; }
 .gallery-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
@@ -52,7 +51,6 @@
   .gallery { padding: 24px 18px !important; }
   .gallery-heading { margin-bottom: 24px; }
   .gallery-exhibits { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .gallery-exhibit:nth-child(even) { padding-top: 0; }
   .gallery-art { border-radius: 20px; }
   .gallery-room-heading { margin-bottom: 20px; }
   .gallery-information { padding: 16px; }
