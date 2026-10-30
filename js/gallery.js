@@ -49,7 +49,7 @@
       const sail=landscape.querySelector('.scene-sail');
       if(sail){const rotor=inside(sail.parentElement);motion.push(rotor);control('landscape','wind',[sail], [rotor],'轻转风车');}
     } else if(windows.length){
-      const clusters=scene===2 ? [windows.filter(e=>Number(e.getAttribute('x'))<400),windows.filter(e=>Number(e.getAttribute('x'))>=400)] : [windows];
+      const clusters=scene===2 ? [...landscape.querySelectorAll('.scene-window-group')].map(group=>windows.filter(e=>group.contains(e))) : [windows];
       clusters.filter(nodes=>nodes.length).forEach(nodes=>{
         const groups=nodes.map(node=>{const g=wrap(node);g.classList.add('gallery-light');g.prepend(make('circle',{class:'gallery-halo',r:0}));return g;});
         let ray;
