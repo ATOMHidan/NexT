@@ -8615,10 +8615,28 @@ body:has(.main-inner.index) .sidebar-blogroll {
 }
 
 .article-cover {
+  position: relative;
   --cover-bg: var(--md-low);
   --cover-tone: var(--md-tonal);
   --cover-ink: var(--md-primary);
   --cover-warm: var(--md-tertiary-container);
+}
+
+.article-cover > svg[data-cover-interlude] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+@media print {
+  .article-cover > svg[data-cover-interlude] {
+    display: none !important;
+  }
 }
 
 .index .article-cover,

@@ -141,3 +141,85 @@
   window.visualViewport?.addEventListener('resize',position);
   sync();
 })();
+
+/* One quiet day/night handover. Shares the existing panel request; no idle work. */
+(function () {
+  'use strict';
+  if (!document.getElementById('appearance-panel') || typeof Element.prototype.animate !== 'function') return;
+  const root=document.documentElement, reduced=matchMedia('(prefers-reduced-motion: reduce)'), forced=matchMedia('(forced-colors: active)'), print=matchMedia('print');
+  const duration=560, paint=['fill','stroke','stroke-width','stroke-linecap','stroke-linejoin','stroke-dasharray','fill-rule','opacity','display','color'];
+  let current=null;
+  function cancel() {
+    const run=current;if(!run)return;current=null;
+    run.observer?.disconnect();
+    run.animations.forEach(animation=>animation.cancel());
+    run.items.forEach(item=>item.ghost.remove());
+  }
+  function animate(run,node,frames,options={}) {
+    run.animations.push(node.animate(frames,{duration,easing:'cubic-bezier(.22,.7,.2,1)',...options}));
+  }
+  function prepare(event) {
+    cancel();const change=event.detail;
+    if(change?.reason!=='mode' || !['light','dark'].includes(change.from) || change.from===change.to || document.hidden || reduced.matches || forced.matches || print.matches) return;
+    const style=change.coverStyle==='landscape'?'landscape':'geometry',run={items:[],animations:[],change,style};current=run;
+    try {
+      const candidates=[...document.querySelectorAll('.article-cover:not([data-cover-preview])')].map(cover=>{
+        const rect=cover.getBoundingClientRect(),width=Math.max(0,Math.min(innerWidth,rect.right)-Math.max(0,rect.left)),height=Math.max(0,Math.min(innerHeight,rect.bottom)-Math.max(0,rect.top));
+        return {cover,area:width*height,rect};
+      }).filter(item=>item.area>800 && item.rect.width>60 && item.rect.height>30 && getComputedStyle(item.cover).visibility==='visible')
+        .sort((a,b)=>b.area-a.area).slice(0,2);
+      for(const {cover} of candidates){
+        const svg=cover.querySelector('svg:not([data-cover-interlude])'),group=svg?.querySelector('.cover-'+style);
+        if(!group || getComputedStyle(group).display==='none')continue;
+        const ghost=svg.cloneNode(true),originals=[svg,...svg.querySelectorAll('*')],copies=[ghost,...ghost.querySelectorAll('*')];
+        // Resolve the OLD palette now, before root tokens change. Freeze only
+        // paint, retaining SVG transforms, cropping and cutouts verbatim.
+        originals.forEach((node,i)=>{const css=getComputedStyle(node);paint.forEach(name=>copies[i].style.setProperty(name,css.getPropertyValue(name)));copies[i].removeAttribute('id');});
+        ghost.style.backgroundColor=getComputedStyle(cover).getPropertyValue('--cover-bg').trim();
+        ghost.setAttribute('data-cover-interlude','');ghost.setAttribute('aria-hidden','true');ghost.setAttribute('focusable','false');
+        const lights=[...group.querySelectorAll('.scene-window,.scene-lantern')].map(node=>({node,fill:getComputedStyle(node).fill}));
+        const glows=[...group.querySelectorAll('.gallery-halo,.gallery-light-ray,.scene-beam')].map(node=>({node,opacity:getComputedStyle(node).opacity}));
+        cover.append(ghost);run.items.push({cover,group,ghost,lights,glows});
+      }
+      if(!run.items.length)cancel();
+      else {
+        run.observer=new MutationObserver(()=>{if(current===run && run.items.some(item=>!item.cover.isConnected))cancel();});
+        run.observer.observe(document.body,{childList:true,subtree:true});
+      }
+    }catch {cancel();} // The theme still changes normally if decoration fails.
+  }
+  function play(event) {
+    const run=current;if(!run)return;
+    if(event.detail!==run.change || document.hidden || root.dataset.theme!==run.change.to){cancel();return;}
+    try {
+      for(const item of run.items){
+        if(!item.cover.isConnected){cancel();return;}
+        animate(run,item.ghost,[{opacity:1},{opacity:1,offset:.18},{opacity:0,offset:.76},{opacity:0}],{easing:'ease-in-out'});
+        if(run.style==='landscape'){
+          const outgoing=run.change.from==='light'?'.scene-day':'.scene-night',incoming=run.change.to==='dark'?'.scene-night':'.scene-day';
+          item.ghost.querySelectorAll(outgoing).forEach(node=>animate(run,node,[{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(42px)'}],{duration:300,easing:'ease-in-out'}));
+          item.group.querySelectorAll(incoming).forEach(node=>animate(run,node,[{opacity:0,transform:'translateY(18px)'},{opacity:0,transform:'translateY(18px)',offset:.25},{opacity:1,transform:'translateY(0)'}],{easing:'ease-in-out'}));
+          item.lights.forEach(({node,fill})=>animate(run,node,[{fill},{fill:getComputedStyle(node).fill}],{delay:260,duration:260,fill:'backwards'}));
+          item.glows.forEach(({node,opacity})=>animate(run,node,[{opacity},{opacity:getComputedStyle(node).opacity}],{delay:260,duration:260,fill:'backwards'}));
+        }else{
+          const old=item.ghost.querySelector('.cover-geometry');
+          animate(run,old,[{transform:'translateY(0)'},{transform:'translateY(-7px)'}]);
+          animate(run,item.group,[{opacity:0,transform:'translateY(7px)'},{opacity:1,transform:'translateY(0)'}]);
+        }
+      }
+      Promise.allSettled(run.animations.map(animation=>animation.finished)).then(()=>{if(current===run)cancel();});
+    }catch {cancel();}
+  }
+  document.addEventListener('soyo-appearance-before-change',prepare);
+  document.addEventListener('soyo-appearance-change',play);
+  // No queues or offscreen continuation. Pointer/keyboard interaction always
+  // gets the final native artwork, including gallery lamps and reading links.
+  document.addEventListener('pointerdown',cancel,true);
+  document.addEventListener('keydown',cancel,true);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();});
+  window.addEventListener('pagehide',cancel);
+  window.addEventListener('pageswap',cancel);
+  window.addEventListener('scroll',cancel,{passive:true});
+  window.addEventListener('resize',cancel);
+  for(const media of [reduced,forced,print])media.addEventListener('change',cancel);
+})();

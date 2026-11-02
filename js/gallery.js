@@ -183,6 +183,7 @@
     touch = null;
   }, {passive:true});
   stage.addEventListener('touchcancel', () => { touch = null; }, {passive:true});
+  document.addEventListener('soyo-appearance-before-change',()=>controllers.forEach(c=>c.stop()));
   document.addEventListener('soyo-appearance-change',()=>controllers.forEach(c=>c.refresh()));
   reduced.addEventListener?.('change',()=>controllers.forEach(c=>c.refresh()));
   document.addEventListener('visibilitychange',()=>{if(document.hidden)controllers.forEach(c=>c.stop());});

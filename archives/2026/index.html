@@ -47,10 +47,13 @@
   try { palette = validPalette(localStorage.getItem(paletteKey)); } catch {}
   try { custom = readCustom(localStorage.getItem(customKey)); } catch {}
   try { coverStyle = validCover(localStorage.getItem(coverKey)); } catch {}
-  function apply() {
+  function apply(reason = 'passive') {
+    const nextTheme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
+    const detail = {reason:typeof reason === 'string' ? reason : 'passive',from:root.dataset.theme,to:nextTheme,coverStyle};
+    document.dispatchEvent(new CustomEvent('soyo-appearance-before-change', {detail}));
     root.dataset.coverStyle = coverStyle;
     root.dataset.palette = custom ? 'custom' : palette;
-    root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
+    root.dataset.theme = nextTheme;
     root.style.colorScheme = root.dataset.theme;
     roles.forEach((role, i) => {
       if (custom) root.style.setProperty('--md-' + role, custom[root.dataset.theme][i]);
@@ -61,13 +64,13 @@
       meta.content = custom ? custom[root.dataset.theme][0] : palette === 'green' ? (root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed') : (root.dataset.theme === 'dark' ? '#191b1e' : '#f3f4f6');
     });
     document.querySelectorAll('[data-theme-select]').forEach(select => { select.value = preference; });
-    document.dispatchEvent(new CustomEvent('soyo-appearance-change'));
+    document.dispatchEvent(new CustomEvent('soyo-appearance-change', {detail}));
   }
   window.SoyoAppearance = {
     roles,
     get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null,coverStyle}),
     setCoverStyle(value) { coverStyle = validCover(value); try { localStorage.setItem(coverKey, coverStyle); } catch {} apply(); },
-    setMode(value) { preference = valid(value); try { localStorage.setItem(key, preference); } catch {} apply(); },
+    setMode(value) { preference = valid(value); try { localStorage.setItem(key, preference); } catch {} apply('mode'); },
     setCustom(value) {
       const next = readCustom(value); if (!next) return false;
       custom = next; palette = 'green';
@@ -96,7 +99,7 @@
       select.addEventListener('change', () => {
         preference = valid(select.value);
         try { localStorage.setItem(key, preference); } catch {}
-        apply();
+        apply('mode');
       });
     });
   });
@@ -8729,10 +8732,28 @@ body:has(.main-inner.index) .sidebar-blogroll {
 }
 
 .article-cover {
+  position: relative;
   --cover-bg: var(--md-low);
   --cover-tone: var(--md-tonal);
   --cover-ink: var(--md-primary);
   --cover-warm: var(--md-tertiary-container);
+}
+
+.article-cover > svg[data-cover-interlude] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+@media print {
+  .article-cover > svg[data-cover-interlude] {
+    display: none !important;
+  }
 }
 
 .index .article-cover,
@@ -10770,7 +10791,7 @@ setInterval("createtime()",250);
   <p class="appearance-status" data-appearance-status role="status" aria-live="polite" hidden></p>
 </dialog>
 
-<script src="/assets/404beb1f12552d2b5dcb/js/appearance-panel.js" defer></script>
+<script src="/assets/dab8907e7667d89aa56d/js/appearance-panel.js" defer></script>
 <dialog id="site-search" aria-labelledby="search-title" data-index-url="/assets/823a167626c62377026a/search.json" data-random-index="/assets/363c3e46c37e1deae82a/footer-garden.json">
   <header class="search-heading"><h2 id="search-title">搜索博客</h2><button type="button" data-search-close aria-label="关闭搜索">关闭</button></header>
   <div class="search-field"><input id="search-query" type="search" maxlength="120" autocomplete="off" placeholder="搜索文章，或输入画廊、深色、随机…" aria-label="搜索文章或快捷操作" aria-describedby="search-status search-keyboard-hint"><button type="button" data-search-clear>清空</button></div>

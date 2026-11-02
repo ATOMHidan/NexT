@@ -42,10 +42,13 @@
   try { palette = validPalette(localStorage.getItem(paletteKey)); } catch {}
   try { custom = readCustom(localStorage.getItem(customKey)); } catch {}
   try { coverStyle = validCover(localStorage.getItem(coverKey)); } catch {}
-  function apply() {
+  function apply(reason = 'passive') {
+    const nextTheme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
+    const detail = {reason:typeof reason === 'string' ? reason : 'passive',from:root.dataset.theme,to:nextTheme,coverStyle};
+    document.dispatchEvent(new CustomEvent('soyo-appearance-before-change', {detail}));
     root.dataset.coverStyle = coverStyle;
     root.dataset.palette = custom ? 'custom' : palette;
-    root.dataset.theme = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
+    root.dataset.theme = nextTheme;
     root.style.colorScheme = root.dataset.theme;
     roles.forEach((role, i) => {
       if (custom) root.style.setProperty('--md-' + role, custom[root.dataset.theme][i]);
@@ -56,13 +59,13 @@
       meta.content = custom ? custom[root.dataset.theme][0] : palette === 'green' ? (root.dataset.theme === 'dark' ? '#101c16' : '#edf4ed') : (root.dataset.theme === 'dark' ? '#191b1e' : '#f3f4f6');
     });
     document.querySelectorAll('[data-theme-select]').forEach(select => { select.value = preference; });
-    document.dispatchEvent(new CustomEvent('soyo-appearance-change'));
+    document.dispatchEvent(new CustomEvent('soyo-appearance-change', {detail}));
   }
   window.SoyoAppearance = {
     roles,
     get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null,coverStyle}),
     setCoverStyle(value) { coverStyle = validCover(value); try { localStorage.setItem(coverKey, coverStyle); } catch {} apply(); },
-    setMode(value) { preference = valid(value); try { localStorage.setItem(key, preference); } catch {} apply(); },
+    setMode(value) { preference = valid(value); try { localStorage.setItem(key, preference); } catch {} apply('mode'); },
     setCustom(value) {
       const next = readCustom(value); if (!next) return false;
       custom = next; palette = 'green';
@@ -91,7 +94,7 @@
       select.addEventListener('change', () => {
         preference = valid(select.value);
         try { localStorage.setItem(key, preference); } catch {}
-        apply();
+        apply('mode');
       });
     });
   });
