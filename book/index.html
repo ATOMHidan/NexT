@@ -5826,6 +5826,162 @@ button[data-music-url]:active {
   }
 }
 
+.post-header-bookmarked {
+  position: relative;
+}
+
+.post-header-bookmarked .post-title {
+  padding-inline-end: 68px;
+  min-height: 60px;
+}
+
+.article-bookmark {
+  position: absolute;
+  inset-inline-end: 0;
+  top: 0;
+  display: block;
+  width: 56px;
+  height: 64px;
+}
+
+.bookmark-decoration,
+.bookmark-ribbon {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.bookmark-decoration {
+  pointer-events: none;
+}
+
+.bookmark-ribbon {
+  fill: var(--md-low);
+  stroke: var(--md-outline);
+  stroke-width: 1;
+}
+
+.bookmark-ribbon .bookmark-thread {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.bookmark-picture {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 9px;
+  height: 26px;
+  border-radius: 6px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--md-tonal);
+}
+
+.bookmark-fallback {
+  width: 100%;
+  height: 100%;
+  fill: var(--md-primary);
+  opacity: 0.65;
+}
+
+.bookmark-fallback path {
+  fill: var(--md-tertiary);
+}
+
+.post .bookmark-picture .article-cover {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+
+.post .bookmark-picture .article-cover > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.bookmark-shutter {
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48%;
+  background: var(--md-tonal);
+  border: 1px solid var(--md-primary);
+  box-sizing: border-box;
+  opacity: 0.92;
+}
+
+.bookmark-shutter::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  border: 1px solid var(--md-primary);
+  border-radius: 2px;
+  opacity: 0.25;
+}
+
+.bookmark-shutter-left {
+  left: 0;
+  border-radius: 5px 0 0 5px;
+}
+
+.bookmark-shutter-right {
+  right: 0;
+  border-radius: 0 5px 5px 0;
+}
+
+:root[data-cover-style='landscape'] .bookmark-ready .bookmark-shutter {
+  display: block;
+}
+
+.bookmark-touch {
+  position: absolute;
+  inset: 0;
+  width: 56px;
+  height: 64px;
+  border: 0;
+  border-radius: 10px;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bookmark-touch[hidden] {
+  display: none;
+}
+
+.bookmark-touch:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .bookmark-touch:hover {
+    background: var(--md-primary);
+    opacity: 0.07;
+  }
+}
+
+@media (forced-colors: active), print {
+  .article-bookmark {
+    display: none;
+  }
+
+  .post-header-bookmarked .post-title {
+    padding-inline-end: 0;
+    min-height: 0;
+  }
+}
+
 .theme-control {
   display: flex;
   align-items: center;
@@ -11374,7 +11530,7 @@ body:has(.main-inner.index) .sidebar-blogroll {
   </dialog>
 </div>
 
-<script src="/assets/51df60b8f09d4b0d92b3/js/blog-easter-eggs.js" defer></script>
+<script src="/assets/4a7799dd4697fc86a3a3/js/blog-easter-eggs.js" defer></script>
 <script>
     var now = new Date(); 
     function createtime() { 

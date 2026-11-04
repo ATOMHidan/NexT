@@ -191,3 +191,70 @@
     location.assign(target);
   });
 })();
+
+
+// One small article ribbon, reusing the already rendered cover and request.
+(() => {
+  'use strict';
+  const ribbon = document.querySelector('.article-bookmark');
+  const source = document.querySelector('.article-entry-cover .article-cover');
+  const button = ribbon?.querySelector('.bookmark-touch');
+  if (!source || !button || typeof Element.prototype.animate !== 'function') return;
+  const art = source.cloneNode(true);
+  const syncStyle = () => { art.dataset.coverPreview = document.documentElement.dataset.coverStyle === 'landscape' ? 'landscape' : 'geometry'; };
+  syncStyle();
+  art.querySelectorAll('[id], [data-cover-interlude]').forEach(node => {
+    if (node.hasAttribute('data-cover-interlude')) node.remove();
+    else node.removeAttribute('id');
+  });
+  art.querySelector('svg')?.setAttribute('preserveAspectRatio','xMidYMid meet');
+  const picture = ribbon.querySelector('.bookmark-picture');
+  picture.querySelector('.bookmark-fallback').replaceWith(art);
+  ribbon.classList.add('bookmark-ready');
+  button.hidden = false;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const forced = matchMedia('(forced-colors: active)');
+  const print = matchMedia('print');
+  let current = null;
+  function stop() {
+    if (!current) return;
+    const run = current; current = null;
+    run.forEach(animation => animation.cancel());
+  }
+  button.addEventListener('click', event => {
+    // Keep the site's legacy page-click hearts out of this quiet interaction.
+    event.stopPropagation();
+    stop();
+    if (document.hidden || reduced.matches || forced.matches || print.matches) return;
+    const run = []; current = run;
+    const play = (node,frames,duration) => run.push(node.animate(frames,{duration,easing:'cubic-bezier(.4,0,.2,1)'}));
+    if (document.documentElement.dataset.coverStyle === 'landscape') {
+      for (const [selector,sign] of [['.bookmark-shutter-left',-1],['.bookmark-shutter-right',1]]) {
+        play(ribbon.querySelector(selector),[
+          {transform:'translateX(0)'},
+          {transform:'translateX('+sign*105+'%)',offset:.3},
+          {transform:'translateX('+sign*105+'%)',offset:.7},
+          {transform:'translateX(0)'}
+        ],1000);
+      }
+    } else {
+      play(art.querySelector('svg'),[
+        {transform:'scaleX(1) rotate(0deg)'},
+        {transform:'scaleX(.12) rotate(-7deg)',offset:.32},
+        {transform:'scaleX(1.04) rotate(2deg)',offset:.72},
+        {transform:'scaleX(1) rotate(0deg)'}
+      ],760);
+    }
+    Promise.allSettled(run.map(animation => animation.finished)).then(() => {
+      if (current !== run) return;
+      stop();
+    });
+  });
+  document.addEventListener('soyo-appearance-before-change',stop);
+  document.addEventListener('soyo-appearance-change',syncStyle);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+  window.addEventListener('pagehide',stop);
+  window.addEventListener('pageswap',stop);
+  window.addEventListener('resize',stop);
+  for (const media of [reduced,forced,print]) media.addEventListener('change',stop);
+})();
