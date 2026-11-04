@@ -4291,6 +4291,59 @@ header.header {
     box-shadow: none;
   }
 
+  .sidebar .links-of-author {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 16px 0 0;
+  }
+
+  .sidebar .links-of-author-item {
+    display: block;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .sidebar .links-of-author-item a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    min-height: 44px;
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--md-outline);
+    border-radius: 16px;
+    background: var(--md-low);
+    color: var(--md-primary);
+    box-shadow: none;
+    font-size: 13px;
+    line-height: 1.5;
+    text-decoration: none;
+  }
+
+  .sidebar .links-of-author-item a::before {
+    display: none;
+    content: none;
+  }
+
+  .sidebar .links-of-author-item i[class^='fa'] {
+    margin: 0;
+  }
+
+  .sidebar .links-of-author-item a:hover,
+  .sidebar .links-of-author-item a:active {
+    background: var(--md-tonal);
+    color: var(--md-on-tonal);
+    border-color: var(--md-outline);
+  }
+
+  .sidebar .links-of-author-item a:focus-visible {
+    outline: 2px solid var(--md-primary);
+    outline-offset: -3px;
+  }
+
   .sidebar-dimmer {
     background: #0b2115;
   }
