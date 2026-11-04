@@ -38,6 +38,13 @@
   const coverKey = 'soyo-cover-style';
   const validCover = value => ['geometry', 'landscape'].includes(value) ? value : 'geometry';
   let coverStyle = 'geometry';
+  const seasonKey = 'soyo-season';
+  const validSeason = value => ['auto','spring','summer','autumn','winter','off'].includes(value) ? value : 'auto';
+  let season = 'auto';
+  try { season = validSeason(localStorage.getItem(seasonKey)); } catch {}
+  function applySeason() {
+    root.dataset.season = season === 'auto' ? ['winter','spring','summer','autumn'][Math.floor((new Date().getMonth() + 1) % 12 / 3)] : season;
+  }
   try { preference = valid(localStorage.getItem(key)); } catch {}
   try { palette = validPalette(localStorage.getItem(paletteKey)); } catch {}
   try { custom = readCustom(localStorage.getItem(customKey)); } catch {}
@@ -49,6 +56,7 @@
     root.dataset.coverStyle = coverStyle;
     root.dataset.palette = custom ? 'custom' : palette;
     root.dataset.theme = nextTheme;
+    applySeason();
     root.style.colorScheme = root.dataset.theme;
     roles.forEach((role, i) => {
       if (custom) root.style.setProperty('--md-' + role, custom[root.dataset.theme][i]);
@@ -63,7 +71,8 @@
   }
   window.SoyoAppearance = {
     roles,
-    get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null,coverStyle}),
+    get: () => ({mode:preference,palette:custom ? 'custom' : palette,custom:custom ? readCustom(custom) : null,coverStyle,season,resolvedSeason:root.dataset.season}),
+    setSeason(value) { season = validSeason(value); try { localStorage.setItem(seasonKey,season); } catch {} apply(); },
     setCoverStyle(value) { coverStyle = validCover(value); try { localStorage.setItem(coverKey, coverStyle); } catch {} apply(); },
     setMode(value) { preference = valid(value); try { localStorage.setItem(key, preference); } catch {} apply('mode'); },
     setCustom(value) {
@@ -81,13 +90,17 @@
   apply();
   system.addEventListener('change', apply);
   window.addEventListener('storage', event => {
-    if (![key,paletteKey,customKey,coverKey,null].includes(event.key)) return;
+    if (![key,paletteKey,customKey,coverKey,seasonKey,null].includes(event.key)) return;
     try {
       preference = valid(localStorage.getItem(key)); palette = validPalette(localStorage.getItem(paletteKey)); custom = readCustom(localStorage.getItem(customKey));
       coverStyle = validCover(localStorage.getItem(coverKey));
+      season = validSeason(localStorage.getItem(seasonKey));
     } catch {}
     apply();
   });
+  // No clock or polling: refresh automatic ornaments only on returning to a page.
+  window.addEventListener('pageshow', applySeason);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) applySeason(); });
   document.addEventListener('DOMContentLoaded', () => {
     apply();
     document.querySelectorAll('[data-theme-select]').forEach(select => {

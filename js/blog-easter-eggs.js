@@ -86,14 +86,18 @@
   // The article's geometry stays stable. No timer, weather API or animation.
   function updateClimate() {
     const now = new Date();
-    const season = Math.floor((now.getMonth() + 1) % 12 / 3);
+    const seasons = ['winter','spring','summer','autumn'];
+    const resolved = document.documentElement.dataset.season;
+    const season = seasons.indexOf(resolved);
     const night = now.getHours() < 6 || now.getHours() >= 18;
-    garden.dataset.gardenSeason = ['winter','spring','summer','autumn'][season];
+    garden.dataset.gardenSeason = season >= 0 ? resolved : seasons[Math.floor((now.getMonth() + 1) % 12 / 3)];
     garden.dataset.gardenTime = night ? 'night' : 'day';
     const label = garden.querySelector('[data-garden-climate]');
-    if (label) label.textContent = `${garden.dataset.gardenName} · ${['冬','春','夏','秋'][season]}${night ? '夜' : '日'}`;
+    if (label) label.textContent = resolved === 'off' ? garden.dataset.gardenName : `${garden.dataset.gardenName} · ${['冬','春','夏','秋'][seasons.indexOf(garden.dataset.gardenSeason)]}${night ? '夜' : '日'}`;
   }
   updateClimate();
+  document.addEventListener('soyo-appearance-change', updateClimate);
+  window.addEventListener('pageshow', updateClimate);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const status = garden.querySelector('.garden-status');
   const animations = new Set();

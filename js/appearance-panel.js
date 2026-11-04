@@ -35,6 +35,7 @@
   }
   function sync() {
     const state = appearance.get();
+    panel.querySelectorAll('[data-season-choice]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.seasonChoice === state.season)));
     coverChoices.forEach(choice => choice.setAttribute('aria-pressed', String(choice.dataset.coverChoice === state.coverStyle)));
     const custom = state.custom;
     const selected = selectedPreset(custom);
@@ -131,6 +132,7 @@
     appearance.setCoverStyle(choice.dataset.coverChoice);
     notice('已切换为' + choice.querySelector('strong').textContent + '封面。');
   }));
+  panel.querySelectorAll('[data-season-choice]').forEach(button => button.addEventListener('click', () => appearance.setSeason(button.dataset.seasonChoice)));
   customOptions?.addEventListener('toggle', position);
   panel.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>appearance.setMode(b.dataset.mode)));
   panel.querySelector('[data-appearance-reset]').addEventListener('click',()=>{

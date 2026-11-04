@@ -9656,6 +9656,263 @@ body:has(.main-inner.index) .sidebar-blogroll {
   }
 }
 
+.decor-ink {
+  fill: var(--md-primary);
+}
+
+.decor-tone {
+  fill: var(--md-tonal);
+}
+
+.decor-soft {
+  fill: var(--md-secondary-container);
+}
+
+.decor-warm {
+  fill: var(--md-tertiary);
+}
+
+.decor-cut {
+  fill: var(--md-surface);
+}
+
+.decor-line,
+.decor-cut-line {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.decor-cut-line {
+  stroke: var(--md-surface);
+}
+
+.decor-landscape {
+  display: none;
+}
+
+:root[data-cover-style='landscape'] .decor-geometry {
+  display: none;
+}
+
+:root[data-cover-style='landscape'] .decor-landscape {
+  display: inline;
+}
+
+.seasonal-ornament,
+.season-art,
+.scenery-season {
+  display: none;
+  pointer-events: none;
+}
+
+:root[data-season=spring] .seasonal-signature,
+:root[data-season=spring] .season-art-spring,
+:root[data-season=spring] .scenery-season-spring {
+  display: block;
+}
+
+:root[data-season=spring] .welcome-signature .signature-original {
+  display: none;
+}
+
+:root[data-season=summer] .seasonal-signature,
+:root[data-season=summer] .season-art-summer,
+:root[data-season=summer] .scenery-season-summer {
+  display: block;
+}
+
+:root[data-season=summer] .welcome-signature .signature-original {
+  display: none;
+}
+
+:root[data-season=autumn] .seasonal-signature,
+:root[data-season=autumn] .season-art-autumn,
+:root[data-season=autumn] .scenery-season-autumn {
+  display: block;
+}
+
+:root[data-season=autumn] .welcome-signature .signature-original {
+  display: none;
+}
+
+:root[data-season=winter] .seasonal-signature,
+:root[data-season=winter] .season-art-winter,
+:root[data-season=winter] .scenery-season-winter {
+  display: block;
+}
+
+:root[data-season=winter] .welcome-signature .signature-original {
+  display: none;
+}
+
+.welcome-signature {
+  min-height: 40px;
+}
+
+.welcome-signature .seasonal-signature {
+  display: none;
+  width: 180px;
+  height: 40px;
+  opacity: 0.85;
+}
+
+.main-inner {
+  position: relative;
+}
+
+.seasonal-margin {
+  position: absolute;
+  right: -30px;
+  top: 48px;
+  width: 22px;
+  height: 99px;
+  opacity: 0.6;
+}
+
+@media (min-width: 1200px) {
+  :root[data-season=spring] .seasonal-margin {
+    display: block;
+  }
+
+  :root[data-season=summer] .seasonal-margin {
+    display: block;
+  }
+
+  :root[data-season=autumn] .seasonal-margin {
+    display: block;
+  }
+
+  :root[data-season=winter] .seasonal-margin {
+    display: block;
+  }
+}
+
+.footer-scenery {
+  margin: 8px 0 16px;
+  pointer-events: none;
+}
+
+.footer-scenery > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+}
+
+.scenery-distant {
+  fill: var(--md-secondary-container);
+}
+
+.scenery-hill {
+  fill: var(--md-tonal);
+  opacity: 0.6;
+}
+
+.scenery-building {
+  fill: var(--md-container);
+  stroke: var(--md-primary);
+  stroke-width: 1.2;
+}
+
+.scenery-door {
+  fill: var(--md-tonal);
+}
+
+.scenery-window {
+  fill: var(--md-secondary-container);
+}
+
+.scenery-window-line {
+  stroke: var(--md-container);
+  stroke-width: 1;
+}
+
+.scenery-path {
+  fill: none;
+  stroke: var(--md-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.scenery-night {
+  display: none;
+}
+
+:root[data-theme='dark'] .scenery-day {
+  display: none;
+}
+
+:root[data-theme='dark'] .scenery-night {
+  display: inline;
+}
+
+:root[data-theme='dark'] .scenery-window {
+  fill: var(--md-tertiary);
+}
+
+:root[data-season='off'] .garden-season-art {
+  display: none;
+}
+
+.season-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.appearance-panel .season-choice-grid button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 8px 6px;
+  border: 1px solid var(--md-outline);
+  border-radius: 14px;
+  font-size: 13px;
+}
+
+.season-choice-grid svg {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+}
+
+.appearance-panel .season-choice-grid [aria-pressed='true'] {
+  background: var(--md-tonal);
+  border-color: var(--md-primary);
+  color: var(--md-on-tonal);
+}
+
+.season-choice-grid .decor-cut-line {
+  stroke: var(--md-container);
+}
+
+@media (max-width: 600px) {
+  .footer-scenery {
+    margin: 4px 0 12px;
+  }
+
+  .scenery-outside {
+    display: none;
+  }
+}
+
+@media (forced-colors: active), print {
+  .seasonal-ornament,
+  .footer-scenery {
+    display: none !important;
+  }
+
+  .welcome-signature .signature-original {
+    display: block !important;
+  }
+}
+
 .footer-inner .footer-note {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
